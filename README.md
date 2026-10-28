@@ -2,7 +2,7 @@
 
 App pessoal de rotina para a transição de carreira para Analista de BI/Dados: cronograma diário de 07/12/2026 em diante, cursos, flashcards com revisão espaçada, checklist da PL-300, portfólio, perfil profissional e controle de candidaturas.
 
-- Versão instalável: https://pedro1105.github.io/carreira-dados/
+- Versão instalável: https://carreira-em-dados-2027.netlify.app/ (Netlify, publica sozinho a cada push na main)
 - A mesma página também é publicada no claude.ai (`src/app.html`, sem `<html>`/`<head>`).
 
 ## Como funciona
