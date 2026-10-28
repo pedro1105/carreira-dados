@@ -10,7 +10,7 @@ app = open(os.path.join(ROOT, 'src', 'app.html'), encoding='utf8').read()
 i = app.index('</style>') + len('</style>')
 head, body = app[:i], app[i:]
 head_add = ('<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">'
-            '<meta name="theme-color" content="#2F5C9E"><link rel="manifest" href="manifest.json">'
+            '<meta name="theme-color" content="#2F5C9E"><link rel="manifest" href="carreira.webmanifest">'
             '<link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-180.png">'
             '<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">'
             '<meta name="apple-mobile-web-app-title" content="Carreira">')
