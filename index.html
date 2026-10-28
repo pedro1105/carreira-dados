@@ -1,0 +1,1494 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#2F5C9E"><link rel="manifest" href="manifest.json"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Carreira"><title>Carreira em Dados 2027</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: app de rotina — barra inferior no celular, abas no tablet, menu lateral no PC; conteúdo em coluna de leitura */
+:root{
+  --bg:#F4F6F8;--surface:#FFFFFF;--ink:#1D2530;--muted:#5B6675;--line:#DEE3EA;
+  --pri:#2F5C9E;--pri-soft:#E7EEF8;--onpri:#FFFFFF;--acc:#9A6400;--acc-soft:#FCF1DC;
+  --ok:#2C7A4B;--ok-soft:#E2F2E8;--bad:#B03A3A;--bad-soft:#F9E5E3;
+  --k-curso:#2F6FB0;--k-projeto:#B0631F;--k-marca:#7A55A8;--k-ingles:#1F8079;--k-pratica:#4E7A23;--k-cand:#A8456B;--k-rev:#6B7480;--k-marco:#B03A3A;
+  --f:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#14181E;--surface:#1C222A;--ink:#E4E8ED;--muted:#A0AAB6;--line:#2C343F;
+  --pri:#8DB3EA;--pri-soft:#22324A;--onpri:#10151B;--acc:#E6B45C;--acc-soft:#30281A;
+  --ok:#6FC891;--ok-soft:#1A2E22;--bad:#EE8A84;--bad-soft:#3A201F;
+  --k-curso:#86B4EA;--k-projeto:#E7A064;--k-marca:#BFA2E6;--k-ingles:#6CCFC6;--k-pratica:#A6CF74;--k-cand:#E58CB0;--k-rev:#A0AAB6;--k-marco:#EE8A84;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14181E;--surface:#1C222A;--ink:#E4E8ED;--muted:#A0AAB6;--line:#2C343F;
+  --pri:#8DB3EA;--pri-soft:#22324A;--onpri:#10151B;--acc:#E6B45C;--acc-soft:#30281A;
+  --ok:#6FC891;--ok-soft:#1A2E22;--bad:#EE8A84;--bad-soft:#3A201F;
+  --k-curso:#86B4EA;--k-projeto:#E7A064;--k-marca:#BFA2E6;--k-ingles:#6CCFC6;--k-pratica:#A6CF74;--k-cand:#E58CB0;--k-rev:#A0AAB6;--k-marco:#EE8A84;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:17px/1.55 var(--f);-webkit-font-smoothing:antialiased;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--surface)}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+h2{font:700 23px/1.2 var(--f);letter-spacing:-.01em}
+h3{font:650 18px/1.3 var(--f)}
+h4{font:650 13px/1.3 var(--f);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+p{margin:0}
+a{color:var(--pri);text-underline-offset:3px;overflow-wrap:anywhere}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 32px;display:flex;flex-direction:column;gap:20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.grid>*{min-width:0}
+.btn{all:unset;cursor:pointer;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:9px 16px;border-radius:10px;font:600 15px var(--f);background:var(--pri);color:var(--onpri);text-align:center}
+.btn.ghost{background:transparent;color:var(--pri);border:1.5px solid var(--pri)}
+.btn.sm{min-height:38px;padding:6px 12px;font-size:14px}
+.btn.warn{background:var(--bad);color:#fff}
+.btn:focus-visible,.chip:focus-visible,.seg button:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+input[type=text],input[type=number],input[type=url],input[type=date],input[type=time],textarea,select{font:16px var(--f);padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);min-height:44px;max-width:100%}
+textarea{width:100%;min-height:90px}
+/* cabeçalho */
+header.band{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+.hwrap{display:flex;align-items:center;gap:10px;max-width:1180px;margin:0 auto;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px))}
+.brand{display:flex;flex-direction:column;min-width:0;flex:1}
+.bt{font:700 17px/1.2 var(--f);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bs{font:500 12px/1.3 var(--f);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.count{display:flex;align-items:baseline;gap:5px;padding:6px 12px;border-radius:99px;background:var(--pri-soft);color:var(--pri);flex:none}
+.count b{font:700 18px/1 var(--f)}
+.count span{font:600 12px/1.2 var(--f)}
+.themebtn{all:unset;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;width:44px;height:44px;border:1px solid var(--line);border-radius:12px;color:var(--ink);flex:none}
+.themebtn svg{width:20px;height:20px}
+.themebtn .tl{display:none;font:600 13px var(--f)}
+.themebtn[aria-current="page"]{background:var(--pri-soft);color:var(--pri);border-color:var(--pri)}
+#view{zoom:var(--fz,1)}
+.cfgrow{display:flex;justify-content:space-between;align-items:center;gap:10px 16px;flex-wrap:wrap;padding:8px 0;border-top:1px solid var(--line)}
+.cfgrow:first-of-type{border-top:0}
+.cfgrow label{flex:1 1 220px}
+.cfgrow input[type=checkbox]{width:22px;height:22px;accent-color:var(--pri)}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(6,1fr);gap:2px;background:var(--surface);border-top:1px solid var(--line);padding:4px max(4px,env(safe-area-inset-right,0px)) calc(4px + env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))}
+nav.tabs button{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;padding:4px 1px;border-radius:12px;font:600 11px/1.2 var(--f);color:var(--muted);white-space:nowrap}
+nav.tabs button svg{width:23px;height:23px}
+nav.tabs button[aria-selected="true"]{color:var(--pri);background:var(--pri-soft)}
+nav.tabs button:focus-visible{outline:2px solid var(--pri);outline-offset:-2px}
+@media (min-width:760px){
+  body{padding-bottom:0}
+  .hwrap{flex-wrap:wrap;padding-top:14px;padding-bottom:0}
+  .bt{font-size:20px}
+  nav.tabs{position:static;display:flex;width:100%;border:0;padding:6px 0 0;background:none;gap:4px}
+  nav.tabs button{flex-direction:row;min-height:46px;padding:8px 14px;font-size:15px;gap:8px;border-radius:10px 10px 0 0}
+  nav.tabs button svg{width:19px;height:19px}
+  nav.tabs button[aria-selected="true"]{background:var(--bg);color:var(--ink)}
+  .themebtn{width:auto;padding:0 12px}.themebtn .tl{display:inline}
+  .wrap{padding-block:24px 56px}
+}
+@media (min-width:1100px){
+  header.band{position:fixed;left:0;top:0;bottom:0;width:250px;border-bottom:0;border-right:1px solid var(--line);overflow-y:auto}
+  .hwrap{flex-direction:column;align-items:stretch;flex-wrap:nowrap;gap:16px;padding:calc(24px + env(safe-area-inset-top,0px)) 16px 24px max(16px,env(safe-area-inset-left,0px));min-height:100%}
+  .bt{white-space:normal;font-size:21px}.bs{white-space:normal}
+  .brand{flex:none}
+  .count{align-self:flex-start}
+  nav.tabs{flex-direction:column;padding:0;order:3}
+  nav.tabs button{justify-content:flex-start;border-radius:10px;width:100%;box-sizing:border-box}
+  nav.tabs button[aria-selected="true"]{background:var(--pri-soft);color:var(--pri)}
+  .themebtn{order:4;margin-top:auto;align-self:flex-start}
+  main{margin-left:250px}
+  .wrap{max-width:1000px;padding-left:40px;padding-right:max(40px,env(safe-area-inset-right,0px))}
+}
+@media (max-width:759px){.bs{display:none}.count span{display:none}.count b::after{content:" dias";font:600 12px var(--f)}}
+/* tarefas */
+.tasks{display:flex;flex-direction:column}
+.task{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:11px 0;border-top:1px solid var(--line);align-items:start}
+.task:first-child{border-top:0}
+.task input[type=checkbox]{width:22px;height:22px;margin:2px 0 0;accent-color:var(--pri);cursor:pointer}
+.task .tb{min-width:0;display:flex;flex-direction:column;gap:4px}
+.task .tt{font-weight:600;line-height:1.35;cursor:pointer}
+.task.done .tt{color:var(--muted);text-decoration:line-through}
+.task .tm{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--muted)}
+.task details summary{cursor:pointer;font-size:14px;color:var(--pri);list-style:none;display:inline-block;padding:2px 0}
+.task details summary::-webkit-details-marker{display:none}
+.task details p{font-size:15px;margin-top:4px}
+.task.folga{grid-template-columns:1fr}
+.kchip{display:inline-flex;align-items:center;gap:6px;font:600 12px var(--f);color:var(--kc,var(--muted))}
+.kchip::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--kc,var(--muted))}
+.pill{display:inline-block;font:600 12px var(--f);padding:2px 9px;border-radius:99px;background:var(--line);color:var(--muted);white-space:nowrap}
+.pill.free{background:var(--ok-soft);color:var(--ok)}
+.pill.paid{background:var(--acc-soft);color:var(--acc)}
+.pill.pri{background:var(--pri-soft);color:var(--pri)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.daycard{display:flex;flex-direction:column;gap:6px}
+.dayhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.daytitle{font:700 17px var(--f)}
+.daytitle.today{color:var(--pri)}
+.track{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+.fill{height:100%;background:var(--pri);border-radius:99px}
+.fill.ok{background:var(--ok)}
+.bar{display:grid;grid-template-columns:minmax(0,1fr) 110px 56px;gap:10px;align-items:center;font-size:15px}
+.big{font:700 30px/1.1 var(--f);font-variant-numeric:tabular-nums}
+.fact{display:flex;flex-direction:column;gap:2px}
+.fact .k{font:600 12px var(--f);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tip{border-left:4px solid var(--acc);background:var(--acc-soft);padding:12px 14px;border-radius:0 12px 12px 0;display:flex;flex-direction:column;gap:4px}
+.note{border:1px dashed var(--line);border-radius:12px;padding:12px 14px}
+.pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.pipe .sg{height:12px;border-radius:4px;background:var(--line);overflow:hidden}
+.pipe .sg i{display:block;height:100%;background:var(--pri)}
+.pipe-l{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;font:500 12px var(--f);color:var(--muted)}
+.heat{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
+.hc{aspect-ratio:1;max-width:100%;border-radius:5px;background:var(--line);display:grid;place-items:center;font:500 10px var(--f);color:var(--muted)}
+.hc.l1{background:var(--pri-soft)}.hc.l2{background:color-mix(in srgb,var(--pri) 55%,var(--surface))}.hc.l3{background:var(--pri);color:var(--onpri)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{all:unset;cursor:pointer;min-height:40px;box-sizing:border-box;display:inline-flex;align-items:center;padding:8px 14px;border-radius:99px;border:1px solid var(--line);font:600 14px var(--f);background:var(--surface)}
+.seg button[aria-selected="true"]{background:var(--pri);color:var(--onpri);border-color:var(--pri)}
+.chip{all:unset;cursor:pointer;min-height:36px;box-sizing:border-box;display:inline-flex;align-items:center;padding:6px 12px;border-radius:99px;border:1px solid var(--line);font:500 14px var(--f)}
+.chip.on{background:var(--pri-soft);border-color:var(--pri);color:var(--pri)}
+details.acc{border-top:1px solid var(--line);padding-top:10px}
+details.acc>summary{cursor:pointer;list-style:none;display:flex;gap:10px;align-items:center;justify-content:space-between;min-height:44px}
+details.acc>summary::-webkit-details-marker{display:none}
+details.acc>summary .chev{transition:transform .15s;color:var(--muted)}
+details.acc[open]>summary .chev{transform:rotate(90deg)}
+.copybox{font:14px/1.55 ui-monospace,Consolas,monospace;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+ul.plain{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.cust{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.cust .ctr{display:flex;gap:6px;align-items:center}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,160%);width:min(420px,calc(100% - 32px));background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--ok);border-radius:10px;padding:12px 14px;box-shadow:0 8px 28px rgba(0,0,0,.22);z-index:50;transition:transform .25s}
+#toast{visibility:hidden}#toast.on{transform:translate(-50%,0);visibility:visible}
+@media (min-width:760px){#toast{bottom:16px}}
+@media (max-width:520px){.bar{grid-template-columns:minmax(0,1fr) 64px 48px}.big{font-size:26px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+[hidden]{display:none!important}
+/* v4 */
+nav.tabs{grid-template-columns:repeat(7,1fr)}
+@media (max-width:420px){nav.tabs button{font-size:10.5px;letter-spacing:-.01em}nav.tabs button svg{width:22px;height:22px}}
+.linkbtn{all:unset;cursor:pointer;color:var(--pri);font:600 14px var(--f);text-decoration:underline;text-underline-offset:3px}
+.linkbtn:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.task .tm .tmgo{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:2px 10px;min-height:28px;border-radius:99px;border:1px solid var(--pri);color:var(--pri);font:600 12px var(--f)}
+.task .tm .tmgo:focus-visible{outline:2px solid var(--acc)}
+.grid.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:620px){.grid.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.g3 .big,.grid.g4 .big{font-size:24px}}
+#tmbar{position:fixed;left:8px;right:8px;bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:35;display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--pri);border-radius:14px;padding:8px 10px;box-shadow:0 8px 28px rgba(0,0,0,.18)}
+#tmbar .tmi{display:flex;flex-direction:column;gap:3px;min-width:0}
+#tmbar .tmph{font:700 11px var(--f);text-transform:uppercase;letter-spacing:.06em;color:var(--pri)}
+#tmbar .tmph.brk{color:var(--ok)}
+#tmbar .tmt{font:600 13px var(--f);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tmbar .tmtr{height:5px}
+#tmbar .tmc{font:700 24px/1 var(--f)}
+#tmbar .tmb{display:flex;gap:4px}
+#tmbar .tmb .btn{min-width:38px;padding:4px 8px}
+#tmbar .tmb .btn[aria-pressed="true"]{background:var(--pri-soft)}
+body.hastm{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+body.hastm #toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+@media (min-width:760px){#tmbar{left:auto;right:16px;bottom:16px;width:420px}body.hastm{padding-bottom:90px}body.hastm #toast{bottom:96px}}
+@media (min-width:1100px){#tmbar{right:24px}}
+.fc{border:1px solid var(--line);border-radius:14px;padding:18px;background:var(--bg);display:flex;flex-direction:column;gap:10px;min-height:150px}
+.fcq{font:650 19px/1.4 var(--f)}
+.fca{border-top:1px dashed var(--line);padding-top:10px}
+.fcg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.fcg .btn{flex-direction:column;gap:0;padding:6px 4px;line-height:1.2}
+.fcg .btn .small{font-weight:500;font-size:12px;opacity:.85}
+.fcst{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:100px}
+.fcb{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;height:100%}
+.fcbar{width:60%;max-width:28px;background:var(--pri);border-radius:4px 4px 0 0}
+.skr{display:flex;justify-content:space-between;gap:8px 12px;align-items:center;flex-wrap:wrap;padding:8px 0;border-top:1px solid var(--line)}
+.skr>span:first-child{flex:1 1 220px}
+.sks{display:inline-flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;flex:none}
+.sks button{all:unset;cursor:pointer;padding:6px 10px;font:600 12px var(--f);min-height:32px;box-sizing:border-box;display:inline-flex;align-items:center}
+.sks button+button{border-left:1px solid var(--line)}
+.sks button[aria-checked="true"]{background:var(--pri);color:var(--onpri)}
+.sks button[data-v="2"][aria-checked="true"]{background:var(--ok);color:#fff}
+.sks button:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
+input[type=range]{accent-color:var(--pri);width:min(240px,100%)}
+.tutlog{display:flex;flex-direction:column;gap:10px;max-height:min(60vh,520px);overflow-y:auto;padding:4px 2px}
+.msg{padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.5;overflow-wrap:anywhere}
+.msg.user{background:var(--pri-soft);align-self:flex-end;max-width:90%}
+.msg.assistant{background:var(--bg);border:1px solid var(--line)}
+.msg .copybox{margin:6px 0;font-size:13px}
+.g2f{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.fl{display:flex;flex-direction:column;gap:4px;font:600 13px var(--f);color:var(--muted)}
+.fl input,.fl select,.fl textarea{color:var(--ink);font-weight:400}
+.apr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+@media (max-width:520px){.apr{grid-template-columns:1fr}}
+.wk{display:flex;flex-direction:column;gap:6px}
+.wkr{display:grid;grid-template-columns:46px minmax(0,1fr) 56px;gap:8px;align-items:center}
+.wkb{position:relative;height:14px;border-radius:4px;background:var(--line);overflow:hidden}
+.wkp{position:absolute;inset:0 auto 0 0;background:color-mix(in srgb,var(--pri) 30%,var(--surface))}
+.wkd{position:absolute;inset:0 auto 0 0;background:var(--pri)}
+.lg{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:middle;margin:0 2px 0 8px}.lg.lgd{background:var(--pri)}.lg.lgp{background:color-mix(in srgb,var(--pri) 30%,var(--surface))}
+.diary{border-top:1px solid var(--line);padding-top:12px;margin-top:6px}
+.tdq{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.tdq textarea{min-height:56px;font-size:15px}
+#toast .linkbtn{margin-left:6px}
+</style></head><body>
+
+<header class="band"><div class="hwrap">
+  <div class="brand"><span class="bt">Carreira em Dados</span><span class="bs">Rumo a Analista de BI · plano desde 07/12/2026</span></div>
+  <div class="count" id="cnt"><b id="cntN" class="num">–</b><span id="cntT">dias</span></div>
+  <button class="themebtn" id="cfgBtn" type="button" aria-label="Configurações"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="tl">Configurações</span></button>
+  <nav class="tabs" role="tablist" aria-label="Seções" id="tabs"></nav>
+</div></header>
+<main><div class="wrap" id="view"></div></main>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ================= DATAS-CHAVE ================= */
+const START="2026-12-07", END="2027-09-30"; let BAIXA="2027-02-28", CIVIL="2027-03-01";
+const DEF_CFG={baixa:"2027-02-28",h1:"19:00",h2:"09:00",hw:"09:00",eng:true,sql:true,post:true,home:"hoje"};
+const OFF=new Set(["2026-12-24","2026-12-25","2026-12-31","2027-01-01","2027-02-08","2027-02-09","2027-03-26","2027-04-21","2027-05-27","2027-09-07"]);
+const PHASES=[
+ {id:"f0",n:"Fase 0 · Base",a:"2026-12-07",b:"2027-01-03",h:"8–10 h/semana",goal:"Excel e Power Query revisados, Git funcionando, SQL iniciado, LinkedIn e GitHub com cara profissional."},
+ {id:"f1",n:"Fase 1 · Fundamentos",a:"2027-01-04",b:"2027-02-28",h:"12–15 h/semana (ainda militar)",goal:"SQL e Power BI do curso completo, modelagem e DAX, projetos 1 e 2 publicados, currículo pronto e candidaturas para início em março."},
+ {id:"f2",n:"Fase 2 · Certificação",a:"2027-03-01",b:"2027-05-31",h:"cerca de 20 h/semana de estudo + busca de vaga (civil)",goal:"PL-300 aprovada, projetos 3 a 5 publicados, IA aplicada a dados, 15 candidaturas por semana."},
+ {id:"f3",n:"Fase 3 · Primeira vaga",a:"2027-06-01",b:"2027-09-30",h:"cerca de 20 h/semana de estudo + busca de vaga",goal:"Projeto com IA publicado, Python e estatística, networking semanal. Meta: vaga até 30/06 (otimista) ou 30/09 (realista)."}
+];
+const KINDS={curso:"Curso",projeto:"Portfólio",marca:"Perfil profissional",ingles:"Inglês",pratica:"Prática",cand:"Candidaturas",rev:"Revisão",marco:"Marco"};
+
+/* ================= CURSOS (fila principal, na ordem) ================= */
+const COURSES=[
+ {id:"excel",n:"Excel e Power Query",plat:"Udemy",free:false,src:"Microsoft Excel – Excel from Beginner to Advanced (Kyle Pew)",u:"https://www.udemy.com/course/microsoft-excel-2013-from-beginner-to-advanced-and-beyond/",alt:"Grátis: Fundação Bradesco – Escola Virtual (Excel) ou Hashtag Treinamentos no YouTube",s:["Fórmulas essenciais: SOMASES, CONT.SES e SE aninhado","PROCX/PROCV e ÍNDICE + CORRESP","Tabelas dinâmicas e gráficos dinâmicos","Power Query: importar, limpar e transformar","Power Query: mesclar e acrescentar consultas","Desafio: painel de controle administrativo no Excel"]},
+ {id:"git",n:"Git e GitHub para portfólio",plat:"Grátis",free:true,src:"GitHub Skills + Curso em Vídeo (Git e GitHub)",u:"https://skills.github.com/",alt:"",s:["Instalar o Git, criar o primeiro repositório","Commit, push e README em Markdown","Branches, .gitignore e pastas de um projeto de dados"]},
+ {id:"sql",n:"SQL do zero ao intermediário",plat:"Udemy",free:false,src:"The Complete SQL Bootcamp (Jose Portilla)",u:"https://www.udemy.com/course/the-complete-sql-bootcamp/",alt:"Grátis: SQLBolt, Kaggle Learn (Intro to SQL), Curso em Vídeo – MySQL",s:["Instalar PostgreSQL e pgAdmin; SELECT e WHERE","ORDER BY, LIMIT, BETWEEN, IN e LIKE","Agregações: COUNT, SUM, AVG e GROUP BY","HAVING e desafios de agregação","JOINs: INNER e LEFT","JOINs: FULL, SELF e desafios","Funções de data e de texto","Subconsultas","CREATE TABLE, tipos, chaves primária e estrangeira","INSERT, UPDATE, DELETE e constraints","CASE, COALESCE, NULLIF e VIEWs","Projeto do curso e revisão geral"]},
+ {id:"pbi",n:"Power BI Desktop",plat:"Udemy",free:false,src:"Microsoft Power BI Desktop for Business Intelligence (Maven Analytics)",u:"https://www.udemy.com/course/microsoft-power-bi-up-running-with-power-bi-desktop/",alt:"Grátis: trilha PL-300 no Microsoft Learn e canal Guy in a Cube",s:["Interface e fluxo de trabalho do Power BI","Power Query: conexão e perfil dos dados","Transformações: tipos, colunas, dinamizar e despivotar","Mesclar, acrescentar e boas práticas de consulta","Modelo de dados: tabelas fato e dimensão","Relacionamentos, cardinalidade e direção de filtro","Tabela calendário","DAX: colunas calculadas x medidas","DAX: SUM, COUNTROWS, DIVIDE e CALCULATE","DAX: ALL, FILTER e REMOVEFILTERS","DAX: inteligência de tempo (acumulado no ano, mês anterior)","Visuais: escolher o gráfico certo","Interatividade: segmentações, drill e dicas de ferramenta","Layout e storytelling do relatório","Power BI Service: publicar, compartilhar e atualizar","Projeto final do curso"]},
+ {id:"model",n:"Modelagem dimensional",plat:"Grátis",free:true,src:"The Data Warehouse Toolkit (Kimball), cap. 1–3 + vídeos da SQLBI",u:"https://www.sqlbi.com/topics/data-modeling/",alt:"",s:["Esquema estrela x floco de neve","Granularidade e tabelas fato","Dimensões e chaves substitutas","Exercício: modelar o projeto 1 no papel e no SQL"]},
+ {id:"dax",n:"DAX a fundo",plat:"Grátis",free:true,src:"Introducing DAX (SQLBI, curso em vídeo gratuito)",u:"https://www.sqlbi.com/p/introducing-dax-video-course/",alt:"Udemy: cursos de DAX em português de Leonardo Karpinski, se estiverem no seu plano",s:["Contexto de linha x contexto de filtro","CALCULATE a fundo","Iteradores: SUMX e AVERAGEX","Variáveis e legibilidade das medidas","RELATED e USERELATIONSHIP","Desafios de DAX"]},
+ {id:"sqladv",n:"SQL avançado para análise",plat:"Grátis",free:true,src:"Kaggle Learn – Advanced SQL",u:"https://www.kaggle.com/learn/advanced-sql",alt:"",s:["CTEs (WITH)","Funções de janela: ROW_NUMBER e RANK","Janela: LAG, LEAD e somas acumuladas","Noções de desempenho e índices"]},
+ {id:"ia1",n:"IA generativa para quem trabalha com dados",plat:"Grátis",free:true,src:"Generative AI for Everyone (DeepLearning.AI, Coursera, modo ouvinte gratuito)",u:"https://www.coursera.org/learn/generative-ai-for-everyone",alt:"",s:["Como funcionam os modelos de linguagem e seus limites","Usar IA para escrever e revisar SQL e DAX, conferindo sempre o resultado","Privacidade, LGPD e ética no uso de IA no trabalho"]},
+ {id:"pl300",n:"Preparação PL-300",plat:"Grátis",free:true,src:"Microsoft Learn – trilha do exame PL-300 (Power BI Data Analyst)",u:"https://learn.microsoft.com/pt-br/credentials/certifications/data-analyst-associate/",alt:"A prova é paga (valor em reais no site da Microsoft); fique de olho em desafios do Microsoft Learn que dão desconto",s:["Preparar dados (parte 1)","Preparar dados (parte 2)","Modelar dados (parte 1)","Modelar dados (parte 2)","Modelar dados: DAX para o exame","Visualizar e analisar (parte 1)","Visualizar e analisar (parte 2)","Implantar e manter: workspaces e RLS","Implantar e manter: gateway e atualização","Revisão dos pontos fracos","Simulado oficial 1","Corrigir os erros do simulado 1","Simulado oficial 2","Revisão final e agendamento da prova"],exam:"Fazer a prova PL-300"},
+ {id:"copilot",n:"Copilot e IA no Power BI",plat:"Grátis",free:true,src:"Microsoft Learn – Copilot no Power BI e no Fabric",u:"https://learn.microsoft.com/pt-br/power-bi/create-reports/copilot-introduction",alt:"",s:["O que o Copilot faz no Power BI e no Fabric","Prática: gerar medidas e resumos e validar cada resposta"]},
+ {id:"py",n:"Python para análise de dados",plat:"Grátis",free:true,src:"Kaggle Learn – Python e Pandas",u:"https://www.kaggle.com/learn/pandas",alt:"Udemy: um curso de Python for Data Analysis bem avaliado do seu plano",s:["Python básico: variáveis e tipos","Listas, dicionários e laços","Funções","Pandas: ler CSV e explorar","Filtrar, ordenar e agrupar","Juntar tabelas (merge)","Datas e limpeza de dados","Gráficos com matplotlib e seaborn","Notebook de análise completa","Publicar o notebook no GitHub"]},
+ {id:"ia2",n:"IA aplicada a dados",plat:"Grátis",free:true,src:"Documentação de APIs de IA com camada gratuita + prática própria",u:"https://www.kaggle.com/learn",alt:"",s:["Prompting para análise: descrever dados e pedir hipóteses","Chamar uma API de IA em Python para classificar textos","Avaliar a IA: conferir uma amostra à mão","Documentar o uso de IA no portfólio"]},
+ {id:"stats",n:"Estatística para análise",plat:"Grátis",free:true,src:"Khan Academy – Estatística e probabilidade",u:"https://pt.khanacademy.org/math/statistics-probability",alt:"Udemy: Statistics for Data Science and Business Analysis (365 Careers)",s:["Média, mediana, moda e dispersão","Distribuições e outliers","Amostragem e margem de erro","Correlação x causalidade","Teste A/B em linguagem simples","Aplicar estatística descritiva num projeto"]},
+ {id:"ai900",n:"Fundamentos de IA (AI-900)",plat:"Grátis",free:true,src:"Microsoft Learn – trilha AI-900 (a prova é opcional e paga)",u:"https://learn.microsoft.com/pt-br/credentials/certifications/azure-ai-fundamentals/",alt:"",s:["Conceitos de IA e machine learning","Machine learning no Azure","Visão computacional e linguagem","IA generativa e IA responsável","Revisão e simulado"]},
+ {id:"fabric",n:"Microsoft Fabric para analistas",plat:"Grátis",free:true,src:"Microsoft Learn – Fabric (base para a futura DP-600)",u:"https://learn.microsoft.com/pt-br/training/fabric/",alt:"",s:["O que é o Fabric: lakehouse e warehouse","Dataflows Gen2","Lakehouse e modelos semânticos","Governança e workspaces","Direct Lake","Mini-projeto no Fabric (avaliação gratuita)"]}
+];
+
+/* ================= PROJETOS ================= */
+const PROJECTS=[
+ {id:"p1",n:"Painel de prazos e gestão documental",repo:"gestao-documental-sla",why:"É a sua rotina na FAB virando dado. Mostra controle de prazos, SLA e gargalos, sem expor nada real.",src:"Base fictícia criada por você (deixe claro no README)",skills:"Excel, SQL, modelagem, DAX, Power BI",s:["Definir 5 perguntas de negócio (atraso por setor, SLA, gargalos)","Gerar base fictícia no Excel: 2.000 documentos, 8 setores, 12 meses","Criar as tabelas no PostgreSQL (fato_documento, dim_setor, dim_tipo, dim_data)","Carregar os dados e escrever 5 consultas SQL que respondem às perguntas","Montar o modelo e as medidas DAX (SLA %, tempo médio, backlog)","Construir o dashboard: visão geral, setores e detalhe","Escrever o README com prints, perguntas e respostas","Publicar no GitHub e postar no LinkedIn"]},
+ {id:"p2",n:"Execução orçamentária do Comando da Aeronáutica",repo:"orcamento-comaer",why:"Prova que você entende o ciclo da despesa pública que via na prática.",src:"Portal da Transparência (despesas por órgão) · Painel do Orçamento Federal",u:"https://portaldatransparencia.gov.br/download-de-dados",skills:"Power Query, modelagem, DAX, storytelling",s:["Baixar as despesas do Comando da Aeronáutica de 2020 a 2026","Limpar no Power Query (tipos, colunas, valores)","Modelo estrela: fato despesa; dimensões ação, natureza e data","Medidas: empenhado, liquidado, pago e % de execução","Comparar com Exército e Marinha","Dashboard com 3 páginas","README explicando empenho, liquidação e pagamento","Publicar e postar"]},
+ {id:"p3",n:"Compras e contratos públicos da Defesa",repo:"compras-defesa-pncp",why:"Junta licitações, fornecedores e prazos, assunto de toda área administrativa.",src:"PNCP – Portal Nacional de Contratações Públicas (dados abertos)",u:"https://www.gov.br/pncp/pt-br",skills:"SQL, modelagem, análise de concentração",s:["Explorar os dados abertos do PNCP e escolher o recorte","Baixar contratos do Ministério da Defesa (2024–2026)","Carregar no PostgreSQL e modelar","SQL: fornecedores, modalidades e concentração (top 10)","Calcular tempo de processo e valor por modalidade","Dashboard","README e publicação","Post no LinkedIn"]},
+ {id:"p4",n:"Logística de combustíveis no Brasil",repo:"combustiveis-anp",why:"Assunto para entrevista na Transpetro e em empresas de energia e logística.",src:"ANP – dados abertos (vendas de derivados e preços)",u:"https://www.gov.br/anp/pt-br/centrais-de-conteudo/dados-abertos",skills:"Séries temporais, mapas, DAX",s:["Baixar vendas de derivados por UF e preços na bomba","Tratar no Power Query","Modelo e medidas: volume, variação anual e média móvel","Mapa e séries temporais","Página de preços por região","README com contexto de transporte e logística","Publicar e postar"]},
+ {id:"p5",n:"Diárias e passagens no governo federal",repo:"viagens-governo-federal",why:"Bom primeiro uso de Python num dado que você conhece da rotina administrativa.",src:"Portal da Transparência – viagens a serviço",u:"https://portaldatransparencia.gov.br/download-de-dados/viagens",skills:"Python (pandas), Power BI",s:["Baixar os dados de viagens a serviço","Limpeza em Python com pandas","Análise: gasto por órgão, destino e antecedência da compra","Dashboard","README","Publicar e postar"]},
+ {id:"p6",n:"Pedidos de acesso à informação classificados com IA",repo:"lai-pedidos-ia",why:"Une seu curso de Acesso à Informação, LGPD e IA. É o projeto que mais chama atenção em 2027.",src:"CGU – dados abertos de pedidos e respostas da LAI (Fala.BR)",u:"https://buscalai.cgu.gov.br/",skills:"Python, IA, avaliação de modelo, Power BI",s:["Baixar uma amostra de pedidos LAI nos dados abertos da CGU","Explorar com pandas: órgãos, prazos e taxa de negativa","Definir 8 categorias de assunto","Classificar 500 pedidos com IA e conferir uma amostra à mão","Medir a concordância entre a IA e a sua revisão","Dashboard: temas, prazos e negativas","README com método, limites da IA e cuidados de LGPD","Publicar e postar"]}
+];
+
+/* ================= PERFIL PROFISSIONAL (fila) ================= */
+const BRAND=[
+ {id:"pes",g:"car",t:"Seção de Pessoal: confirmar data do licenciamento, férias a gozar e compensação pecuniária",d:"Pergunte também quais documentos pedir na saída (certidão de tempo de serviço, alterações). A data define o 'disponível a partir de' do currículo."},
+ {id:"mail",g:"red",t:"Criar e-mail profissional e definir seu nome profissional",d:"Formato nome.sobrenome@gmail.com. Use o nome completo do diploma ou uma forma curta fixa, igual em todas as redes."},
+ {id:"gh1",g:"gh",t:"GitHub: criar a conta com usuário profissional",d:"Usuário curto e com seu nome, sem números aleatórios. Ex.: pedro-guedes-dados ou pedrohguedes."},
+ {id:"gh2",g:"gh",t:"GitHub: foto, bio, cidade e link do LinkedIn",d:"Bio sugerida: 'Analista de Dados e BI em formação | Power BI · SQL · Python | Rio de Janeiro'."},
+ {id:"li1",g:"li",t:"LinkedIn: foto profissional",d:"Rosto ocupando 60% da foto, fundo neutro, roupa civil, boa luz. Celular com modo retrato resolve."},
+ {id:"li2",g:"li",t:"LinkedIn: título",d:"Use o texto pronto da aba Perfil → LinkedIn."},
+ {id:"li3",g:"li",t:"LinkedIn: seção Sobre",d:"Use o texto pronto da aba Perfil → LinkedIn e ajuste com suas palavras."},
+ {id:"red1",g:"red",t:"Redes: revisar Instagram, Facebook e TikTok públicos",d:"Recrutador pesquisa seu nome. Deixe o pessoal privado ou remova posts que não queira ver numa entrevista. Nada de farda ou rotina interna da FAB."},
+ {id:"li4",g:"li",t:"LinkedIn: experiência na FAB com bullets",d:"Use o texto pronto da aba Perfil → LinkedIn. Troque os colchetes por números reais."},
+ {id:"li5",g:"li",t:"LinkedIn: formação e certificados da ENAP",d:"Em Licenças e certificados: LGPD, Acesso à Informação, Ética e Serviço Público, Gestão da Ética Pública. Use o código de validação da EV.G."},
+ {id:"gh3",g:"gh",t:"GitHub: README de perfil",d:"Crie um repositório com o mesmo nome do seu usuário e cole o modelo da aba Perfil → GitHub."},
+ {id:"li6",g:"li",t:"LinkedIn: competências (top 5)",d:"Power BI, SQL, Excel, Power Query, Modelagem de dados. Depois acrescente DAX, Python e Comunicação."},
+ {id:"li7",g:"li",t:"LinkedIn: banner",d:"Faça no Canva: fundo sóbrio, 'Dados · Power BI · SQL' e uma miniatura de dashboard seu."},
+ {id:"li8",g:"li",t:"LinkedIn: URL personalizada",d:"linkedin.com/in/seu-nome. Use a mesma no currículo e no GitHub."},
+ {id:"car1",g:"car",t:"Currículo: versão 1 (uma página, compatível com ATS)",d:"Modelo no plano mestre. Sem colunas, sem foto, fonte simples, PDF. Linha de topo: 'Disponível a partir de [data da baixa]'."},
+ {id:"gh4",g:"gh",t:"GitHub: arrumar repositórios antigos da faculdade",d:"Arquive ou torne privados os que estão incompletos. Mantenha 1 ou 2 bons de ADS com README."},
+ {id:"li9",g:"li",t:"LinkedIn: seguir 20 empresas-alvo e 15 profissionais de BI",d:"Inclua Transpetro, Petrobras, Embraer, empresas de logística e bancos do RJ. Comente com conteúdo útil, não só 'parabéns'."},
+ {id:"car2",g:"car",t:"Criar a planilha de candidaturas",d:"Colunas: data, empresa, vaga, link, salário, status, contato, próximo passo. Vire seu próprio projeto de dados depois."},
+ {id:"li10",g:"li",t:"LinkedIn: primeiro post sobre a sua transição",d:"Use o tema 1 da lista de posts. Curto, verdadeiro, com um print do projeto 1."},
+ {id:"red2",g:"red",t:"Redes: mesma foto e mesmo nome em todas",d:"LinkedIn, GitHub, e-mail e WhatsApp com a foto profissional."},
+ {id:"li11",g:"li",t:"LinkedIn: 'Open to Work' só para recrutadores",d:"Cargos: Analista de BI, Analista de Dados, Analista de Relatórios, Analista de Planejamento. Início: a partir da data da baixa."},
+ {id:"pf",g:"gh",t:"Página de portfólio com links (GitHub Pages ou Notion)",d:"Uma página: foto, 3 frases sobre você, cards dos projetos com print e link. Vai no topo do currículo."},
+ {id:"li12",g:"li",t:"Pedir 2 recomendações no LinkedIn",d:"De quem acompanhou seu trabalho: chefe de seção, colega da ENAP ou da faculdade. Ofereça escrever uma para a pessoa também."},
+ {id:"car3",g:"car",t:"Currículo em inglês (versão simples)",d:"Mesmo conteúdo, revisado com ajuda de IA e conferido por você. Serve para multinacionais."},
+ {id:"gh5",g:"gh",t:"GitHub: fixar os 4 melhores repositórios",d:"Ordem sugerida: projeto com IA, gestão documental, orçamento COMAER, combustíveis."}
+];
+
+const POSTS=["Estou saindo da FAB depois de 8 anos e indo para dados: por quê e como estou me preparando","O que 8 anos controlando documentos e prazos me ensinaram sobre indicadores","Projeto 1: painel de prazos com dados fictícios. A pergunta, o modelo e o que descobri","Um erro de DAX que cometi e como corrigi","SQL em 3 consultas: como respondi uma pergunta de negócio","Orçamento público explicado com um dashboard: empenho, liquidação e pagamento","O que aprendi estudando para a PL-300","Antes e depois: refazendo um visual para ficar mais claro","Dados abertos que pouca gente usa (e o que dá para analisar com eles)","Como uso IA para revisar SQL sem confiar cegamente","Um mês de candidaturas: números da minha própria planilha","LGPD na prática para quem trabalha com dados"];
+
+const TIPS=[
+ ["Termine antes de colecionar","Um curso terminado vale mais que cinco começados. Não abra o próximo antes de fechar o atual."],
+ ["Estude no mesmo horário","Horário fixo vira hábito. Escolha 2 horas que você consegue proteger quase todo dia."],
+ ["Pratique mais do que assiste","Para cada aula de 10 minutos, abra o Power BI ou o SQL e refaça sozinho, sem o vídeo."],
+ ["Escreva o que aprendeu","Ao fim de cada sessão, anote 3 linhas no caderno ou no Notion. Isso vira post e resposta de entrevista."],
+ ["Erro é conteúdo","Guarde os erros que você resolveu. Recrutador gosta de ouvir como você destravou um problema."],
+ ["Pergunta antes do gráfico","Todo dashboard começa com perguntas de negócio. Sem pergunta, é só decoração."],
+ ["Menos visuais, mais clareza","Uma página boa tem de 4 a 6 visuais. Se precisa explicar o gráfico, troque o gráfico."],
+ ["README é a vitrine","Quem avalia portfólio lê o README, não o arquivo .pbix. Coloque prints, perguntas e conclusões."],
+ ["Dados fictícios valem","Quando o dado real é sigiloso, crie uma base fictícia realista e diga isso no README."],
+ ["Nada da FAB no portfólio","Nunca use dado interno, nem anonimizado. Use dados públicos ou simulados."],
+ ["Candidatura personalizada","3 candidaturas ajustadas à vaga rendem mais que 30 genéricas. Copie palavras-chave da descrição."],
+ ["Vaga pede 1 ano? Mande assim mesmo","Requisito de vaga é lista de desejos. Se você cobre 60%, candidate-se."],
+ ["Vagas híbridas são porta de entrada","Analista administrativo, de planejamento ou de controladoria com Power BI aceitam melhor sua experiência."],
+ ["Networking sem pedir emprego","Peça 15 minutos para entender a rotina de alguém da área. A indicação vem depois, naturalmente."],
+ ["Inglês todo dia, pouco","30 minutos diários vencem 4 horas no domingo. Documentação de dados é em inglês."],
+ ["IA como copiloto, não piloto","Use IA para explicar erros e sugerir SQL, mas rode, confira e entenda cada linha."],
+ ["Durma","Sono ruim derruba memória. Estudar cansado até tarde rende pouco."],
+ ["Revise no domingo","20 minutos olhando o que fez na semana fixam mais que estudar coisa nova."],
+ ["Mostre o processo","Posts sobre o que você está aprendendo atraem recrutadores. Não precisa ser especialista para postar."],
+ ["Traduza o militar","Troque 'Cabo SAD' por 'Assistente Administrativo' e diga o resultado, não só a tarefa."],
+ ["Números no currículo","'Controlei 300 documentos por mês' é mais forte que 'controlei documentos'. Estime com honestidade."],
+ ["STAR nas entrevistas","Situação, Tarefa, Ação, Resultado. Prepare 4 histórias e treine em voz alta."],
+ ["Por que dados?","Tenha uma resposta de 30 segundos ligando sua rotina administrativa à análise de dados."],
+ ["Saída da FAB, pelo futuro","Responda 'por que saiu' falando do plano, nunca de problemas na instituição."],
+ ["Modelo estrela sempre","Fato no centro, dimensões em volta. Resolve metade dos problemas de DAX antes de existirem."],
+ ["Calendário é obrigatório","Todo modelo com datas precisa de uma tabela calendário marcada como tabela de datas."],
+ ["Medidas em vez de colunas","Prefira medidas DAX a colunas calculadas: modelo mais leve e flexível."],
+ ["Commit todo dia de projeto","Commits pequenos e frequentes mostram constância no GitHub."],
+ ["Uma vaga real por semana","Leia uma vaga com atenção e anote o que falta. Isso ajusta seus estudos ao mercado."],
+ ["Cuide do dinheiro da transição","Saiba quantos meses suas reservas cobrem e defina a data-limite para aceitar uma vaga híbrida."]
+];
+
+const CATALOG=[
+ {n:"Elements of AI",p:"Universidade de Helsinque · em português",tags:["ia"],free:true,u:"https://www.elementsofai.com/pt",note:"Base conceitual de IA, com certificado. Ótimo primeiro passo."},
+ {n:"Introduction to Generative AI",p:"Google Cloud Skills Boost",tags:["ia"],free:true,u:"https://www.cloudskillsboost.google/",note:"Curso curto com selo digital para o LinkedIn."},
+ {n:"Generative AI Fundamentals",p:"Databricks Academy",tags:["ia","cert"],free:true,u:"https://www.databricks.com/learn/training",note:"Credencial gratuita de uma empresa líder em dados."},
+ {n:"AI-900 Azure AI Fundamentals",p:"Microsoft Learn",tags:["ia","cert"],free:false,u:"https://learn.microsoft.com/pt-br/credentials/certifications/azure-ai-fundamentals/",note:"Trilha grátis, prova paga. Já está no cronograma; a prova é opcional."},
+ {n:"DP-900 Azure Data Fundamentals",p:"Microsoft Learn",tags:["dados","cert"],free:false,u:"https://learn.microsoft.com/pt-br/credentials/certifications/azure-data-fundamentals/",note:"Fundamentos de bancos, nuvem e analytics. Boa depois da PL-300."},
+ {n:"DP-600 Fabric Analytics Engineer",p:"Microsoft Learn",tags:["dados","cert"],free:false,u:"https://learn.microsoft.com/pt-br/credentials/",note:"Meta para 2028, já como analista júnior. Confira o nome e o código atuais no site."},
+ {n:"Google Data Analytics",p:"Coursera",tags:["dados","cert"],free:false,u:"https://www.coursera.org/professional-certificates/google-data-analytics",note:"Certificado conhecido por recrutadores. Pago, mas a Coursera oferece auxílio financeiro."},
+ {n:"Kaggle Learn: Data Visualization e Intro to ML",p:"Kaggle",tags:["dados","ia"],free:true,u:"https://www.kaggle.com/learn",note:"Curtos, práticos e com certificado de conclusão."},
+ {n:"Catálogo da ENAP: ciência de dados, governança de dados e IA",p:"Escola Virtual.Gov",tags:["gov","dados","ia"],free:true,u:"https://www.escolavirtual.gov.br/",note:"Você já tem 5 certificados lá. Procure 'dados', 'governança' e 'inteligência artificial'."},
+ {n:"Fundação Bradesco: Excel avançado e introdução à IA",p:"Escola Virtual Fundação Bradesco",tags:["dados","ia"],free:true,u:"https://www.ev.org.br/",note:"Certificados gratuitos em português."},
+ {n:"Bootcamps DIO (Power BI, IA, dados)",p:"DIO",tags:["dados","ia"],free:true,u:"https://www.dio.me/",note:"Gratuitos com projetos práticos. Escolha um e termine."},
+ {n:"Udemy: IA generativa para análise de dados",p:"Udemy (seu plano)",tags:["ia"],free:false,u:"https://www.udemy.com/",note:"Escolha um com nota 4,5+ e atualizado em 2026. Confira se está na sua assinatura."},
+ {n:"Udemy: Statistics for Data Science and Business Analysis",p:"365 Careers · Udemy",tags:["dados"],free:false,u:"https://www.udemy.com/",note:"Alternativa ao Khan Academy para a parte de estatística."},
+ {n:"Fundamentos de Scrum e métodos ágeis",p:"Scrum.org (avaliação aberta) / ENAP",tags:["gestao"],free:true,u:"https://www.scrum.org/open-assessments",note:"Times de dados trabalham em sprints. Ajuda em entrevistas e na futura liderança."},
+ {n:"Liderança e gestão de equipes",p:"ENAP / Fundação Bradesco",tags:["gestao","gov"],free:true,u:"https://www.escolavirtual.gov.br/",note:"Para mais tarde, rumo a Coordenador. Comece por cursos curtos."}
+];
+const CTAGS={ia:"IA",dados:"Dados",cert:"Certificação",gestao:"Gestão",gov:"Governo"};
+
+/* ================= MOTOR DO CRONOGRAMA ================= */
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c);};
+const addD=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return iso(d);};
+const todayS=()=>iso(new Date());
+const WD=["dom","seg","ter","qua","qui","sex","sáb"];
+const MES=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+const fmt=s=>{const d=parse(s);return WD[d.getDay()]+", "+d.getDate()+" "+MES[d.getMonth()];};
+const fmtShort=s=>{const d=parse(s);return pad(d.getDate())+"/"+pad(d.getMonth()+1);};
+const diff=(a,b)=>Math.round((parse(b)-parse(a))/864e5);
+
+/* ================= v4: FLASHCARDS (revisão espaçada) ================= */
+/* d = baralho; liberado quando começa o curso ligado a ele (DECKS[d].c) ou quando você libera todos */
+const DECKS={
+ excel:{n:"Excel",c:["excel"]},
+ pq:{n:"Power Query",c:["excel","pbi"]},
+ sql:{n:"SQL",c:["sql","sqladv"]},
+ model:{n:"Modelagem",c:["model","pbi"]},
+ dax:{n:"DAX",c:["dax","pbi"]},
+ pbi:{n:"Power BI Service",c:["pbi","pl300"]},
+ py:{n:"Python e estatística",c:["py","stats"]},
+ ia:{n:"IA e carreira",c:["ia1","copilot"]}
+};
+const CARDS=[
+ ["excel","Diferença entre PROCV e PROCX?","PROCX procura em qualquer direção, devolve várias colunas, tem valor padrão para 'não encontrado' e busca exata por padrão. PROCV só olha para a direita e depende do número da coluna."],
+ ["excel","Para que serve SOMASES?","Somar um intervalo aplicando vários critérios ao mesmo tempo. Ex.: =SOMASES(Valor;Setor;\"Compras\";Mês;3)."],
+ ["excel","Referência absoluta x relativa","$A$1 não muda ao copiar a fórmula; A1 muda. $A1 trava só a coluna; A$1 trava só a linha."],
+ ["excel","Por que formatar os dados como Tabela (Ctrl+Alt+T)?","A tabela cresce sozinha, as fórmulas usam nomes de colunas e o Power Query e as tabelas dinâmicas leem o intervalo certo sempre."],
+ ["excel","ÍNDICE + CORRESP faz o quê?","CORRESP acha a posição do valor; ÍNDICE devolve o valor daquela posição em outra coluna. Funciona para a esquerda e é mais leve que PROCV em bases grandes."],
+ ["excel","Quando usar tabela dinâmica?","Para resumir milhares de linhas por categoria (soma, contagem, média) sem fórmulas, e mudar a visão arrastando campos."],
+ ["pq","O que é o Power Query?","Ferramenta de ETL do Excel e do Power BI: conecta a fontes, limpa e transforma os dados em passos gravados, que se repetem sozinhos a cada atualização."],
+ ["pq","Mesclar x Acrescentar consultas","Mesclar junta colunas de duas tabelas por uma chave (como um JOIN). Acrescentar empilha linhas de tabelas com a mesma estrutura (como UNION)."],
+ ["pq","O que faz 'Transformar colunas em linhas' (unpivot)?","Converte colunas de meses (jan, fev, mar…) em duas colunas: Atributo e Valor. Deixa a tabela no formato longo, que o Power BI modela melhor."],
+ ["pq","Referência x Duplicar consulta","Referência cria uma consulta que parte do resultado da outra (mudanças na original propagam). Duplicar copia todos os passos e fica independente."],
+ ["pq","Por que definir o tipo de dado cedo?","Tipos errados (texto em vez de número ou data) quebram somas, relacionamentos e inteligência de tempo. Defina logo após importar e confira de novo no fim."],
+ ["pq","O que é um parâmetro no Power Query?","Um valor reutilizável (caminho de pasta, data de corte, servidor) que alimenta as consultas. Trocar o parâmetro muda todas de uma vez."],
+ ["pq","Como tratar erros de importação?","Use Manter erros para ver as linhas problemáticas, corrija a origem ou o tipo, e use Substituir erros só quando souber o valor certo."],
+ ["sql","Ordem lógica de execução de um SELECT","FROM → JOIN → WHERE → GROUP BY → HAVING → SELECT → DISTINCT → ORDER BY → LIMIT. Por isso o WHERE não enxerga apelidos criados no SELECT."],
+ ["sql","WHERE x HAVING","WHERE filtra linhas antes de agrupar; HAVING filtra grupos depois do GROUP BY (ex.: HAVING COUNT(*) > 10)."],
+ ["sql","INNER JOIN x LEFT JOIN","INNER traz só o que casa nas duas tabelas. LEFT traz tudo da tabela da esquerda e NULL onde não houver par na direita."],
+ ["sql","Como achar registros sem par (ex.: setores sem documentos)?","LEFT JOIN e filtrar onde a chave da direita é nula: SELECT s.* FROM setor s LEFT JOIN doc d ON d.setor_id=s.id WHERE d.id IS NULL."],
+ ["sql","COUNT(*) x COUNT(coluna)","COUNT(*) conta todas as linhas; COUNT(coluna) ignora os NULL daquela coluna. COUNT(DISTINCT coluna) conta valores únicos."],
+ ["sql","Para que serve uma CTE (WITH)?","Nomear uma consulta intermediária e usá-la logo abaixo. Deixa consultas longas legíveis, em etapas."],
+ ["sql","O que faz ROW_NUMBER() OVER (PARTITION BY x ORDER BY y)?","Numera as linhas dentro de cada grupo x, na ordem de y. Serve para pegar o mais recente por grupo (filtrar rn = 1)."],
+ ["sql","Função de janela x GROUP BY","GROUP BY reduz as linhas a uma por grupo. Funções de janela (OVER) calculam por grupo mas mantêm todas as linhas."],
+ ["sql","Como somar acumulado no SQL?","SUM(valor) OVER (ORDER BY data ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)."],
+ ["sql","CASE WHEN serve para quê?","Criar categorias e regras dentro da consulta: CASE WHEN dias > 30 THEN 'Atrasado' ELSE 'No prazo' END."],
+ ["sql","Por que evitar SELECT * em produção?","Traz colunas desnecessárias, pesa na rede e quebra relatórios quando a tabela muda. Liste as colunas que você usa."],
+ ["sql","Chave primária x chave estrangeira","Primária identifica cada linha da tabela, sem repetir. Estrangeira aponta para a primária de outra tabela e garante o relacionamento."],
+ ["sql","UNION x UNION ALL","UNION remove duplicadas (mais lento); UNION ALL mantém todas as linhas. Use UNION ALL quando souber que não há repetição."],
+ ["model","O que é esquema estrela?","Uma tabela fato no centro (eventos com números) ligada a tabelas dimensão (quem, o quê, quando, onde). É o modelo recomendado no Power BI."],
+ ["model","Fato x dimensão","Fato tem muitas linhas, chaves e valores medidos (vendas, documentos). Dimensão tem poucas linhas e atributos descritivos (setor, produto, data)."],
+ ["model","Por que criar uma tabela de datas?","Para usar inteligência de tempo (acumulado, mês anterior), ter todos os dias sem buracos e filtrar várias tabelas pelo mesmo calendário. Marque como tabela de datas."],
+ ["model","Cardinalidade mais comum e recomendada","Um para muitos (1:*), da dimensão para a fato, com filtro em direção única."],
+ ["model","Quando evitar filtro bidirecional?","Quase sempre: cria ambiguidade e deixa o modelo lento. Use só em casos específicos (ex.: muitos para muitos com tabela ponte)."],
+ ["model","O que é uma dimensão com várias funções (role-playing)?","A mesma dimensão ligada mais de uma vez à fato, como Data do pedido e Data de entrega. Uma relação fica ativa; as outras se usam com USERELATIONSHIP."],
+ ["model","Coluna calculada x medida","Coluna calculada é gravada linha a linha na atualização e ocupa memória. Medida é calculada na hora, conforme os filtros do visual. Prefira medidas para números."],
+ ["model","Como reduzir o tamanho do modelo?","Remover colunas e linhas que não usa, diminuir a granularidade (mês em vez de segundo), evitar colunas de texto únicas e preferir tipos inteiros."],
+ ["dax","O que faz CALCULATE?","Avalia uma expressão mudando o contexto de filtro. Ex.: CALCULATE([Total], Setor[Nome]=\"Compras\")."],
+ ["dax","Contexto de linha x contexto de filtro","Linha: a linha atual numa coluna calculada ou iterador. Filtro: os filtros vindos de visuais, segmentações e CALCULATE."],
+ ["dax","SUM x SUMX","SUM soma uma coluna. SUMX percorre a tabela linha a linha calculando uma expressão (ex.: Qtd * Preço) e soma o resultado."],
+ ["dax","Para que serve DIVIDE?","Dividir sem erro quando o denominador é zero: DIVIDE([Atrasados],[Total]) devolve vazio (ou o valor alternativo) em vez de erro."],
+ ["dax","Como fazer acumulado do ano (YTD)?","TOTALYTD([Total], 'Data'[Data]) ou CALCULATE([Total], DATESYTD('Data'[Data])). Exige tabela de datas marcada."],
+ ["dax","Valor do mesmo período do ano anterior","CALCULATE([Total], SAMEPERIODLASTYEAR('Data'[Data]))."],
+ ["dax","O que faz ALL?","Remove filtros de uma tabela ou coluna. Usado para % do total: DIVIDE([Total], CALCULATE([Total], ALL(Setor)))."],
+ ["dax","ALL x ALLEXCEPT x REMOVEFILTERS","ALL tira os filtros da tabela/coluna; ALLEXCEPT tira todos menos os indicados; REMOVEFILTERS é o nome mais claro para tirar filtros dentro do CALCULATE."],
+ ["dax","Para que serve VAR em DAX?","Guardar um resultado intermediário: deixa a medida legível e calcula uma vez só. VAR x = … RETURN …"],
+ ["dax","O que é medida semi-aditiva?","Um valor que não se soma no tempo, como saldo ou estoque. Use LASTDATE/LASTNONBLANK para pegar o último valor do período."],
+ ["dax","FILTER dentro do CALCULATE: quando usar?","Quando o filtro depende de uma medida ou de uma condição complexa. Para filtros simples de coluna, a forma direta é mais rápida."],
+ ["dax","O que são grupos de cálculo?","Itens reutilizáveis (YTD, mês anterior, % do total) aplicados a qualquer medida, sem repetir a fórmula. Criados no modelo (Power BI Desktop ou Tabular Editor)."],
+ ["dax","Como achar uma medida lenta?","Use o Performance Analyzer no Power BI Desktop e copie a consulta para a visualização de consulta DAX para medir e testar alternativas."],
+ ["pbi","Import x DirectQuery x Direct Lake","Import copia os dados para o modelo (mais rápido, precisa atualizar). DirectQuery consulta a fonte a cada clique. Direct Lake lê arquivos Delta do Fabric sem importar."],
+ ["pbi","Quando é preciso um gateway?","Quando o Power BI Service precisa atualizar dados de uma fonte local (servidor ou pasta da rede) que não está na nuvem."],
+ ["pbi","O que é RLS (segurança em nível de linha)?","Regras DAX por função que limitam as linhas que cada usuário vê, como cada chefe ver só o próprio setor. Atribua pessoas ou grupos às funções no Service."],
+ ["pbi","Funções do workspace (do maior ao menor acesso)","Administrador, Membro, Colaborador e Visualizador."],
+ ["pbi","App x compartilhar relatório","App distribui um pacote de relatórios para muitos usuários, com navegação própria. Compartilhar um item é para casos pontuais."],
+ ["pbi","Dashboard x relatório no Power BI","Relatório tem várias páginas interativas a partir de um modelo. Dashboard é uma página do Service com blocos fixados de vários relatórios e alertas."],
+ ["pbi","Para que servem os indicadores (bookmarks)?","Guardar um estado da página (filtros, visuais visíveis) para criar navegação, botões de alternar visões e apresentações."],
+ ["pbi","O que é drill-through?","Clicar num item e ir para uma página de detalhe já filtrada por ele (ex.: do setor para a lista dos documentos do setor)."],
+ ["pbi","Rótulos de confidencialidade servem para quê?","Classificar o conteúdo (público, interno, confidencial) e manter a proteção quando exportado. Fazem parte da governança cobrada na PL-300."],
+ ["pbi","Atualização agendada: o que configurar?","Credenciais da fonte, gateway (se local), frequência e fuso horário, e e-mail de falha. No Pro, até 8 atualizações por dia."],
+ ["py","pandas: como ler um CSV e ver o começo?","import pandas as pd; df = pd.read_csv('arquivo.csv', sep=';'); df.head()"],
+ ["py","pandas: agrupar e somar","df.groupby('setor')['valor'].sum().sort_values(ascending=False)"],
+ ["py","Média x mediana: qual usar com valores extremos?","Mediana. Ela não é puxada por poucos valores muito altos ou muito baixos (como salários ou prazos atípicos)."],
+ ["py","O que é desvio padrão?","Medida de quanto os valores se afastam da média. Baixo: dados parecidos. Alto: dados espalhados."],
+ ["py","Correlação implica causa?","Não. Duas variáveis podem andar juntas por coincidência ou por um terceiro fator. Para falar em causa é preciso experimento ou análise específica."],
+ ["py","O que é um outlier e como achar?","Valor muito fora do padrão. Regra comum: abaixo de Q1 − 1,5×IQR ou acima de Q3 + 1,5×IQR (boxplot)."],
+ ["ia","O que é um prompt bom para análise de dados?","Contexto (quem é o público), tarefa clara, dados ou estrutura das tabelas, formato da resposta e restrições. Ex.: 'Explique esta medida DAX para um gestor, em 3 frases'."],
+ ["ia","Onde o Copilot entra no Power BI?","Criar páginas de relatório, sugerir conteúdo, escrever narrativas e resumir o modelo semântico. Desde 2025 isso aparece na PL-300."],
+ ["ia","Cuidado número 1 ao usar IA com dados","Não colar dados pessoais ou internos em ferramentas públicas (LGPD). Use dados fictícios ou anonimizados e confira as respostas."],
+ ["ia","Como contar a sua história de transição numa entrevista?","Situação (8 anos de gestão administrativa na FAB), o que você fez com dados lá (controles, relatórios), o que estudou e construiu (projetos), e por que BI agora. Em 1 minuto."],
+ ["ia","Método STAR para perguntas comportamentais","Situação, Tarefa, Ação e Resultado. Sempre termine com um número ou efeito concreto."],
+ ["ia","O que um recrutador de BI Júnior mais quer ver?","SQL e Power BI na prática (projetos com README), comunicação clara de resultados e vontade de aprender. Certificação ajuda a passar na triagem."]
+];
+CARDS.forEach((c,i)=>{c.id="k"+i;});
+
+/* ================= v4: HABILIDADES DA PL-300 (guia oficial de 20/04/2026) ================= */
+const SKILLS=[
+ {id:"prep",n:"Preparar os dados",w:27.5,g:[
+  ["Obter ou conectar aos dados",["Conectar a fontes de dados ou a um modelo semântico compartilhado","Alterar configurações da fonte: credenciais e níveis de privacidade","Escolher entre Direct Lake, DirectQuery e Import","Criar e modificar parâmetros"]],
+  ["Perfilar e limpar",["Avaliar os dados: estatísticas e propriedades das colunas","Resolver inconsistências, nulos e problemas de qualidade","Resolver erros de importação"]],
+  ["Transformar e carregar",["Escolher os tipos de dados das colunas","Criar e transformar colunas","Agrupar e agregar linhas","Dinamizar, transformar colunas em linhas e transpor","Converter dados semiestruturados em tabela","Criar tabelas fato e dimensão","Saber quando usar consulta de referência ou duplicada","Mesclar e acrescentar consultas","Criar chaves adequadas para relacionamentos","Configurar o carregamento das consultas"]]]},
+ {id:"mod",n:"Modelar os dados",w:27.5,g:[
+  ["Projetar o modelo",["Configurar propriedades de tabelas e colunas","Implementar dimensões com várias funções (role-playing)","Definir cardinalidade e direção do filtro cruzado","Criar uma tabela de datas comum","Saber quando usar colunas e tabelas calculadas"]],
+  ["Cálculos com DAX",["Medidas de agregação simples","Usar CALCULATE","Medidas de inteligência de tempo","Funções estatísticas básicas","Medidas semiaditivas","Medidas rápidas","Tabelas ou colunas calculadas","Grupos de cálculo"]],
+  ["Otimizar o desempenho",["Remover linhas e colunas desnecessárias","Achar medidas, relações e visuais lentos (Performance Analyzer e consulta DAX)","Reduzir a granularidade"]]]},
+ {id:"vis",n:"Visualizar e analisar",w:27.5,g:[
+  ["Criar relatórios",["Escolher o visual adequado","Formatar e configurar visuais","Criar visual de narrativa com Copilot","Aplicar e personalizar tema","Formatação condicional","Segmentação e filtros","Criar página de relatório com Copilot","Pedir sugestões de conteúdo ao Copilot","Configurar a página do relatório","Saber quando usar relatório paginado","Cálculos visuais com DAX"]],
+  ["Usabilidade e storytelling",["Indicadores (bookmarks)","Dicas de ferramenta personalizadas","Interações entre visuais","Navegação do relatório","Classificação nos visuais","Sincronizar segmentações","Agrupar e organizar camadas no painel Seleção","Drill-through com páginas, filtros e botões","Configurações de exportação","Layout para celular","Personalização de visuais","Acessibilidade","Atualização automática de página"]],
+  ["Padrões e tendências",["Recurso Analisar","Agrupamento, compartimentalização e clusterização","Visuais de IA","Linhas de referência, barras de erro e previsão","Detectar outliers e anomalias","Resumir o modelo semântico com Copilot"]]]},
+ {id:"man",n:"Gerenciar e proteger",w:17.5,g:[
+  ["Workspaces e itens",["Criar e configurar workspace","Configurar e atualizar um app","Publicar, importar e atualizar itens","Criar dashboards","Escolher a forma de distribuição","Assinaturas e alertas de dados","Promover ou certificar conteúdo","Saber quando precisa de gateway","Agendar atualização do modelo semântico"]],
+  ["Segurança e governança",["Atribuir funções do workspace","Acesso por item","Acesso a modelos semânticos","Criar funções de RLS","Associar grupos às funções de RLS","Aplicar rótulos de confidencialidade"]]]}
+];
+SKILLS.forEach(d=>d.g.forEach((g,gi)=>{g.items=g[1].map((t,i)=>({id:d.id+gi+"_"+i,t}));}));
+const SK_ALL=SKILLS.flatMap(d=>d.g.flatMap(g=>g.items));
+const SK_LV=["Não vi","Estudei","Domino"];
+
+/* ================= v4: CANDIDATURAS ================= */
+const ETAPAS=[["env","Enviada"],["tri","Triagem / RH"],["tec","Teste técnico"],["ent","Entrevista"],["fin","Entrevista final"],["prop","Proposta"],["nao","Não seguiu"],["sem","Sem retorno"]];
+const ETAPA_N=Object.fromEntries(ETAPAS);
+const FONTES=["LinkedIn","Gupy","Indicação","Site da empresa","Catho / Indeed","Outra"];
+
+const MAINQ=[];COURSES.forEach(c=>{c.s.forEach((t,i)=>MAINQ.push({id:"c:"+c.id+":"+i,k:"curso",t:c.n+" · "+t,m:75,c:c.id,d:c.src,u:c.u}));if(c.exam)MAINQ.push({id:"c:"+c.id+":exam",k:"marco",t:c.exam,m:150,c:c.id,d:"Agende com 2 semanas de antecedência, de preferência num horário em que você rende bem. Faça em casa (online) ou num centro de provas.",u:c.u});});
+const PROJQ=[];PROJECTS.forEach(p=>p.s.forEach((t,i)=>PROJQ.push({id:"p:"+p.id+":"+i,k:"projeto",t:p.n+" · "+t,m:90,p:p.id,d:"Repositório: "+p.repo+". Fonte: "+p.src+".",u:p.u})));
+const BRANDQ=BRAND.map(b=>({id:"b:"+b.id,k:"marca",t:b.t,m:30,d:b.d}));
+const MS={
+ "2026-12-07":["Início do plano: defina seus horários fixos de estudo e leia a aba Hoje","Escolha 4 noites e o sábado de manhã. Bloqueie na agenda do celular."],
+ "2027-01-11":["Conferir se saiu o resultado da Transpetro","Se aprovado, siga estudando normalmente: a convocação pode levar meses."],
+ "2027-02-01":["Conferir o resultado ou a convocação da Transpetro",""],
+ "2027-06-30":["Checkpoint: meta otimista da primeira vaga","Se ainda não houve entrevistas, revise currículo e portfólio antes de enviar mais."],
+ "2027-07-31":["Checkpoint: revisar estratégia de candidatura","Sem entrevistas? O problema é currículo ou portfólio. Peça revisão a alguém da área."],
+ "2027-09-30":["Checkpoint final: revisar o plano para a fase Júnior","Abra o plano mestre e ajuste as metas de 2027–2029."]
+};
+function msBaixa(){const o={};
+ o[addD(BAIXA,-2)]=["Pedir documentos de saída: certidão de tempo de serviço e alterações","Leve para casa cópias de certificados de cursos militares e da referência elogiosa."];
+ o[BAIXA]=["Último dia de serviço previsto (confirme a data)","A partir de amanhã você pode trabalhar, estagiar e fazer freelas."];
+ o[CIVIL]=["Primeiro dia civil: mudar o LinkedIn para disponibilidade imediata","Atualize título, Open to Work e a linha de topo do currículo. Confira também a Transpetro."];
+ return o;}
+const EXTRA_MAIN=["Sessão de curso extra (aba Cursos → Meus cursos ou Catálogo)","Desafio de DAX: recrie 3 medidas de um projeto sem consultar","Estudar uma vaga real e listar o que falta aprender","Sessão de curso extra (aba Cursos → Meus cursos ou Catálogo)","Refazer um visual de um projeto para ficar mais claro"];
+const ENG_C="Inglês 30 min: uma lição (Duolingo, Cambly ou BBC Learning English) e 1 artigo técnico de dados em inglês";
+const SQLP_C="Desafio SQL 20 min (sql-practice.com, HackerRank SQL ou LeetCode SQL 50)";
+
+/* o.rp (Reorganizar): a partir dessa data, as filas de cursos, projetos e perfil recomeçam pelo
+   que ainda não foi feito; o que estava atrasado sai dos dias passados e vem para a frente. */
+const HARD_END="2027-12-31";
+function build(o){
+ const S={}, IDX={}, MB=msBaixa(); let mi=0,pi=0,bi=0,po=0,xm=0,sqlOn=false;
+ const rp=o.rp&&o.rp>START&&o.rp<=HARD_END?o.rp:null, D0=(typeof ST!=="undefined"&&ST.done)||{};
+ const keep=id=>D0[id]&&D0[id]<rp;
+ let mQ=MAINQ,pQ=PROJQ,bQ=BRANDQ;
+ const push=(arr,t,s)=>{arr.push(t);IDX[t.id]=Object.assign({date:s},t);};
+ for(let s=START;s<=END||(rp&&s<=HARD_END&&(mi<mQ.length||pi<pQ.length||bi<bQ.length));s=addD(s,1)){
+  if(rp&&s===rp){mQ=MAINQ.filter(q=>!keep(q.id));pQ=PROJQ.filter(q=>!keep(q.id));bQ=BRANDQ.filter(q=>!keep(q.id));mi=pi=bi=0;}
+  const d=parse(s), wd=d.getDay(), civ=s>=CIVIL, f0=s<"2027-01-04", T=[];
+  const main=()=>{ if(mi<mQ.length){const q=mQ[mi++]; if(q.c==="sql")sqlOn=true; push(T,q,s);} else push(T,{id:"x:"+s+":m",k:"curso",t:EXTRA_MAIN[(xm++)%EXTRA_MAIN.length],m:75,d:"A fila de cursos do plano terminou. Use este horário para aprofundar ou fazer um curso da sua lista."},s); };
+  const proj=()=>{ if(pi<pQ.length) push(T,pQ[pi++],s); else push(T,{id:"x:"+s+":p",k:"projeto",t:"Melhorar um projeto publicado (visual, README ou nova análise)",m:90,d:"Projetos vivos mostram evolução. Faça um commit por melhoria."},s); };
+  const brand=()=>{ if(bi<bQ.length) push(T,bQ[bi++],s); };
+  const eng=()=>o.eng&&push(T,{id:"r:"+s+":en",k:"ingles",t:ENG_C,m:30},s);
+  const sqlp=()=>{ if(sqlOn&&o.sql) push(T,{id:"r:"+s+":sq",k:"pratica",t:SQLP_C,m:20},s); };
+  const rev=()=>push(T,{id:"r:"+s+":rv",k:"rev",t:"Revisão da semana e plano da próxima",m:20,d:"Veja o que ficou pendente na aba Agenda, anote 3 coisas que aprendeu e confira os horários da semana."},s);
+  const post=()=>{if(!o.post)return;const p=POSTS[(po++)%POSTS.length];push(T,{id:"r:"+s+":po",k:"marca",t:"Post no LinkedIn: "+p,m:40,d:"Curto (até 1.300 caracteres), com um print ou gráfico seu e uma pergunta no fim. Responda os comentários no mesmo dia."},s);};
+  const cand=n=>push(T,{id:"r:"+s+":ca",k:"cand",t:n+" candidaturas personalizadas e registro na planilha",m:n>=5?60:45,d:"Ajuste o resumo do currículo às palavras da vaga. Alterne vagas de BI/Dados Júnior e vagas híbridas (administrativo, planejamento, controladoria com Power BI)."},s);
+  if(MS[s]) push(T,{id:"m:"+s,k:"marco",t:MS[s][0],m:15,d:MS[s][1]},s);
+  if(MB[s]) push(T,{id:"m:b"+(s===BAIXA?"0":s<BAIXA?"1":"2"),k:"marco",t:MB[s][0],m:15,d:MB[s][1]},s);
+  if(d.getDate()===1&&s>START) push(T,{id:"r:"+s+":mo",k:"rev",t:"Revisão do mês: atualizar currículo e LinkedIn com o que concluiu",m:30,d:"Acrescente cursos, projetos e números novos. Veja na aba Progresso se o ritmo está em dia."},s);
+  if(OFF.has(s)){ if(!T.length) T.push({id:"o:"+s,k:"folga",t:"Folga",m:0}); S[s]=T; continue; }
+  if(!civ){
+   if(wd>=1&&wd<=4){ main(); if(wd===2||wd===4) eng(); if(wd===1||wd===3) sqlp(); }
+   else if(wd===5){ if(!f0) eng(); brand(); }
+   else if(wd===6){ main(); proj(); if(!f0) proj(); if(!f0) eng(); }
+   else { rev(); brand(); if(s>="2027-01-10") post(); }
+   if(s>="2027-02-15"&&(wd===1||wd===4)) cand(5);
+  } else {
+   if(wd>=1&&wd<=5){ main(); if(wd%2===1) proj(); eng(); cand(3); if(wd===2||wd===4) sqlp(); if(wd===3) post(); if(wd===2) brand(); if(wd===5&&s>="2027-06-01") push(T,{id:"r:"+s+":nw",k:"cand",t:"Networking: uma conversa de 15 min com alguém da área",m:30,d:"Peça para entender a rotina, não emprego. Agradeça e mantenha contato."},s); }
+   else if(wd===6){ proj(); }
+   else rev();
+  }
+  if(!T.length) T.push({id:"o:"+s,k:"folga",t:"Folga",m:0});
+  S[s]=T;
+ }
+ if(rp){
+  for(const s in S){ if(s>=rp) continue; const T=S[s].filter(t=>t.k==="folga"||!IDX[t.id]||IDX[t.id].date===s); S[s]=T.length?T:[{id:"o:"+s,k:"folga",t:"Folga",m:0}]; }
+  /* feito antes da reorganização mas planejado para depois: fica no dia em que foi feito */
+  MAINQ.concat(PROJQ,BRANDQ).forEach(q=>{ if(!IDX[q.id]&&D0[q.id]&&S[D0[q.id]]){ const T=S[D0[q.id]].filter(t=>t.k!=="folga"); T.push(q); IDX[q.id]=Object.assign({date:D0[q.id]},q); S[D0[q.id]]=T; } });
+ }
+ return {S,IDX};
+}
+let SCHED={},IDX={},TOTAL_TASKS=0,TCACHE={};
+function cfg(){return Object.assign({},DEF_CFG,(typeof ST!=="undefined"&&ST.cfg)||{});}
+function rebuild(){const c=cfg(); BAIXA=c.baixa; CIVIL=addD(BAIXA,1); PHASES[1].b=BAIXA; PHASES[2].a=CIVIL; const r=build(c); SCHED=r.S; IDX=r.IDX; TOTAL_TASKS=Object.keys(IDX).length; TCACHE={};}
+
+/* ================= ESTADO ================= */
+const KEY="carreira27";
+let ST={done:{},custom:[],upd:0};
+try{const r=localStorage.getItem(KEY);if(r)ST=Object.assign(ST,JSON.parse(r));}catch(e){}
+rebuild();
+function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}}
+const SYNC={db:null,uid:null,st:"",at:null,t:null};
+function changed(){ST.upd=Date.now();saveLocal();clearTimeout(SYNC.t);SYNC.t=setTimeout(syncPush,600);if(typeof clKick==='function')clKick();if(typeof pushKick==='function')pushKick();}
+async function syncPush(){ if(!SYNC.db||!SYNC.uid) return; try{await SYNC.db.doc("data/users/"+SYNC.uid+"/carreira").set(JSON.parse(JSON.stringify(ST)));SYNC.st="ok";SYNC.at=new Date();}catch(e){SYNC.st="err";} syncLbl(); }
+setTimeout(async()=>{
+ try{
+  if(!window.claude||!window.claude.use){syncLbl();return;}
+  const [db,user]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
+  if(!db||!user){syncLbl();return;}
+  const uid=await user.id(); if(!uid){syncLbl();return;}
+  SYNC.db=db;SYNC.uid=uid; let first=true;
+  db.doc("data/users/"+uid+"/carreira").onSnapshot(snap=>{
+   if(snap.metadata&&snap.metadata.hasPendingWrites) return;
+   if(snap.exists){const d=snap.data()||{}; if((d.upd||0)>(ST.upd||0)){ST=Object.assign({done:{},custom:[],upd:0},JSON.parse(JSON.stringify(d)));saveLocal();rebuild();rerenderKeep();clKick();} else if(first&&(ST.upd||0)>(d.upd||0)) syncPush(); SYNC.st="ok";SYNC.at=new Date();}
+   else{if(first&&ST.upd) syncPush(); SYNC.st="ok";SYNC.at=new Date();}
+   first=false; syncLbl();
+  },()=>{SYNC.st="err";syncLbl();});
+ }catch(e){SYNC.st="err";syncLbl();}
+},0);
+
+/* ================= UTIL ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let toastT;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),2600);}
+async function copyText(txt,btn){try{await navigator.clipboard.writeText(txt);toast("Texto copiado.");}catch(e){const pre=btn&&btn.closest(".stack")&&btn.closest(".stack").querySelector(".copybox");if(pre){const r=document.createRange();r.selectNodeContents(pre);const sel=getSelection();sel.removeAllRanges();sel.addRange(r);}toast("Selecione e copie o texto.");}}
+/* ================= SINCRONIZAÇÃO POR CÓDIGO (igual ao app da Transpetro) ================= */
+/* O progresso fica na mesma nuvem do Supabase do app da Transpetro (funções tp_get / tp_save / tp_ver),
+   com um código próprio "cd-…". tp_save só grava se a nuvem ainda estiver na versão que este aparelho
+   conhecia (p_base); senão o app baixa, junta e envia de novo. No GitHub a chamada é direta; no claude.ai,
+   se a página não puder acessar a internet, usa o conector Supabase da conta do Claude. */
+const SB_URL="https://xpfcmehgdfruhnveslmj.supabase.co", SB_KEY="sb_publishable_Bgf_LtyuT9ABzExDTuAyQg_krQ9yy9R", SB_REF="xpfcmehgdfruhnveslmj";
+const GH_URL="https://pedro1105.github.io/carreira-dados/";
+const CK=KEY+"-cloud", CSNAP=KEY+"-cloudsnap";
+const IN_CLAUDE=!!(window.claude&&window.claude.use);
+const IS_PWA=location.protocol==="https:"&&/github\.io$/.test(location.hostname);
+const CL={code:null,base:0,st:"off",at:null,t:null,busy:false,via:"fetch",mcp:null,err:"",perm:null};
+try{const o=JSON.parse(localStorage.getItem(CK)||"{}");CL.code=o.code||null;CL.base=o.base||0;}catch(e){}
+if(!CL.code&&ST.cloud) CL.code=ST.cloud;
+function clStore(){try{localStorage.setItem(CK,JSON.stringify({code:CL.code,base:CL.base}));}catch(e){}}
+function clSnap(st){try{if(st)localStorage.setItem(CSNAP,JSON.stringify(st));else localStorage.removeItem(CSNAP);}catch(e){}}
+function clGetSnap(){try{return JSON.parse(localStorage.getItem(CSNAP)||"null");}catch(e){return null;}}
+function newCode(){const a="abcdefghjkmnpqrstuvwxyz23456789",r=crypto.getRandomValues(new Uint8Array(24));let s="";r.forEach((x,i)=>{if(i&&i%4===0)s+="-";s+=a[x%a.length];});return "cd-"+s;}
+const codeOk=c=>/^cd-[a-z0-9]{4}(-[a-z0-9]{4}){5}$/.test(c||"");
+const clErr=e=>e.message==="needmcp"?"needmcp":(e.message==="server_not_connected"||e.message==="needs_reauth")?"noconn":"err";
+
+async function mcpReady(ask){
+ if(!IN_CLAUDE) return false;
+ if(CL.mcp) return true;
+ try{
+  const perm=await window.claude.use("permissions"), K="mcp:Supabase";
+  let st=perm?await perm.state(K).catch(()=>"unavailable"):"prompt";
+  if(st==="prompt"&&ask){const r=await perm.request([K]).catch(()=>null);if(r&&r[K])st=r[K];}
+  CL.perm=st;
+  if(st==="denied"||st==="unavailable") return false;
+  CL.mcp=await window.claude.use("mcp"); return !!CL.mcp;
+ }catch(e){return false;}
+}
+async function rpcMcp(fn,args){
+ const tag="$cd"+Math.random().toString(36).slice(2,8)+"$";
+ const lit=v=>typeof v==="number"?String(Math.round(v)):tag+String(v).split(tag).join("")+tag;
+ const params=fn!=="tp_save"?[lit(args.p_code)]:[lit(args.p_code),lit(args.p_s),lit(args.p_upd),lit(args.p_base)];
+ let res;
+ try{res=await CL.mcp.callTool("Supabase","execute_sql",{project_id:SB_REF,query:"select public."+fn+"("+params.join(",")+")::text as r"},{cache:false});}
+ catch(e){const c=e&&e.code||"";if(["consent_required","denied","not_granted"].includes(c)){CL.perm="denied";throw new Error("needmcp");}
+  if(c==="server_not_connected"||c==="needs_reauth") throw new Error(c); throw new Error(c||String(e&&e.message||e));}
+ let p=res&&res.payload; if(p&&typeof p==="object"&&p.result) p=p.result; if(typeof p!=="string") p=JSON.stringify(p);
+ const m=/<untrusted-data[^>]*>\s*([\s\S]*?)\s*<\/untrusted-data/.exec(p); const arr=JSON.parse(m?m[1]:p);
+ const r=Array.isArray(arr)&&arr[0]?arr[0].r:null; return r?JSON.parse(r):null;
+}
+async function rpc(fn,args,ask){
+ if(CL.via==="fetch"){
+  try{
+   const r=await fetch(SB_URL+"/rest/v1/rpc/"+fn,{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify(args)});
+   if(!r.ok) throw new Error("HTTP "+r.status);
+   const t=await r.text(); return t&&t!=="null"?JSON.parse(t):null;
+  }catch(e){ if(!IN_CLAUDE||!navigator.onLine) throw e; CL.via="mcp"; }
+ }
+ if(!(await mcpReady(ask))) throw new Error("needmcp");
+ return rpcMcp(fn,args);
+}
+
+/* Junta dois progressos. base = última versão sincronizada: uma tarefa desmarcada de um lado só some
+   se o outro lado não mexeu nela. Sem base, vale a união. Cursos cadastrados se juntam pelo nome e
+   ficam com o maior número de aulas feitas; ajustes e o resto vêm do lado mais recente. */
+/* Junta dois progressos. base = última versão sincronizada: algo apagado num lado (tarefa desmarcada,
+   candidatura ou anotação excluída) só some se o outro lado não tinha mudado aquilo. Sem base, vale a união.
+   Em conflito no mesmo item, fica o mais recente. */
+function mmap(A,B,Z,pick){ A=A||{};B=B||{}; const o={}; new Set([...Object.keys(A),...Object.keys(B)]).forEach(k=>{ const x=A[k],y=B[k]; if(Z&&Z[k]!==undefined&&(x===undefined||y===undefined)){ const z=JSON.stringify(Z[k]), other=x===undefined?y:x; if(JSON.stringify(other)===z) return; o[k]=other; return; } o[k]=x===undefined?y:y===undefined?x:pick(x,y); }); return o; }
+function mergeST(a,b,base){
+ const newer=(a.upd||0)>=(b.upd||0)?a:b, older=newer===a?b:a, o=Object.assign({},newer), Z=base||{};
+ o.done=mmap(a.done,b.done,base&&Z.done||null,(x,y)=>x<y?x:y);
+ const nk=c=>String(c.n||"").trim().toLowerCase(), has=(l,k)=>(l||[]).some(c=>nk(c)===k), zc=base&&base.custom, cm={};
+ [...(older.custom||[]),...(newer.custom||[])].forEach(c=>{const k=nk(c);if(zc&&has(zc,k)&&(!has(a.custom,k)||!has(b.custom,k)))return;const p=cm[k];cm[k]=p?Object.assign({},c,{done:Math.max(p.done||0,c.done||0)}):c;});
+ o.custom=Object.values(cm);
+ o.cfg=Object.assign({},older.cfg||{},newer.cfg||{});
+ o.log=mmap(a.log,b.log,null,(x,y)=>Math.max(x,y));
+ o.rv=mmap(a.rv,b.rv,null,(x,y)=>Math.max(x,y));
+ o.srs=mmap(a.srs,b.srs,null,(x,y)=>(x.l||"")>(y.l||"")?x:(y.l||"")>(x.l||"")?y:(newer===a?x:y));
+ o.sk=mmap(a.sk,b.sk,null,(x,y)=>(x.t||0)>=(y.t||0)?x:y);
+ o.apps=mmap(a.apps,b.apps,base&&Z.apps||null,(x,y)=>(x.u||0)>=(y.u||0)?x:y);
+ o.diary=mmap(a.diary,b.diary,base&&Z.diary||null,(x,y)=>(x.u||0)>=(y.u||0)?x:y);
+ return o;
+}
+const hasProgress=st=>!!st&&["done","srs","apps","diary","sk","log"].some(k=>Object.keys(st[k]||{}).length>0)||!!st&&(st.custom||[]).length>0;
+function clAdopt(st,upd){
+ ST=Object.assign({done:{},custom:[],upd:0},st); ST.upd=upd; ST.cloud=CL.code;
+ saveLocal(); rebuild(); syncPush(); rerenderKeep();
+}
+async function clPush(){
+ if(!CL.code||CL.busy) return;
+ CL.busy=true;
+ try{
+  ST.cloud=CL.code; const upd=ST.upd||Date.now(), body=JSON.stringify(ST);
+  const r=await rpc("tp_save",{p_code:CL.code,p_s:body,p_upd:upd,p_base:CL.base||0});
+  if(r&&r.ok===false){CL.busy=false;return clPull();}
+  CL.base=upd; clStore(); clSnap(JSON.parse(body)); CL.st="ok"; CL.at=new Date(); CL.err="";
+ }catch(e){CL.st=clErr(e);CL.err=String(e.message||e);}
+ CL.busy=false; syncLbl();
+}
+async function clPull(){
+ if(!CL.code&&ST.cloud) CL.code=ST.cloud;
+ if(!CL.code||CL.busy) return;
+ CL.busy=true; let then=null;
+ try{
+  const r=await rpc("tp_get",{p_code:CL.code});
+  const lu=ST.upd||0;
+  if(!r){then="push";}
+  else if(!CL.base){
+   const remote=JSON.parse(r.s);
+   if(hasProgress(ST)&&hasProgress(remote)&&lu!==r.upd){clAdopt(mergeST(ST,remote,null),Math.max(Date.now(),r.upd+1));CL.base=r.upd;then="push";}
+   else if(lu>r.upd&&hasProgress(ST)){CL.base=r.upd;then="push";}
+   else{clAdopt(remote,r.upd);CL.base=r.upd;clStore();clSnap(remote);}
+  }
+  else if(r.upd===CL.base){if(lu>CL.base) then="push";}
+  else if(r.upd>CL.base){
+   const remote=JSON.parse(r.s);
+   if(lu>CL.base){clAdopt(mergeST(ST,remote,clGetSnap()),Math.max(Date.now(),r.upd+1));CL.base=r.upd;then="push";}
+   else{clAdopt(remote,r.upd);CL.base=r.upd;clStore();clSnap(remote);}
+  }else then="push";
+  CL.st="ok"; CL.at=new Date(); CL.err="";
+ }catch(e){CL.st=clErr(e);CL.err=String(e.message||e);}
+ CL.busy=false; syncLbl();
+ if(then==="push") clPush();
+}
+function clKick(){if(!CL.code&&ST.cloud){CL.code=ST.cloud;clStore();}if(!CL.code) return;clearTimeout(CL.t);CL.t=setTimeout(CL.base?clPush:clPull,1500);}
+/* quase ao vivo: a cada 15 s (60 s pelo conector do Claude) pergunta só a versão da nuvem */
+async function clCheck(){
+ if(!CL.code&&ST.cloud){CL.code=ST.cloud;clStore();}
+ if(!CL.code||CL.busy||document.visibilityState!=="visible") return;
+ if(CL.via==="mcp"&&Date.now()-(CL.lastMcp||0)<55000) return;
+ if(CL.via==="mcp") CL.lastMcp=Date.now();
+ try{const v=await rpc("tp_ver",{p_code:CL.code});if(v!==CL.base||(ST.upd||0)>CL.base) clPull();else if(CL.st!=="ok"){CL.st="ok";CL.at=new Date();syncLbl();}}
+ catch(e){CL.st=clErr(e);CL.err=String(e.message||e);syncLbl();}
+}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible") clPull();else if(CL.code&&CL.base&&(ST.upd||0)>CL.base){clearTimeout(CL.t);clPush();}});
+window.addEventListener("online",()=>clPull());
+setInterval(clCheck,15000);
+async function clLink(code,ask){
+ code=String(code||"").trim().toLowerCase();
+ if(!codeOk(code)){toast("Código inválido. Copie inteiro, no formato cd-xxxx-xxxx-…");return;}
+ CL.code=code; CL.base=0; clStore(); syncLbl();
+ let r=null;
+ try{r=await rpc("tp_get",{p_code:code},ask);}catch(e){CL.st=clErr(e);syncLbl();toast("Sem conexão agora. O código ficou guardado e a sincronização tenta de novo sozinha.");return;}
+ if(!r){ST.cloud=code;changed();toast("Sincronização ativada.");return;}
+ const remote=JSON.parse(r.s);
+ if(!hasProgress(ST)){clAdopt(remote,r.upd);CL.base=r.upd;clStore();clSnap(remote);}
+ else{clAdopt(mergeST(ST,remote,null),Math.max(Date.now(),r.upd+1));CL.base=r.upd;clStore();await clPush();}
+ CL.st="ok";CL.at=new Date();syncLbl();
+ toast("Aparelho conectado. O progresso agora é o mesmo nos aparelhos conectados.");
+}
+async function clAllow(){CL.via="mcp";if(CL.perm==="denied"){try{const perm=await window.claude.use("permissions");await perm.manage();}catch(e){toast("Abra o menu Permissões desta página e ligue o conector Supabase.");}CL.perm=null;}
+ if(await mcpReady(true)){CL.st="";syncLbl();await clPull();}else toast("Sem permissão: a sincronização com o celular fica parada até você permitir o conector Supabase.");if(current==="config")rerenderKeep();}
+async function clNew(){CL.code=newCode();CL.base=0;ST.cloud=CL.code;clStore();changed();await clPull();rerenderKeep();}
+function clOff(btn){if(!btn.dataset.arm){btn.dataset.arm="1";btn.textContent="Toque de novo para desconectar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.arm;btn.textContent="Desconectar este aparelho";}},4000);return;}
+ CL.code=null;CL.base=0;CL.st="off";clStore();clSnap(null);delete ST.cloud;saveLocal();rerenderKeep();toast("Este aparelho parou de sincronizar.");}
+/* link #sync=código abre o app já conectado */
+(function(){const m=/[#&]sync=(cd-[a-z0-9-]+)/.exec(location.hash||"");if(!m) return;try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}if(m[1]!==CL.code) setTimeout(()=>clLink(m[1],true),400);})();
+setTimeout(clPull,1200);
+/* no claude.ai a sincronização liga sozinha: sem código depois de carregar a conta, cria um; ele vai junto
+   no progresso da conta e chega aos outros aparelhos com o mesmo login */
+if(IN_CLAUDE) setTimeout(()=>{if(SYNC.st==="ok"&&!CL.code&&!ST.cloud){CL.code=newCode();CL.base=0;ST.cloud=CL.code;clStore();changed();}},8000);
+
+function syncText(){
+ if(!CL.code) return IN_CLAUDE?(SYNC.st==="ok"?"Preparando a sincronização…":"Conectando à sua conta…"):"Este aparelho ainda não está conectado. Abra o link de conexão (fica aqui nas Configurações do app no claude.ai ou no PC) ou cole o código abaixo.";
+ if(CL.st==="ok") return "Ligada e em dia"+(CL.at?" (conferido às "+CL.at.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})+")":"")+". O que você marca aqui aparece nos outros aparelhos em poucos segundos.";
+ if(CL.st==="needmcp") return CL.perm==="denied"?"O conector Supabase foi bloqueado para esta página. Toque em Permitir e ligue o Supabase no painel de permissões.":"Falta uma permissão: toque em Permitir para esta página usar o conector Supabase.";
+ if(CL.st==="noconn") return "O conector Supabase não está conectado (ou a conexão expirou) na sua conta do claude.ai. Reconecte em Configurações → Conectores do claude.ai e volte aqui.";
+ if(CL.st==="err") return navigator.onLine?"Não deu para falar com a nuvem agora; o app tenta de novo sozinho. Nada se perde.":"Sem internet. O progresso fica salvo aqui e sobe quando a conexão voltar.";
+ return "Conectando…";
+}
+function syncLbl(){
+ document.querySelectorAll(".synclbl").forEach(e=>{e.textContent=syncText();e.style.color=CL.code&&CL.st==="ok"?"var(--ok)":["err","needmcp","noconn"].includes(CL.st)?"var(--bad)":"";});
+ const b=$("#clMcp"); if(b) b.hidden=CL.st!=="needmcp";
+ const c=$("#syncDot"); if(c){c.dataset.st=!CL.code?"off":CL.st==="ok"?"ok":["err","needmcp","noconn"].includes(CL.st)?"bad":"wait";c.title=syncText();}
+}
+function cfgSync(){
+ const link=CL.code?GH_URL+"#sync="+CL.code:"";
+ let h='<section class="panel stack" id="cfgSync"><h3>Sincronização entre aparelhos</h3><p class="synclbl small"></p><div class="row"><button class="btn sm" id="clMcp" type="button" '+(CL.st==="needmcp"?"":"hidden")+'>Permitir</button></div>';
+ if(CL.code) h+='<div class="stack"><strong>Conectar outro aparelho (uma vez só)</strong><p class="muted small">Abra este link no celular (pelo Chrome) ou no tablet. Ele entra conectado e junta o que já tiver lá. Depois, no menu do navegador, toque em "Instalar app" ou "Adicionar à tela inicial".</p><pre class="copybox">'+esc(link)+'</pre><div class="row"><button class="btn sm" id="clCopy" type="button">Copiar link</button>'+(navigator.share?'<button class="btn ghost sm" id="clShare" type="button">Enviar para…</button>':'')+'<button class="btn ghost sm" id="clNow" type="button">Sincronizar agora</button></div></div>';
+ else h+='<div class="row"><button class="btn sm" id="clNew" type="button">Este é o primeiro aparelho: criar a sincronização</button></div>';
+ h+='<details class="acc"'+(CL.code?"":" open")+'><summary><span>'+(CL.code?"Usar outro código":"Já tenho um código (de outro aparelho)")+'</span><span class="chev">›</span></summary><div class="stack">'+(CL.code?'<span class="muted small">Código atual: <span class="num">'+esc(CL.code)+'</span></span>':'')+'<input id="clIn" type="text" placeholder="cd-xxxx-xxxx-xxxx-xxxx-xxxx-xxxx" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Código de sincronização"><div class="row"><button class="btn sm" id="clGo" type="button">Conectar este aparelho</button>'+(CL.code?'<button class="btn ghost sm" id="clOff" type="button">Desconectar este aparelho</button>':'')+'</div></div></details>';
+ h+='<p class="muted small">'+(IN_CLAUDE?'Aqui no claude.ai o progresso também acompanha a sua conta. ':'')+'App instalável (celular, tablet e PC): <a href="'+GH_URL+'" target="_blank" rel="noopener">'+GH_URL.replace("https://","")+'</a></p></section>';
+ return h;
+}
+function wireSync(el){
+ const on=(id,f)=>{const b=el.querySelector("#"+id); if(b) b.onclick=f;};
+ on("clMcp",clAllow); on("clNew",clNew); on("clNow",()=>{clPull();toast("Sincronizando…");});
+ on("clCopy",async()=>{try{await navigator.clipboard.writeText(GH_URL+"#sync="+CL.code);toast("Link copiado. Abra no outro aparelho.");}catch(e){toast("Selecione o link e copie.");}});
+ on("clShare",()=>navigator.share({title:"Carreira em Dados 2027",url:GH_URL+"#sync="+CL.code}).catch(()=>{}));
+ on("clGo",()=>clLink($("#clIn").value,true).then(()=>rerenderKeep()));
+ on("clOff",e=>clOff(e.currentTarget));
+}
+
+const isDone=id=>!!ST.done[id];
+function toggle(id){ if(ST.done[id]) delete ST.done[id]; else ST.done[id]=todayS(); changed(); }
+function phaseOf(s){return PHASES.find(p=>s>=p.a&&s<=p.b)||null;}
+function hm(m){return pad(Math.floor(m/60)%24)+":"+pad(m%60);}
+function timeOf(id){const x=IDX[id]; if(!x) return ""; const s=x.date; if(!TCACHE[s]){const c=cfg(), wd=parse(s).getDay(); const st=(wd===0||wd===6)?c.hw:(s>=CIVIL?c.h2:c.h1); const [H,M]=(st||"19:00").split(":").map(Number); let m=H*60+M; const o={}; (SCHED[s]||[]).forEach(t=>{if(t.k==="folga")return; o[t.id]=hm(m)+"–"+hm(m+t.m); m+=t.m+10;}); TCACHE[s]=o;} return TCACHE[s][id]||"";}
+function taskHTML(t,showDate){
+ if(t.k==="folga") return '<div class="task folga"><div class="tb"><span class="tt muted">Folga. Descanse: consistência também é saber parar.</span></div></div>';
+ const dn=isDone(t.id);
+ const extra=t.k==="projeto"&&t.p?'<details class="tdq"><summary>Anotar no diário do projeto</summary><textarea data-tdq="'+esc(t.p)+'" data-tid="'+esc(t.id)+'" aria-label="Anotação do projeto" placeholder="O que você fez nesta sessão?"></textarea><div class="row"><button type="button" class="btn ghost sm" data-tdqb="'+esc(t.id)+'">Salvar no diário</button></div></details>':t.k==="cand"?'<div class="row"><button type="button" class="linkbtn" data-goapp="1">Registrar no controle de candidaturas</button></div>':"";
+ const det=(t.d||t.u)?'<details><summary>Detalhes</summary><p>'+esc(t.d||"")+(t.u?' <a href="'+esc(t.u)+'" target="_blank" rel="noopener">Abrir link</a>':"")+'</p></details>':"";
+ return '<div class="task'+(dn?" done":"")+'"><input type="checkbox" data-id="'+esc(t.id)+'" id="ck-'+esc(t.id)+'"'+(dn?" checked":"")+' aria-label="Concluir: '+esc(t.t)+'"><div class="tb"><label class="tt" for="ck-'+esc(t.id)+'">'+esc(t.t)+'</label><div class="tm">'+(!showDate&&timeOf(t.id)?'<span class="num" style="font-weight:600;color:var(--ink)">'+timeOf(t.id)+'</span>':'')+'<span class="kchip" style="--kc:var(--k-'+t.k+')">'+KINDS[t.k]+'</span><span>'+t.m+' min</span>'+(showDate&&IDX[t.id]?'<span>· planejado '+fmtShort(IDX[t.id].date)+'</span>':"")+(!dn&&t.m>=20?'<button type="button" class="tmgo" data-tm="'+esc(t.id)+'" aria-label="Iniciar cronômetro: '+esc(t.t)+'">'+(TM&&TM.id===t.id?"⏱ em andamento":"▶ Iniciar")+'</button>':'')+'</div>'+det+extra+'</div></div>';
+}
+function wireChecks(root){
+ root.querySelectorAll("[data-tm]").forEach(b=>b.onclick=()=>{tmStart(b.dataset.tm);rerenderKeep();});
+ root.querySelectorAll("[data-tdqb]").forEach(b=>b.onclick=()=>{const ta=root.querySelector('textarea[data-tid="'+b.dataset.tdqb+'"]'); if(diaryAdd(ta.dataset.tdq,ta.value,ta.dataset.tid)){ta.value="";toast("Anotado no diário do projeto.");} else toast("Escreva o que você fez.");});
+ root.querySelectorAll("[data-goapp]").forEach(b=>b.onclick=()=>{pfSeg="vagas";apEdit="new";go("perfil");});
+ root.querySelectorAll('input[type=checkbox][data-id]').forEach(c=>c.onchange=()=>{toggle(c.dataset.id); const row=c.closest(".task"); if(row) row.classList.toggle("done",c.checked); if(c.checked) toast("Feito. Bom trabalho!"); refreshHeader(); if(current==="hoje"||current==="prog") rerenderKeep();}); }
+
+/* ================= ESTATÍSTICAS ================= */
+function stats(){
+ const t=todayS(); let planned=0,plannedDone=0,mins=0,doneN=0; const byK={};
+ for(const id in IDX){const x=IDX[id]; if(x.k==="folga")continue; byK[x.k]=byK[x.k]||{n:0,d:0}; byK[x.k].n++; if(x.date<=t){planned++; if(isDone(id)) plannedDone++;} if(isDone(id)){doneN++;mins+=x.m;byK[x.k].d++;}}
+ const days=new Set(Object.values(ST.done)); let streak=0; let s=t; if(!days.has(s)) s=addD(s,-1); while(days.has(s)){streak++; s=addD(s,-1);}
+ return {planned,plannedDone,mins,doneN,byK,streak,days};
+}
+function overdue(){ const t=todayS(), from=addD(t,-21), out=[]; for(let s=from;s<t;s=addD(s,1)){ (SCHED[s]||[]).forEach(x=>{ if(x.k!=="folga"&&!isDone(x.id)) out.push(x); }); } return out; }
+
+/* ================= VIEWS ================= */
+const ICONS={
+ hoje:'<path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/>',
+ agenda:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+ cursos:'<path d="M3 6.5 12 3l9 3.5-9 3.5z"/><path d="M7 8.5V14c0 1.7 2.2 3 5 3s5-1.3 5-3V8.5"/>',
+ port:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>',
+ perfil:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+ prog:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+ rev:'<rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/><path d="M7 13h6M7 16h4"/>'
+};
+const TABS=[["hoje","Hoje"],["agenda","Agenda"],["cursos","Cursos"],["rev","Revisar"],["port","Portfólio"],["perfil","Perfil"],["prog","Progresso"]];
+let current=cfg().home==="agenda"?"agenda":"hoje"; if(cfg().home==="last"){try{const r=localStorage.getItem(KEY+"-tab"); if(r&&(TABS.some(x=>x[0]===r)||r==="config")) current=r;}catch(e){}}
+try{const qv=new URLSearchParams(location.search).get("v"); if(qv&&(TABS.some(x=>x[0]===qv)||qv==="config")) current=qv;}catch(e){}
+$("#tabs").innerHTML=TABS.map(([v,n])=>'<button role="tab" type="button" data-v="'+v+'" aria-selected="'+(v===current)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICONS[v]+'</svg>'+n+'</button>').join("");
+$("#tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+const VIEWS={hoje:vHoje,agenda:vAgenda,cursos:vCursos,rev:vRev,port:vPort,perfil:vPerfil,prog:vProg,config:vConfig};
+function go(v){current=v;try{localStorage.setItem(KEY+"-tab",v);}catch(e){} $("#tabs").querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===v)); $("#cfgBtn").setAttribute("aria-current",v==="config"?"page":"false"); render(); window.scrollTo({top:0});}
+function render(){ const el=$("#view"); el.innerHTML=VIEWS[current](); wireChecks(el); (WIRES[current]||(()=>{}))(el); syncLbl(); refreshHeader(); }
+function rerender(){render();}
+function rerenderKeep(){const y=window.scrollY;render();window.scrollTo({top:y});}
+const WIRES={};
+
+function refreshHeader(){
+ const t=todayS(); let n,lbl;
+ if(t<START){n=diff(t,START);lbl="dias para começar";}
+ else if(t<=BAIXA){n=diff(t,BAIXA);lbl="dias para a baixa";}
+ else if(t<=END){n=diff(START,t)+1;lbl="º dia do plano";}
+ else {n=diff(START,t)+1;lbl="dias de plano";}
+ $("#cntN").textContent=n; $("#cntT").textContent=lbl;
+}
+
+function pipeHTML(){
+ const t=todayS();
+ const seg=PHASES.map(p=>{const tot=diff(p.a,p.b)+1; let f=t<p.a?0:t>p.b?1:(diff(p.a,t)+1)/tot; return '<div class="sg"><i style="width:'+Math.round(f*100)+'%"></i></div>';}).join("");
+ const lab=PHASES.map(p=>'<span>'+p.n.split(" · ")[0].replace("Fase ","F")+" · "+fmtShort(p.a)+'</span>').join("");
+ return '<div class="pipe" aria-hidden="true">'+seg+'</div><div class="pipe-l">'+lab+'</div>';
+}
+
+function vHoje(){
+ const t=todayS(); const st=stats(); let h="";
+ const tipI=(diff("2026-01-01",t)%TIPS.length+TIPS.length)%TIPS.length; const tip=TIPS[tipI];
+ if(t<START){
+  const n=diff(t,START);
+  h+='<section class="panel"><h4>Antes da largada</h4><h2>Faltam '+n+' dias para o plano começar</h2><p>Até 06/12 a prioridade é a prova da Transpetro. Este app começa no dia seguinte, 07/12/2026, com o cronograma diário já montado. Se sobrar energia num fim de semana, adiante só o que é leve: e-mail profissional e foto para o LinkedIn.</p>'+pipeHTML()+'</section>';
+  h+='<section class="panel"><div class="dayhead"><h3>Prévia do primeiro dia · '+fmt(START)+'</h3></div><div class="tasks">'+SCHED[START].map(x=>taskHTML(x)).join("")+'</div></section>';
+  h+='<section class="panel"><h3>Resto da primeira semana</h3>'+weekList(addD(START,1),6)+'</section>';
+ } else if(t>lastDay()){
+  h+='<section class="panel"><h4>Plano de 2027 concluído</h4><h2>Hora de revisar as metas</h2><p>O cronograma diário ia até 30/09/2027. Abra o plano mestre para a fase Júnior e continue usando as abas Cursos, Portfólio e Perfil.</p></section>';
+ } else {
+  const ph=phaseOf(t); const T=SCHED[t]||[]; const real=T.filter(x=>x.k!=="folga"); const dn=real.filter(x=>isDone(x.id)).length; const mins=real.reduce((a,x)=>a+x.m,0);
+  h+='<section class="panel"><div class="dayhead"><div><h4>'+(ph?esc(ph.n):"")+'</h4><h2>'+fmt(t)+'</h2></div><span class="pill pri num">'+dn+'/'+real.length+' feitas · '+Math.round(mins/6)/10+' h</span></div>'+(real.length?'<div class="track" aria-hidden="true"><div class="fill'+(dn===real.length?" ok":"")+'" style="width:'+(real.length?Math.round(dn/real.length*100):0)+'%"></div></div>':"")+'<div class="tasks">'+T.map(x=>taskHTML(x)).join("")+'</div></section>';
+  const cc=srsCounts(), fu=apFollow(), dow=parse(t).getDay();
+  if(cc.due||cc.fresh) h+='<section class="panel"><div class="dayhead"><h3>Revisões de hoje</h3><span class="pill pri num">'+cc.due+' para revisar · '+cc.fresh+' novos</span></div><p class="small">Cerca de '+Math.max(2,Math.round((cc.due+cc.fresh)*0.4))+' min de flashcards. Faça antes do curso do dia: aquece a cabeça.</p><div class="row"><button class="btn sm" id="goCards" type="button">Revisar agora</button>'+(TTS_OK?'<button class="btn ghost sm" id="goAudio" type="button">Ouvir em áudio</button>':'')+'</div></section>';
+  if(fu.length) h+='<section class="panel"><div class="dayhead"><h3>Candidaturas para cobrar</h3><span class="pill bad num">'+fu.length+'</span></div><p class="small">'+fu.slice(0,3).map(p=>esc(p.emp)).join(", ")+(fu.length>3?" e mais "+(fu.length-3):"")+' sem resposta há 10 dias ou mais.</p><div class="row"><button class="btn ghost sm" id="goApps" type="button">Abrir candidaturas</button></div></section>';
+  if((dow===0||dow===1)&&t>addD(START,5)){ const w0=mondayOf(dow===1?addD(t,-1):t); h+=weekCard(weekStats(w0),weekStats(addD(w0,-7)),"Resumo da semana"); }
+  const od=overdue(), bn=behindN();
+  if(bn>=3) h+='<section class="panel"><h3>Ficou para trás?</h3><p class="small">'+bn+' tarefas de curso, projeto ou perfil estão atrasadas. Em vez de acumular, reorganize: elas voltam para a fila a partir de hoje, na mesma ordem, e o resto do plano anda junto (pode passar de 30/09). Dá para desfazer em Configurações.</p><div class="row"><button class="btn sm" id="rpGo" type="button">Estou atrasado: reorganizar o plano</button></div></section>';
+  if(od.length) h+='<section class="panel"><details class="acc"><summary><h3>Pendentes dos últimos 21 dias <span class="pill bad num">'+od.length+'</span></h3><span class="chev">›</span></summary><p class="muted small">Não precisa zerar tudo. Priorize cursos e projetos; recorrentes como inglês podem ficar para trás.</p><div class="tasks">'+od.map(x=>taskHTML(x,true)).join("")+'</div></details></section>';
+  h+='<section class="panel"><h3>Amanhã</h3><div class="tasks">'+(SCHED[addD(t,1)]||[]).map(x=>'<div class="task folga"><div class="tb"><span class="tt">'+esc(x.k==="folga"?"Folga":x.t)+'</span>'+(x.k==="folga"?"":'<div class="tm"><span class="kchip" style="--kc:var(--k-'+x.k+')">'+KINDS[x.k]+'</span><span>'+x.m+' min</span></div>')+'</div></div>').join("")+'</div></section>';
+  if(ph) h+='<section class="panel"><h4>Meta da fase · '+esc(ph.h)+'</h4><p>'+esc(ph.goal)+'</p>'+pipeHTML()+'</section>';
+ }
+ h+='<section class="tip"><strong>Dica do dia · '+esc(tip[0])+'</strong><span>'+esc(tip[1])+'</span></section>';
+ h+='<section class="grid"><div class="panel fact"><span class="k">Sequência</span><span class="big">'+st.streak+' dia'+(st.streak===1?"":"s")+'</span></div><div class="panel fact"><span class="k">Horas estudadas</span><span class="big">'+Math.round(st.mins/6)/10+' h</span></div><div class="panel fact"><span class="k">Em dia com o plano</span><span class="big">'+(st.planned?Math.round(st.plannedDone/st.planned*100):100)+'%</span></div></section>';
+ return h;
+}
+WIRES.hoje=el=>{
+ const on=(id,f)=>{const b=el.querySelector("#"+id); if(b) b.onclick=f;};
+ on("goCards",()=>{revSeg="cards";go("rev");}); on("goAudio",()=>{revSeg="au";go("rev");}); on("goApps",()=>{pfSeg="vagas";go("perfil");});
+ on("rpGo",e=>{const b=e.currentTarget; if(!b.dataset.arm){b.dataset.arm="1";b.textContent="Toque de novo para confirmar";setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent="Estou atrasado: reorganizar o plano";}},4000);return;} replan();});
+};
+function weekList(a,n){ let h=""; for(let i=0;i<n;i++){const s=addD(a,i); const T=SCHED[s]||[]; h+='<details class="acc"><summary><span class="daytitle">'+fmt(s)+'</span><span class="row"><span class="muted small num">'+T.filter(x=>x.k!=="folga").length+' tarefas</span><span class="chev">›</span></span></summary><div class="tasks">'+T.map(x=>taskHTML(x)).join("")+'</div></details>'; } return h; }
+
+/* Agenda */
+let agWeek=null;
+function mondayOf(s){const d=parse(s);const w=(d.getDay()+6)%7;return addD(s,-w);}
+function vAgenda(){
+ const t=todayS(); if(!agWeek) agWeek=mondayOf(t<START?START:t>END?END:t);
+ const end=addD(agWeek,6); const ph=phaseOf(agWeek<START?START:agWeek);
+ let h='<section class="panel"><div class="dayhead"><div><h4>'+(ph?esc(ph.n):"Fora do período do plano")+'</h4><h2>Semana de '+fmtShort(agWeek)+' a '+fmtShort(end)+'</h2></div></div><div class="row"><button class="btn ghost sm" id="agPrev" type="button">‹ Anterior</button><button class="btn ghost sm" id="agToday" type="button">Hoje</button><button class="btn ghost sm" id="agNext" type="button">Próxima ›</button><label class="row small muted" for="agDate">Ir para <input type="date" id="agDate" min="'+START+'" max="'+lastDay()+'" value="'+agWeek+'"></label></div>'+pipeHTML()+'</section>';
+ for(let i=0;i<7;i++){ const s=addD(agWeek,i); const T=SCHED[s]; if(!T){ continue; } const real=T.filter(x=>x.k!=="folga"); const dn=real.filter(x=>isDone(x.id)).length;
+  h+='<section class="panel daycard"><div class="dayhead"><span class="daytitle'+(s===t?" today":"")+'">'+fmt(s)+(s===t?" · hoje":"")+'</span><span class="muted small num">'+(real.length?dn+"/"+real.length+" · "+real.reduce((a,x)=>a+x.m,0)+" min":"")+'</span></div><div class="tasks">'+T.map(x=>taskHTML(x)).join("")+'</div></section>'; }
+ if(agWeek>lastDay()||addD(agWeek,6)<START) h+='<section class="panel"><p class="muted">O cronograma diário vai de 07/12/2026 a '+fmt(lastDay())+'.</p></section>';
+ return h;
+}
+WIRES.agenda=()=>{ $("#agPrev").onclick=()=>{agWeek=addD(agWeek,-7);rerender();}; $("#agNext").onclick=()=>{agWeek=addD(agWeek,7);rerender();}; $("#agToday").onclick=()=>{const t=todayS();agWeek=mondayOf(t<START?START:t>END?END:t);rerender();}; $("#agDate").onchange=e=>{if(e.target.value){agWeek=mondayOf(e.target.value);rerender();}}; };
+
+/* Cursos */
+let catTag="all";
+function vCursos(){
+ let h='<section class="panel"><h4>Planejamento de cursos</h4><h2>Trilha na ordem do cronograma</h2><p>Cada sessão é uma tarefa na agenda, com cerca de 75 minutos. Marque aqui ou na agenda: é o mesmo registro. Antes de começar um curso da Udemy, confira se ele está na sua assinatura; se não estiver, use a alternativa gratuita indicada.</p></section>';
+ h+='<section class="panel">';
+ COURSES.forEach(c=>{ const ids=c.s.map((_,i)=>"c:"+c.id+":"+i).concat(c.exam?["c:"+c.id+":exam"]:[]); const dn=ids.filter(isDone).length; const a=IDX[ids[0]]&&IDX[ids[0]].date, b=IDX[ids[ids.length-1]]&&IDX[ids[ids.length-1]].date; const pct=Math.round(dn/ids.length*100);
+  h+='<details class="acc"><summary><span class="stack" style="gap:4px;min-width:0;flex:1"><span class="row" style="gap:8px"><strong>'+esc(c.n)+'</strong><span class="pill '+(c.free?"free":"paid")+'">'+esc(c.plat)+'</span>'+(pct===100?'<span class="pill free">concluído</span>':"")+'</span><span class="muted small">'+(a?fmtShort(a)+" a "+fmtShort(b)+" · ":"")+dn+"/"+ids.length+' sessões</span><span class="track"><span class="fill'+(pct===100?" ok":"")+'" style="display:block;width:'+pct+'%"></span></span></span><span class="chev">›</span></summary><p class="small"><strong>Curso:</strong> '+esc(c.src)+' · <a href="'+esc(c.u)+'" target="_blank" rel="noopener">Abrir</a></p>'+(c.alt?'<p class="small muted">'+esc(c.alt)+'</p>':"")+'<div class="tasks">'+ids.map(id=>taskHTML(IDX[id],true)).join("")+'</div></details>'; });
+ h+='</section>';
+ h+='<section class="panel"><h3>Meus cursos da Udemy e outros</h3><p class="muted small">Adicione os cursos que você já tem na Udemy (ou em qualquer plataforma) e acompanhe as aulas. Use nos horários de "Sessão de curso extra" da agenda.</p><div id="custList">'+custHTML()+'</div><div class="row"><input type="text" id="cuN" placeholder="Nome do curso" aria-label="Nome do curso" style="flex:2 1 200px"><input type="number" id="cuT" placeholder="Nº de aulas" aria-label="Número de aulas" min="1" style="flex:1 1 110px"><input type="url" id="cuU" placeholder="Link (opcional)" aria-label="Link" style="flex:2 1 200px"><button class="btn" id="cuAdd" type="button">Adicionar</button></div></section>';
+ const chips=[["all","Todos"]].concat(Object.entries(CTAGS)).concat([["free","Gratuitos"]]);
+ h+='<section class="panel"><h3>Catálogo: IA, dados e certificações para o currículo</h3><p class="muted small">Fora do cronograma. Escolha no máximo um por vez, nos horários de curso extra.</p><div class="row" style="gap:6px">'+chips.map(([k,n])=>'<button class="chip'+(catTag===k?" on":"")+'" data-t="'+k+'" type="button">'+n+'</button>').join("")+'</div><div class="stack">'+CATALOG.filter(x=>catTag==="all"||(catTag==="free"?x.free:x.tags.includes(catTag))).map(x=>'<div class="note stack" style="gap:6px"><div class="row" style="gap:8px"><strong>'+esc(x.n)+'</strong><span class="pill '+(x.free?"free":"paid")+'">'+(x.free?"Gratuito":"Pago")+'</span>'+x.tags.map(g=>'<span class="pill">'+CTAGS[g]+'</span>').join("")+'</div><span class="muted small">'+esc(x.p)+'</span><span class="small">'+esc(x.note)+' <a href="'+esc(x.u)+'" target="_blank" rel="noopener">Abrir</a></span></div>').join("")+'</div></section>';
+ return h;
+}
+function custHTML(){ if(!ST.custom.length) return '<p class="muted small">Nenhum curso adicionado ainda. Exemplo: "Power BI Avançado (Udemy), 120 aulas".</p>'; return ST.custom.map((c,i)=>{const pct=Math.round(c.done/c.tot*100); return '<div class="cust"><div class="stack" style="gap:4px;min-width:0"><strong style="overflow-wrap:anywhere">'+esc(c.n)+'</strong><span class="muted small num">'+c.done+'/'+c.tot+' aulas · '+pct+'%'+(c.u?' · <a href="'+esc(c.u)+'" target="_blank" rel="noopener">abrir</a>':"")+'</span><span class="track"><span class="fill'+(pct>=100?" ok":"")+'" style="display:block;width:'+Math.min(100,pct)+'%"></span></span></div><div class="ctr"><button class="btn ghost sm" data-cu="'+i+'" data-op="-1" type="button" aria-label="Menos uma aula">−</button><button class="btn sm" data-cu="'+i+'" data-op="1" type="button" aria-label="Mais uma aula">+1</button><button class="btn ghost sm" data-cu="'+i+'" data-op="x" type="button" aria-label="Remover curso">×</button></div></div>';}).join(""); }
+WIRES.cursos=el=>{
+ el.querySelectorAll(".chip[data-t]").forEach(b=>b.onclick=()=>{catTag=b.dataset.t;rerenderKeep();});
+ $("#cuAdd").onclick=()=>{const n=$("#cuN").value.trim(),tot=parseInt($("#cuT").value,10),u=$("#cuU").value.trim(); if(!n||!(tot>0)){toast("Informe o nome e o número de aulas.");return;} ST.custom.push({n,tot,done:0,u:/^https?:\/\//.test(u)?u:""}); changed(); rerenderKeep(); toast("Curso adicionado.");};
+ el.querySelectorAll("[data-cu]").forEach(b=>b.onclick=()=>{const c=ST.custom[+b.dataset.cu]; if(!c) return; if(b.dataset.op==="x"){ if(b.dataset.arm){ST.custom.splice(+b.dataset.cu,1);changed();rerenderKeep();} else {b.dataset.arm="1";b.textContent="Remover?";setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent="×";}},3000);} return;} c.done=Math.max(0,Math.min(c.tot,c.done+(+b.dataset.op))); changed(); rerenderKeep();});
+};
+
+/* Portfólio */
+const README_TPL=`# Painel de prazos e gestão documental
+
+> Dados 100% fictícios, criados para este estudo.
+
+## Pergunta de negócio
+Quais setores atrasam mais a resposta de documentos e por quê?
+
+## O que eu fiz
+- Gerei uma base fictícia com 2.000 documentos (Excel)
+- Modelei em estrela no PostgreSQL (1 fato, 3 dimensões)
+- Escrevi 5 consultas SQL para responder às perguntas
+- Construí o dashboard no Power BI com medidas DAX
+
+## Principais resultados
+1. O setor X concentra 40% dos atrasos
+2. Documentos do tipo Y levam o dobro do prazo médio
+3. ...
+
+## Prints
+![Visão geral](img/visao-geral.png)
+
+## Ferramentas
+Excel · PostgreSQL · Power BI · DAX
+
+## Como reproduzir
+1. Rode sql/01_criar_tabelas.sql
+2. Importe dados/documentos.csv
+3. Abra powerbi/gestao-documental.pbix
+
+## Contato
+LinkedIn: linkedin.com/in/seu-nome`;
+const TREE=`nome-do-projeto/
+├── README.md        ← vitrine do projeto
+├── dados/           ← CSV pequenos ou link para a fonte
+├── sql/             ← scripts numerados (01_, 02_...)
+├── notebooks/       ← Python, quando houver
+├── powerbi/         ← .pbix (ou só prints, se for grande)
+├── img/             ← prints usados no README
+└── .gitignore`;
+function vPort(){
+ let h='<section class="panel"><h4>Portfólio no GitHub</h4><h2>6 projetos ligados ao seu histórico</h2><p>Todos com dados públicos ou fictícios. Cada etapa é uma tarefa da agenda (sábados enquanto militar; segunda, quarta, sexta e sábado depois da baixa). Três bem feitos já sustentam candidaturas; os outros fortalecem.</p></section>';
+ PROJECTS.forEach((p,pi)=>{ const ids=p.s.map((_,i)=>"p:"+p.id+":"+i); const dn=ids.filter(isDone).length; const pct=Math.round(dn/ids.length*100); const a=(IDX[ids[0]]||{date:START}).date,b=(IDX[ids[ids.length-1]]||{date:END}).date;
+  h+='<section class="panel"><details class="acc" style="border:0;padding:0"'+(pi===0?" open":"")+'><summary><span class="stack" style="gap:4px;flex:1;min-width:0"><span class="row" style="gap:8px"><strong>'+(pi+1)+'. '+esc(p.n)+'</strong>'+(pct===100?'<span class="pill free">publicado</span>':"")+'</span><span class="muted small">'+fmtShort(a)+' a '+fmtShort(b)+' · '+dn+'/'+ids.length+' etapas · repo <code>'+esc(p.repo)+'</code></span><span class="track"><span class="fill'+(pct===100?" ok":"")+'" style="display:block;width:'+pct+'%"></span></span></span><span class="chev">›</span></summary><p class="small"><strong>Por que:</strong> '+esc(p.why)+'</p><p class="small"><strong>Fonte:</strong> '+esc(p.src)+(p.u?' · <a href="'+esc(p.u)+'" target="_blank" rel="noopener">Abrir</a>':"")+'</p><p class="small"><strong>Mostra:</strong> '+esc(p.skills)+'</p><div class="tasks">'+ids.filter(id=>IDX[id]).map(id=>taskHTML(IDX[id],true)).join("")+'</div>'+diaryHTML(p.id)+'</details></section>'; });
+ h+='<section class="panel stack"><h3>Estrutura padrão de cada repositório</h3><pre class="copybox">'+esc(TREE)+'</pre></section>';
+ h+='<section class="panel stack"><div class="dayhead"><h3>Modelo de README de projeto</h3><button class="btn ghost sm" data-copy="readme" type="button">Copiar</button></div><pre class="copybox">'+esc(README_TPL)+'</pre></section>';
+ h+='<section class="panel"><h3>Regras de ouro</h3><ul class="plain"><li>Nunca use dados internos da FAB, nem anonimizados.</li><li>Arquivo .pbix grande? Publique prints e um vídeo curto de 1 minuto no LinkedIn.</li><li>Commits pequenos, com mensagens claras: "adiciona medida de SLA", "corrige tipo de data".</li><li>Nome do repositório em minúsculas com hífen, igual ao sugerido em cada projeto.</li><li>Todo projeto termina com um post no LinkedIn linkando o repositório.</li></ul></section>';
+ return h;
+}
+WIRES.port=el=>{el.querySelectorAll("[data-copy=readme]").forEach(b=>b.onclick=()=>copyText(README_TPL,b)); wireDiary(el);};
+
+/* Perfil profissional */
+let pfSeg="li";
+const TXT={
+ headline:"Analista de Dados e BI em formação | Power BI · SQL · Excel | 8 anos em gestão administrativa e controles na Força Aérea Brasileira",
+ about:`Passei 8 anos na Força Aérea Brasileira cuidando de documentos, prazos e controles administrativos. Foi aí que percebi que boa parte do trabalho era juntar dados à mão para alguém decidir.
+
+Hoje transformo esse tipo de controle em painéis de Power BI e consultas SQL. Sou tecnólogo em Análise e Desenvolvimento de Sistemas (Estácio, 2026) e tenho formação complementar em LGPD e Acesso à Informação pela ENAP.
+
+O que trago: disciplina com prazos, cuidado com informação sensível e a visão de quem já esteve do lado de quem usa o relatório.
+
+Estou em transição para BI e Dados e disponível a partir de março de 2027. Meus projetos estão no GitHub: [link].`,
+ exp:`Assistente Administrativo (Cabo) · Força Aérea Brasileira
+mar/2019 – fev/2027 · Rio de Janeiro
+Terceiro Comando Aéreo Regional (III COMAR) desde nov/2023
+
+• Elaborei e controlei cerca de [N] documentos oficiais por mês, cumprindo prazos normativos.
+• Montei planilhas de controle em Excel que reduziram [tempo/erros] em [X%] no acompanhamento de [tema].
+• Consolidei dados de [área] em relatórios mensais para a chefia.
+• Instrutor de apoio no Curso de Combate a Incêndio para brigadistas do GAP-RJ (2026), com referência elogiosa formal.
+• Promovido a Cabo por merecimento (nota 8,75 no curso de formação).`,
+ gh:`### Olá! Sou o Pedro Henrique
+
+Analista de Dados e BI em formação, vindo de 8 anos de gestão administrativa na Força Aérea Brasileira.
+Gosto de transformar controles manuais em painéis que ajudam a decidir.
+
+**Ferramentas:** Power BI · DAX · SQL (PostgreSQL) · Excel · Power Query · Python (aprendendo)
+
+**Projetos em destaque**
+- [Painel de prazos e gestão documental](link) — SQL + Power BI, dados fictícios
+- [Execução orçamentária do Comando da Aeronáutica](link) — dados públicos
+- [Combustíveis no Brasil (ANP)](link) — séries temporais e mapas
+
+**Formação:** Tecnólogo em ADS (Estácio, 2026) · LGPD e Acesso à Informação (ENAP)
+
+📫 [LinkedIn](link) · nome.sobrenome@gmail.com`
+};
+function brandList(g){ return '<div class="tasks">'+BRAND.filter(b=>b.g===g).map(b=>taskHTML(IDX["b:"+b.id],true)).join("")+'</div>'; }
+function copyBlock(key,title){ return '<div class="stack"><div class="dayhead"><h3>'+title+'</h3><button class="btn ghost sm" data-copy="'+key+'" type="button">Copiar</button></div><pre class="copybox">'+esc(TXT[key])+'</pre></div>'; }
+function vPerfil(){
+ const segs=[["li","LinkedIn"],["gh","GitHub"],["red","Redes sociais"],["car","Currículo"],["vagas","Candidaturas"]];
+ let h='<section class="panel"><h4>Perfil profissional</h4><h2>LinkedIn, GitHub, redes e currículo</h2><p>As tarefas abaixo também aparecem na agenda, às sextas e domingos até a baixa. Os textos são pontos de partida: ajuste com suas palavras e troque os colchetes por números reais.</p><div class="seg" role="tablist">'+segs.map(([k,n])=>'<button role="tab" type="button" data-s="'+k+'" aria-selected="'+(pfSeg===k)+'">'+n+'</button>').join("")+'</div></section>';
+ if(pfSeg==="li"){
+  h+='<section class="panel">'+brandList("li")+'</section>';
+  h+='<section class="panel stack">'+copyBlock("headline","Título")+copyBlock("about","Sobre")+copyBlock("exp","Experiência na FAB")+'</section>';
+  h+='<section class="panel"><h3>Ideias de posts (um por semana)</h3><ol class="plain">'+POSTS.map(p=>'<li>'+esc(p)+'</li>').join("")+'</ol><p class="muted small">Enquanto militar: nada de farda, rotina interna ou opinião sobre a instituição. Fale do que você aprende e dos seus projetos.</p></section>';
+ } else if(pfSeg==="gh"){
+  h+='<section class="panel">'+brandList("gh")+'</section>';
+  h+='<section class="panel stack">'+copyBlock("gh","README de perfil (repositório com o nome do seu usuário)")+'</section>';
+  h+='<section class="panel"><h3>O que um recrutador olha no seu GitHub</h3><ul class="plain"><li>Os 4 repositórios fixados, com README e prints.</li><li>O gráfico de contribuições: constância vale mais que volume.</li><li>Nomes claros e organização de pastas.</li><li>Nada de repositório vazio ou "teste123" público.</li></ul></section>';
+ } else if(pfSeg==="red"){
+  h+='<section class="panel">'+brandList("red")+'</section>';
+  h+='<section class="panel"><h3>Redes sociais com cara profissional</h3><ul class="plain"><li><strong>Instagram e Facebook:</strong> privados, ou públicos só com o que você mostraria numa entrevista.</li><li><strong>Mesma identidade:</strong> foto, nome e usuário iguais no LinkedIn, GitHub e e-mail.</li><li><strong>Onde postar sobre dados:</strong> LinkedIn em primeiro lugar. Instagram ou TikTok sobre dados só se você gostar de produzir vídeo; não é necessário.</li><li><strong>WhatsApp:</strong> foto profissional e recado neutro; recrutadores chamam por lá.</li><li><strong>Até a baixa:</strong> sem farda em fotos de perfil e sem rotina interna da FAB em qualquer rede.</li></ul></section>';
+ } else if(pfSeg==="vagas"){
+  h+=vApps();
+ } else {
+  h+='<section class="panel">'+brandList("car")+'</section>';
+  h+='<section class="panel"><h3>Currículo em uma página</h3><ul class="plain"><li><strong>Topo:</strong> nome, cidade, telefone, e-mail, LinkedIn, GitHub e "Disponível a partir de [data]".</li><li><strong>Resumo:</strong> 3 linhas, adaptadas a cada vaga.</li><li><strong>Projetos:</strong> antes da experiência, enquanto você não tiver vaga em dados.</li><li><strong>Experiência:</strong> FAB com os bullets da aba LinkedIn.</li><li><strong>Formação e certificações:</strong> ADS, PL-300 (quando tiver), cursos ENAP.</li><li><strong>Formato:</strong> PDF, uma coluna, sem foto e sem tabelas (sistemas de triagem leem melhor).</li></ul><p class="muted small">O modelo completo está no plano mestre "Trilha até CDO".</p></section>';
+ }
+ return h;
+}
+WIRES.perfil=el=>{ el.querySelectorAll(".seg button[data-s]").forEach(b=>b.onclick=()=>{pfSeg=b.dataset.s;rerenderKeep();}); el.querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>copyText(TXT[b.dataset.copy],b)); if(pfSeg==="vagas") wireApps(el); };
+
+/* Progresso */
+function vProg(){
+ const st=stats(), t=todayS();
+ let h='';
+ if(t>=START){ const w0=mondayOf(t); h+=weekCard(weekStats(w0),weekStats(addD(w0,-7)),"Esta semana"); }
+ h+='<section class="grid"><div class="panel fact"><span class="k">Tarefas feitas</span><span class="big">'+st.doneN+'</span><span class="muted small">de '+TOTAL_TASKS+' no plano</span></div><div class="panel fact"><span class="k">Horas estudadas</span><span class="big">'+Math.round(st.mins/6)/10+' h</span></div><div class="panel fact"><span class="k">Sequência</span><span class="big">'+st.streak+' dia'+(st.streak===1?"":"s")+'</span></div><div class="panel fact"><span class="k">Em dia com o plano</span><span class="big">'+(st.planned?Math.round(st.plannedDone/st.planned*100):100)+'%</span><span class="muted small">'+st.plannedDone+'/'+st.planned+' até hoje</span></div></section>';
+ h+='<section class="panel"><h3>Fases</h3>'+pipeHTML()+PHASES.map(p=>'<p class="small"><strong>'+esc(p.n)+'</strong> · '+fmtShort(p.a)+' a '+fmtShort(p.b)+' · '+esc(p.goal)+'</p>').join("")+'</section>';
+ h+='<section class="panel"><h3>Por área</h3>'+Object.keys(KINDS).filter(k=>st.byK[k]).map(k=>{const x=st.byK[k];const p=Math.round(x.d/x.n*100);return '<div class="bar"><span class="kchip" style="--kc:var(--k-'+k+')">'+KINDS[k]+'</span><span class="track"><span class="fill" style="display:block;width:'+p+'%;background:var(--k-'+k+')"></span></span><span class="num small">'+x.d+'/'+x.n+'</span></div>';}).join("")+'</section>';
+ let cells=""; for(let i=13;i>=0;i--){const s=addD(t,-i); let n=0; for(const id in ST.done) if(ST.done[id]===s) n++; cells+='<div class="hc '+(n>=4?"l3":n>=2?"l2":n>=1?"l1":"")+'" title="'+fmtShort(s)+': '+n+'">'+parse(s).getDate()+'</div>';}
+ h+='<section class="panel"><h3>Últimos 14 dias</h3><div class="heat">'+cells+'</div><p class="muted small">Cada quadrado é um dia; quanto mais escuro, mais tarefas concluídas.</p></section>';
+ h+='<section class="panel"><h3>Semanas: planejado x feito</h3>'+weeksChart(8)+'</section>';
+ const tmTot=Object.values(ST.log||{}).reduce((a,x)=>a+x,0), pr=projection(), L=apList(), sk=SKILLS.reduce((a,d)=>a+skPct(d)*d.w,0)/SKILLS.reduce((a,d)=>a+d.w,0), cardsSeen=Object.keys(ST.srs||{}).length;
+ h+='<section class="panel"><h3>Mais números</h3><div class="grid g4"><div class="fact"><span class="k">Foco no cronômetro</span><span class="big">'+Math.round(tmTot/6)/10+' h</span></div><div class="fact"><span class="k">PL-300</span><span class="big">'+Math.round(sk*100)+'%</span><span class="muted small">prontidão</span></div><div class="fact"><span class="k">Flashcards</span><span class="big">'+cardsSeen+'</span><span class="muted small">de '+CARDS.length+' vistos</span></div><div class="fact"><span class="k">Candidaturas</span><span class="big">'+L.length+'</span><span class="muted small">'+L.filter(p=>["ent","fin","prop"].includes(p.etapa)).length+' com entrevista</span></div></div>'+(pr?'<p class="small">No ritmo das últimas 4 semanas ('+(Math.round(pr.rate*10)/10)+' sessões de curso por semana), a trilha de cursos termina por volta de <strong>'+fmt(pr.end)+'</strong>'+(pr.plan?(pr.end>pr.plan?', depois do planejado ('+fmtShort(pr.plan)+'). Se a diferença passar de 2 semanas, use "Reorganizar o plano" em Hoje.':', dentro do planejado ('+fmtShort(pr.plan)+').'):'.')+'</p>':'<p class="muted small">A previsão de término aparece depois das primeiras semanas de curso.</p>')+'</section>';
+ h+='<section class="panel"><details class="acc" style="border:0;padding:0"><summary><h3>Todas as dicas de preparo ('+TIPS.length+')</h3><span class="chev">›</span></summary><div class="stack">'+TIPS.map(x=>'<p class="small"><strong>'+esc(x[0])+'.</strong> '+esc(x[1])+'</p>').join("")+'</div></details></section>';
+ return h;
+}
+WIRES.config=el=>{
+ wireCfg(el); wireSync(el);
+ el.querySelectorAll("#thSeg button").forEach(b=>b.onclick=()=>{theme=b.dataset.v;try{localStorage.setItem(KEY+"-theme",theme);}catch(e){}applyTheme();rerenderKeep();});
+ $("#bkGen").onclick=async()=>{const v="CD27:"+btoa(unescape(encodeURIComponent(JSON.stringify(ST))));$("#bkTxt").value=v;try{await navigator.clipboard.writeText(v);$("#bkMsg").textContent="Código gerado e copiado.";}catch(e){$("#bkTxt").select();$("#bkMsg").textContent="Código gerado. Selecione e copie.";}};
+ $("#bkImp").onclick=()=>{try{const v=$("#bkTxt").value.trim();if(!v.startsWith("CD27:"))throw 0;const o=JSON.parse(decodeURIComponent(escape(atob(v.slice(5)))));if(!o||typeof o.done!=="object")throw 0;ST=Object.assign({done:{},custom:[],upd:0},o);changed();rebuild();rerenderKeep();toast("Progresso restaurado.");}catch(e){$("#bkMsg").textContent="Código inválido. Confira se copiou inteiro, começando por CD27:.";}};
+ $("#rst").onclick=e=>{const b=e.currentTarget; if(!b.dataset.arm){b.dataset.arm="1";b.textContent="Toque de novo para confirmar";setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent="Apagar todo o progresso";}},4000);return;} ST={done:{},custom:[],upd:0};changed();rebuild();rerenderKeep();toast("Progresso apagado.");};
+};
+
+/* Configurações */
+function vConfig(){
+ const c=cfg(); const segH=(id,val,opts)=>'<div class="seg" role="tablist" id="'+id+'">'+opts.map(([k,n])=>'<button role="tab" type="button" data-v="'+k+'" aria-selected="'+(String(val)===k)+'">'+n+'</button>').join("")+'</div>';
+ const ck=(id,on,lbl)=>'<div class="cfgrow"><label for="'+id+'">'+lbl+'</label><input type="checkbox" id="'+id+'"'+(on?" checked":"")+'></div>';
+ let h='<section class="stack"><h2>Configurações</h2><p class="muted">Ajustes deste app. O progresso é salvo sozinho a cada tarefa marcada.</p></section>';
+ h+=cfgSync();
+ h+='<section class="panel"><h3>Rotina de estudo</h3><div class="cfgrow"><label for="cH1">Início nos dias úteis, até a baixa</label><input type="time" id="cH1" value="'+c.h1+'"></div><div class="cfgrow"><label for="cH2">Início nos dias úteis, depois da baixa</label><input type="time" id="cH2" value="'+c.h2+'"></div><div class="cfgrow"><label for="cHW">Início no sábado e no domingo</label><input type="time" id="cHW" value="'+c.hw+'"></div><p class="muted small">Hoje e Agenda mostram o horário de cada tarefa a partir daqui, com pausa de 10 min entre elas.</p></section>';
+ h+='<section class="panel"><h3>Data da baixa</h3><div class="cfgrow"><label for="cBx">Último dia de serviço</label><input type="date" id="cBx" min="2027-01-04" max="2027-06-30" value="'+c.baixa+'"></div><p class="muted small">Confirme com a Seção de Pessoal. Mudar a data muda o ritmo do cronograma (militar para civil), os marcos da saída e a contagem do topo. O que você já marcou continua marcado. A Google Agenda não muda sozinha: peça o ajuste na conversa.</p></section>';
+ h+='<section class="panel"><h3>O que entra no cronograma</h3>'+ck("cEng",c.eng,"Inglês (30 min)")+ck("cSql",c.sql,"Desafio SQL (20 min)")+ck("cPost",c.post,"Post semanal no LinkedIn")+'<p class="muted small">Cursos, projetos, perfil profissional e candidaturas ficam sempre.</p></section>';
+ h+='<section class="panel"><h3>Cronômetro e revisões</h3><div class="cfgrow"><label for="cFoc">Foco e pausa</label><select id="cFoc">'+[["50/10","50 + 10 min"],["45/15","45 + 15 min"],["25/5","25 + 5 min (pomodoro)"]].map(([v,n])=>'<option value="'+v+'"'+((c.foc||50)+"/"+(c.brk||10)===v?" selected":"")+'>'+n+'</option>').join("")+'</select></div>'+ck("cBeep",c.beep!==false,"Bipe e vibração ao fim de cada etapa")+'<div class="cfgrow"><label for="cNew">Flashcards novos por dia</label><select id="cNew">'+[5,10,15,20].map(v=>'<option'+((+c.newc||10)===v?" selected":"")+'>'+v+'</option>').join("")+'</select></div>'+ck("cAll",!!c.allDecks,"Liberar todos os baralhos (sem esperar o curso começar)")+'<p class="muted small">O cronômetro marca a tarefa como feita quando você completa os minutos dela. O tempo de foco aparece em Progresso.</p></section>';
+ h+=pushPanel();
+ if(c.rp) h+='<section class="panel"><h3>Reorganização do plano</h3><p class="small">O plano foi reorganizado em '+fmt(c.rp)+': o que estava atrasado foi para a frente.</p><div class="row"><button class="btn ghost sm" id="rpUndo" type="button">Desfazer reorganização</button></div></section>';
+ h+='<section class="panel"><h3>Tela inicial</h3>'+segH("homeSeg",c.home,[["hoje","Hoje"],["agenda","Agenda"],["last","Última aba aberta"]])+'</section>';
+ h+='<section class="panel"><h3>Lembretes</h3><p class="small">Os avisos chegam pela sua Google Agenda (a conta do Gmail sincronizada na conversa): 30 min antes de cada bloco de estudo e na véspera dos marcos. Para mudar os horários lá, peça na conversa.</p></section>';
+ h+='<section class="panel"><h3>Aparência</h3><span class="muted small">Tema</span>'+segH("thSeg",theme,[["auto","Automático"],["light","Claro"],["dark","Escuro"]])+'<span class="muted small">Tamanho da letra</span>'+segH("fzSeg",String(fz),[["0.92","92%"],["1","100%"],["1.12","112%"],["1.25","125%"],["1.4","140%"]])+'<p class="muted small">Tema e letra valem só para este aparelho.</p></section>';
+ h+='<section class="panel"><h3>Backup manual</h3><p class="muted small">Cópia do progresso por código, para guardar ou passar para outro aparelho. A importação substitui o progresso deste aparelho.</p><textarea id="bkTxt" aria-label="Código de backup" placeholder="Cole aqui o código de backup"></textarea><div class="row"><button class="btn ghost sm" id="bkGen" type="button">Gerar e copiar</button><button class="btn sm" id="bkImp" type="button">Importar código</button></div><p class="small muted" id="bkMsg" role="status"></p></section>';
+ h+='<section class="panel"><h3>Zerar progresso</h3><p class="muted small">Apaga as tarefas marcadas, os cursos cadastrados e os ajustes, neste aparelho e na sua conta.</p><div class="row"><button class="btn warn sm" id="rst" type="button">Apagar todo o progresso</button></div></section>';
+ h+='<section class="panel"><h3>Sobre</h3><p class="small">Versão 4 · '+TOTAL_TASKS+' tarefas de 07/12/2026 a '+fmt(lastDay())+'. Plano completo, até CDO: <a href="https://claude.ai/artifact/8hv4yXAzjq8wiUcX57jfv5" target="_blank" rel="noopener">Trilha até CDO</a>.</p></section>';
+ return h;
+}
+function setCfg(k,v){ST.cfg=Object.assign({},ST.cfg||{},{[k]:v});changed();}
+function wireCfg(el){
+ const fo=$("#cFoc"); if(fo) fo.onchange=e=>{const [f,b]=e.target.value.split("/").map(Number);ST.cfg=Object.assign({},ST.cfg||{},{foc:f,brk:b});changed();toast("Cronômetro: "+f+" + "+b+" min.");};
+ const be=$("#cBeep"); if(be) be.onchange=e=>setCfg("beep",e.target.checked);
+ const nw=$("#cNew"); if(nw) nw.onchange=e=>{setCfg("newc",+e.target.value);toast("Até "+e.target.value+" cards novos por dia.");};
+ const al=$("#cAll"); if(al) al.onchange=e=>{setCfg("allDecks",e.target.checked);toast(e.target.checked?"Todos os baralhos liberados.":"Baralhos seguem o andamento dos cursos.");};
+ const ru=$("#rpUndo"); if(ru) ru.onclick=replanUndo;
+ const pm=$("#cPm"); if(pm) pm.onchange=e=>{setCfg("pmin",+e.target.value);pushSync(true);};
+ const po=$("#pushOnB"); if(po) po.onclick=pushOn; const pf=$("#pushOffB"); if(pf) pf.onclick=pushOff;
+ const pt=$("#pushTest"); if(pt) pt.onclick=async()=>{try{const r=await navigator.serviceWorker.ready;r.showNotification("Teste · Carreira em Dados",{body:"As notificações estão funcionando.",icon:"icons/icon-192.png"});}catch(e){toast("Não deu para mostrar o teste.");}};
+ [["cH1","h1"],["cH2","h2"],["cHW","hw"]].forEach(([id,k])=>{$("#"+id).onchange=e=>{if(!e.target.value)return;setCfg(k,e.target.value);TCACHE={};toast("Horário salvo.");};});
+ $("#cBx").onchange=e=>{const v=e.target.value; if(!v||v<"2027-01-04"||v>"2027-06-30"){toast("Escolha uma data entre 04/01 e 30/06/2027.");return;} setCfg("baixa",v);rebuild();refreshHeader();toast("Cronograma recalculado para a baixa em "+fmtShort(v)+".");};
+ [["cEng","eng"],["cSql","sql"],["cPost","post"]].forEach(([id,k])=>{$("#"+id).onchange=e=>{setCfg(k,e.target.checked);rebuild();toast(e.target.checked?"Incluído no cronograma.":"Retirado do cronograma.");};});
+ el.querySelectorAll("#homeSeg button").forEach(b=>b.onclick=()=>{setCfg("home",b.dataset.v);rerenderKeep();toast("Tela inicial salva.");});
+ el.querySelectorAll("#fzSeg button").forEach(b=>b.onclick=()=>{fz=+b.dataset.v;try{localStorage.setItem(KEY+"-fz",fz);}catch(e){}applyFz();rerenderKeep();});
+}
+
+/* ================= v4: CRONÔMETRO DE FOCO (50 + 10) ================= */
+/* Estado só deste aparelho (localStorage); o tempo de foco vai para ST.log[dia] e sincroniza.
+   Ao completar os minutos da tarefa, o cronômetro marca a tarefa como feita. */
+const TMK=KEY+"-tm";
+let TM=null; try{TM=JSON.parse(localStorage.getItem(TMK)||"null");}catch(e){}
+function tmSave(){try{TM?localStorage.setItem(TMK,JSON.stringify(TM)):localStorage.removeItem(TMK);}catch(e){}}
+const tmFoc=()=>(+cfg().foc||50)*60, tmBrk=()=>(+cfg().brk||10)*60;
+function tmTask(){return TM&&(IDX[TM.id]||{t:TM.t||"Estudo livre",m:TM.m||50});}
+function tmElapsed(){if(!TM) return 0; return Math.floor(((TM.paused?TM.paused:Date.now())-TM.t0)/1000);}
+function tmPhaseLen(){if(!TM) return 0; if(TM.ph==="brk") return tmBrk(); const left=TM.target-TM.acc; return Math.max(1,Math.min(tmFoc(),left));}
+function tmStart(id){
+ if(TM&&TM.ph==="foc"&&!TM.paused) tmLogFocus();
+ const t=IDX[id]; TM={id,t:t?t.t:"Estudo livre",m:t?t.m:50,ph:"foc",t0:Date.now(),acc:0,target:(t?t.m:50)*60,paused:0};
+ tmSave(); tmEnsureUI(); sndAuto(true); toast("Cronômetro iniciado: "+(+cfg().foc||50)+" min de foco.");
+}
+function tmLog(sec){const m=Math.round(sec/60); if(m<1) return; const d=todayS(); ST.log=ST.log||{}; ST.log[d]=(ST.log[d]||0)+m; changed();}
+function tmLogFocus(){ if(!TM||TM.ph!=="foc") return; const e=Math.min(tmElapsed(),tmPhaseLen()); TM.acc+=e; tmLog(e); }
+function tmPause(){ if(!TM) return; if(TM.paused){TM.t0+=Date.now()-TM.paused;TM.paused=0;sndAuto(TM.ph==="foc");} else {TM.paused=Date.now();sndAuto(false);} tmSave(); tmRender(); }
+function tmStop(){ if(!TM) return; if(!TM.paused||TM.ph==="foc") tmLogFocus(); TM=null; tmSave(); sndAuto(false); tmRender(); }
+function tmFinishTask(){ const id=TM&&TM.id; if(id&&IDX[id]&&!isDone(id)){ ST.done[id]=todayS(); changed(); toastUndo("Tarefa concluída pelo cronômetro.",()=>{delete ST.done[id];changed();rerenderKeep();}); if(["hoje","agenda","prog"].includes(current)) rerenderKeep(); } }
+function tmTick(){
+ if(!TM){tmRender();return;}
+ if(TM.paused){tmRender();return;}
+ const len=tmPhaseLen(), e=tmElapsed();
+ if(e>=len){
+  if(TM.ph==="foc"){
+   TM.acc+=len; tmLog(len);
+   if(TM.acc>=TM.target){ tmFinishTask(); tmAlert("Tarefa concluída","Hora da pausa de "+(+cfg().brk||10)+" min. Levante, beba água."); TM.ph="brk"; TM.t0=Date.now(); TM.done=1; sndAuto(false); }
+   else { tmAlert("Pausa de "+(+cfg().brk||10)+" min","Você fez "+Math.round(TM.acc/60)+" de "+Math.round(TM.target/60)+" min desta tarefa."); TM.ph="brk"; TM.t0=Date.now(); sndAuto(false); }
+  } else {
+   if(TM.done){ tmAlert("Pausa encerrada","Abra a próxima tarefa de hoje e toque em ▶."); TM=null; }
+   else { tmAlert("Voltar ao foco","Mais "+Math.round(Math.min(tmFoc(),TM.target-TM.acc)/60)+" min de foco."); TM.ph="foc"; TM.t0=Date.now(); sndAuto(true); }
+  }
+  tmSave();
+ }
+ tmRender();
+}
+function beep(){ try{const A=window.AudioContext||window.webkitAudioContext; const c=sndCtx()||new A(); [0,0.25,0.5].forEach(d=>{const o=c.createOscillator(),g=c.createGain(); o.frequency.value=880; g.gain.setValueAtTime(0.0001,c.currentTime+d); g.gain.exponentialRampToValueAtTime(0.25,c.currentTime+d+0.02); g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+d+0.2); o.connect(g).connect(c.destination); o.start(c.currentTime+d); o.stop(c.currentTime+d+0.22);}); }catch(e){} }
+async function tmAlert(title,body){
+ if(cfg().beep!==false) beep();
+ if(navigator.vibrate) try{navigator.vibrate([200,100,200]);}catch(e){}
+ toast(title+". "+body);
+ try{ if(document.visibilityState!=="visible"&&"Notification" in window&&Notification.permission==="granted"){ const r=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration(); if(r) r.showNotification(title,{body,icon:"icons/icon-192.png",tag:"cd-tm"}); else new Notification(title,{body}); } }catch(e){}
+}
+function tmEnsureUI(){ if($("#tmbar")) return; const d=document.createElement("div"); d.id="tmbar"; d.setAttribute("role","region"); d.setAttribute("aria-label","Cronômetro"); document.body.appendChild(d); tmRender(); }
+function tmRender(){
+ const el=$("#tmbar"); if(!TM){ if(el) el.remove(); document.body.classList.remove("hastm"); return; }
+ if(!el){tmEnsureUI();return;}
+ document.body.classList.add("hastm");
+ const len=tmPhaseLen(), left=Math.max(0,len-tmElapsed()), mm=Math.floor(left/60), ss=left%60;
+ const tot=TM.target, doneS=TM.acc+(TM.ph==="foc"?Math.min(tmElapsed(),len):0);
+ const lbl=TM.ph==="foc"?"Foco":"Pausa";
+ const html='<div class="tmi"><span class="tmph '+TM.ph+'">'+lbl+(TM.paused?" · pausado":"")+'</span><span class="tmt" title="'+esc(TM.t)+'">'+esc(TM.t)+'</span><span class="track tmtr"><span class="fill" style="display:block;width:'+Math.min(100,Math.round(doneS/tot*100))+'%"></span></span></div><span class="tmc num">'+pad(mm)+":"+pad(ss)+'</span><div class="tmb"><button type="button" class="btn ghost sm" id="tmP" aria-label="'+(TM.paused?"Continuar":"Pausar")+'">'+(TM.paused?"▶":"❚❚")+'</button><button type="button" class="btn ghost sm" id="tmS" aria-label="Som para concentrar" aria-pressed="'+(SND.on?"true":"false")+'">♪</button><button type="button" class="btn ghost sm" id="tmX" aria-label="Parar">■</button></div>';
+ if(el.dataset.k!==TM.ph+TM.paused+TM.id+SND.on){ el.innerHTML=html; el.dataset.k=TM.ph+TM.paused+TM.id+SND.on; $("#tmP").onclick=tmPause; $("#tmX").onclick=tmStop; $("#tmS").onclick=()=>{sndToggle();el.dataset.k="";tmRender();}; }
+ else { el.querySelector(".tmc").textContent=pad(mm)+":"+pad(ss); el.querySelector(".tmtr .fill").style.width=Math.min(100,Math.round(doneS/tot*100))+"%"; }
+ try{document.title=(TM.paused?"❚❚ ":"")+pad(mm)+":"+pad(ss)+" · "+lbl;}catch(e){}
+}
+setInterval(tmTick,1000);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible") tmTick();});
+
+/* toast com Desfazer */
+function toastUndo(m,undo){const t=$("#toast");t.innerHTML='<span>'+esc(m)+'</span> <button type="button" class="linkbtn" id="tUndo">Desfazer</button>';t.classList.add("on");$("#tUndo").onclick=()=>{undo();t.classList.remove("on");};clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),6000);}
+
+/* ================= v4: SONS PARA CONCENTRAR (gerados no aparelho) ================= */
+const SNDK=KEY+"-snd";
+const SND={on:false,kind:"brown",vol:0.35,auto:false,ctx:null,node:null,gain:null};
+try{const o=JSON.parse(localStorage.getItem(SNDK)||"{}");if(o.kind)SND.kind=o.kind;if(o.vol!=null)SND.vol=o.vol;if(o.auto!=null)SND.auto=o.auto;}catch(e){}
+const SND_K=[["brown","Ruído marrom"],["pink","Ruído rosa"],["white","Ruído branco"],["rain","Chuva"],["waves","Ondas"]];
+function sndStore(){try{localStorage.setItem(SNDK,JSON.stringify({kind:SND.kind,vol:SND.vol,auto:SND.auto}));}catch(e){}}
+function sndCtx(){return SND.ctx;}
+function sndBuf(c,kind){
+ const n=c.sampleRate*4, b=c.createBuffer(2,n,c.sampleRate);
+ for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch); let l=0,b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+  for(let i=0;i<n;i++){const w=Math.random()*2-1; let v;
+   if(kind==="white") v=w*0.25;
+   else if(kind==="pink"){b0=.99886*b0+w*.0555179;b1=.99332*b1+w*.0750759;b2=.969*b2+w*.153852;b3=.8665*b3+w*.3104856;b4=.55*b4+w*.5329522;b5=-.7616*b5-w*.016898;v=(b0+b1+b2+b3+b4+b5+b6+w*.5362)*.06;b6=w*.115926;}
+   else { l=(l+0.02*w)/1.02; v=l*3.2; }
+   d[i]=v;}
+  /* emenda suave do loop */
+  for(let i=0;i<2000;i++){const f=i/2000; d[n-2000+i]=d[n-2000+i]*(1-f)+d[i]*f;}
+ }
+ return b;
+}
+function sndPlay(){
+ try{
+  const A=window.AudioContext||window.webkitAudioContext; if(!SND.ctx) SND.ctx=new A(); const c=SND.ctx; if(c.state==="suspended") c.resume();
+  sndStop(true);
+  const src=c.createBufferSource(); src.buffer=sndBuf(c,SND.kind==="rain"||SND.kind==="waves"?(SND.kind==="rain"?"pink":"brown"):SND.kind); src.loop=true;
+  const g=c.createGain(); g.gain.value=0; let out=src;
+  if(SND.kind==="rain"){const f=c.createBiquadFilter();f.type="highpass";f.frequency.value=900;src.connect(f);out=f;}
+  if(SND.kind==="waves"){const f=c.createBiquadFilter();f.type="lowpass";f.frequency.value=500;src.connect(f);const lfo=c.createOscillator(),lg=c.createGain();lfo.frequency.value=0.09;lg.gain.value=0.5;lfo.connect(lg).connect(g.gain);lfo.start();SND.lfo=lfo;out=f;}
+  out.connect(g).connect(c.destination); src.start();
+  g.gain.setTargetAtTime(SND.kind==="waves"?SND.vol*0.6:SND.vol,c.currentTime,0.4);
+  SND.node=src; SND.gain=g; SND.on=true;
+ }catch(e){SND.on=false;toast("Este navegador não tocou o som.");}
+}
+function sndStop(quick){ if(SND.node){const n=SND.node,g=SND.gain,c=SND.ctx; try{g.gain.setTargetAtTime(0,c.currentTime,quick?0.02:0.5);setTimeout(()=>{try{n.stop();}catch(e){}},quick?80:1500);}catch(e){} } if(SND.lfo){try{SND.lfo.stop();}catch(e){}SND.lfo=null;} SND.node=null; SND.on=false; }
+function sndToggle(){ if(SND.on) sndStop(); else sndPlay(); syncSndUI(); }
+function sndAuto(on){ if(!SND.auto) return; if(on&&!SND.on) sndPlay(); else if(!on&&SND.on) sndStop(); syncSndUI(); }
+function syncSndUI(){ document.querySelectorAll("[data-snd-on]").forEach(b=>{b.setAttribute("aria-pressed",SND.on?"true":"false");b.textContent=SND.on?"Parar som":"Tocar som";}); }
+
+/* ================= v4: REVISÃO ESPAÇADA (FSRS, igual ao app da Transpetro) ================= */
+const FW=[0.40255,1.18385,3.173,15.69105,7.1949,0.5345,1.4604,0.0046,1.54575,0.1192,1.01925,1.9395,0.11,0.29605,2.2698,0.2315,2.9898];
+const FF=19/81, FDEC=-0.5;
+const fClampD=d=>Math.min(10,Math.max(1,d));
+const fD0=g=>fClampD(FW[4]-Math.exp(FW[5]*(g-1))+1);
+function fNextD(d,g){const dd=d-FW[6]*(g-3)*(10-d)/9;return fClampD(FW[7]*fD0(4)+(1-FW[7])*dd);}
+function fRet(t,s){return Math.pow(1+FF*t/s,FDEC);}
+function fSucc(d,s,r,g){return s*(1+Math.exp(FW[8])*(11-d)*Math.pow(s,-FW[9])*(Math.exp(FW[10]*(1-r))-1)*(g===2?FW[15]:1)*(g===4?FW[16]:1));}
+function fFail(d,s,r){return Math.min(s,FW[11]*Math.pow(d,-FW[12])*(Math.pow(s+1,FW[13])-1)*Math.exp(FW[14]*(1-r)));}
+/* g: 1 De novo · 2 Difícil · 3 Bom · 4 Fácil */
+function srsGrade(id,g){
+ const t=todayS(); ST.srs=ST.srs||{}; let e=ST.srs[id];
+ if(!e){ e={s:FW[g-1],dif:fD0(g),l:t,f:t}; }
+ else { const el=Math.max(0,diff(e.l,t)), r=fRet(el,e.s); e.s=g===1?fFail(e.dif,e.s,r):fSucc(e.dif,e.s,r,g); e.dif=fNextD(e.dif,g); e.l=t; }
+ e.s=Math.round(e.s*100)/100; e.dif=Math.round(e.dif*100)/100;
+ e.d=g===1?t:addD(t,Math.max(1,Math.round(e.s)));
+ ST.srs[id]=e; ST.rv=ST.rv||{}; ST.rv[t]=(ST.rv[t]||0)+1;
+ changed();
+}
+function srsIv(id,g){const e=ST.srs&&ST.srs[id], t=todayS(); if(g===1) return "hoje"; let s; if(!e) s=FW[g-1]; else {const r=fRet(Math.max(0,diff(e.l,t)),e.s); s=fSucc(e.dif,e.s,r,g);} const d=Math.max(1,Math.round(s)); return d<30?d+" d":d<365?Math.round(d/30)+" m":Math.round(d/365*10)/10+" a";}
+function deckOpen(k){ if(cfg().allDecks) return true; const t=todayS(); return DECKS[k].c.some(cid=>{const c=COURSES.find(x=>x.id===cid); if(!c) return false; const id0="c:"+cid+":0"; return isDone(id0)||(IDX[id0]&&IDX[id0].date<=t);}); }
+function srsQueue(deck){
+ const t=todayS(), S=ST.srs||{};
+ const pool=CARDS.filter(c=>(deck==="all"?deckOpen(c[0]):c[0]===deck));
+ const due=pool.filter(c=>S[c.id]&&S[c.id].d<=t).sort((a,b)=>S[a.id].d<S[b.id].d?-1:1);
+ const newToday=Object.values(S).filter(e=>e.f===t).length;
+ const lim=Math.max(0,(+cfg().newc||10)-newToday);
+ const fresh=pool.filter(c=>!S[c.id]).slice(0,lim);
+ return {due,fresh,all:due.concat(fresh)};
+}
+function srsCounts(){ const q=srsQueue("all"); return {due:q.due.length,fresh:q.fresh.length}; }
+
+/* ================= v4: REORGANIZAR QUANDO ATRASAR ================= */
+function behindN(){ const t=todayS(); let n=0; for(let s=START;s<t;s=addD(s,1)) (SCHED[s]||[]).forEach(x=>{ if(/^[cpb]:/.test(x.id)&&!isDone(x.id)) n++; }); return n; }
+function replan(){
+ const c=cfg(), t=todayS();
+ ST.cfg=Object.assign({},ST.cfg||{},{rpPrev:c.rp||"",rp:t});
+ changed(); rebuild();
+ const last=lastDay();
+ toast("Pronto: o que ficou para trás foi redistribuído a partir de hoje."+(last>END?" O plano agora vai até "+fmtShort(last)+".":""));
+ rerenderKeep();
+}
+function replanUndo(){ const c=cfg(); ST.cfg=Object.assign({},ST.cfg||{},{rp:c.rpPrev||"",rpPrev:""}); changed(); rebuild(); rerenderKeep(); toast("Reorganização desfeita."); }
+function lastDay(){ const ks=Object.keys(SCHED); return ks.length?ks.sort()[ks.length-1]:END; }
+
+/* ================= v4: RESUMO SEMANAL E ESTATÍSTICAS ================= */
+function weekStats(a){
+ const b=addD(a,6), t=todayS(); let planned=0,pd=0,done=0,mins=0,cand=0,cards=0,tm=0; const byK={};
+ for(let s=a;s<=b;s=addD(s,1)){
+  (SCHED[s]||[]).forEach(x=>{ if(x.k==="folga")return; if(s<=t){planned++; if(isDone(x.id)) pd++;} });
+  tm+=(ST.log&&ST.log[s])||0; cards+=(ST.rv&&ST.rv[s])||0;
+ }
+ for(const id in ST.done){ const d=ST.done[id]; if(d<a||d>b) continue; done++; const x=IDX[id]; if(x){mins+=x.m; byK[x.k]=(byK[x.k]||0)+1;} }
+ Object.values(ST.apps||{}).forEach(p=>{ if(p.data>=a&&p.data<=b) cand++; });
+ return {a,b,planned,pd,done,mins,cand,cards,tm,byK};
+}
+function weekCard(ws,prev,title){
+ const pct=ws.planned?Math.round(ws.pd/ws.planned*100):0;
+ const cmp=(v,p,u)=>p==null?"":'<span class="muted small">'+(v>p?"▲ ":v<p?"▼ ":"= ")+(v===p?"igual":Math.abs(v-p)+(u||""))+' vs semana anterior</span>';
+ const best=Object.entries(ws.byK).sort((x,y)=>y[1]-x[1])[0];
+ let msg;
+ if(!ws.planned) msg="Semana sem tarefas no plano.";
+ else if(pct>=90) msg="Semana excelente. Mantenha o ritmo e não acrescente coisas novas: constância vence intensidade.";
+ else if(pct>=70) msg="Boa semana. Veja o que ficou pendente e escolha só o mais importante (curso ou projeto) para recuperar.";
+ else if(pct>=40) msg="Semana pela metade. Se foi falta de tempo, use \"Reorganizar o plano\" em Hoje em vez de acumular.";
+ else msg="Semana difícil. Sem culpa: reorganize o plano e recomece com o mínimo (uma tarefa por dia).";
+ return '<section class="panel"><h4>'+title+' · '+fmtShort(ws.a)+' a '+fmtShort(ws.b)+'</h4><div class="grid g4"><div class="fact"><span class="k">Em dia</span><span class="big">'+pct+'%</span><span class="muted small num">'+ws.pd+'/'+ws.planned+' planejadas</span></div><div class="fact"><span class="k">Feitas</span><span class="big">'+ws.done+'</span>'+cmp(ws.done,prev&&prev.done)+'</div><div class="fact"><span class="k">Foco no cronômetro</span><span class="big">'+Math.round(ws.tm/6)/10+' h</span>'+cmp(Math.round(ws.tm/6)/10,prev&&Math.round(prev.tm/6)/10," h")+'</div><div class="fact"><span class="k">Flashcards</span><span class="big">'+ws.cards+'</span>'+(ws.cand?'<span class="muted small">'+ws.cand+' candidatura'+(ws.cand>1?"s":"")+'</span>':"")+'</div></div><p class="small">'+esc(msg)+(best?' Área mais forte: '+KINDS[best[0]].toLowerCase()+'.':'')+'</p></section>';
+}
+function weeksChart(n){
+ const t=todayS(); let m=mondayOf(t<START?START:t); const rows=[];
+ for(let i=n-1;i>=0;i--){ const a=addD(m,-7*i); if(addD(a,6)<START) continue; rows.push(weekStats(a)); }
+ if(!rows.length) return '<p class="muted small">O gráfico aparece a partir da primeira semana do plano.</p>';
+ const mx=Math.max(1,...rows.map(r=>Math.max(r.planned,r.done)));
+ return '<div class="wk">'+rows.map(r=>'<div class="wkr"><span class="small num">'+fmtShort(r.a)+'</span><span class="wkb"><span class="wkp" style="width:'+Math.round(r.planned/mx*100)+'%"></span><span class="wkd" style="width:'+Math.round(r.pd/mx*100)+'%"></span></span><span class="small num muted">'+r.pd+'/'+r.planned+'</span></div>').join("")+'</div><p class="muted small"><span class="lg lgd"></span> feitas no plano <span class="lg lgp"></span> planejadas</p>';
+}
+function projection(){
+ const t=todayS(); const ids=MAINQ.filter(q=>q.k==="curso").map(q=>q.id); const left=ids.filter(id=>!isDone(id)).length;
+ let n=0; const from=addD(t,-27); for(const id of ids){const d=ST.done[id]; if(d&&d>=from&&d<=t) n++;}
+ const rate=n/4; if(t<START||rate<=0) return null;
+ const weeks=left/rate, end=addD(t,Math.ceil(weeks*7)); const plan=IDX[ids[ids.length-1]]&&IDX[ids[ids.length-1]].date;
+ return {left,rate,end,plan};
+}
+
+/* ================= v4: NOTIFICAÇÕES PUSH (versão instalável do GitHub) ================= */
+const VAPID_PUB="BKi1rhDT9AgD0pBxEUEAbBgg3QQ7BsTD1T_G3ZMsg6oBK4SjLUHcgeSrwF7Ol1g4wT8i9Cj5kPZ3o-10VSsgSew";
+const PUSH_K=KEY+"-push";
+const PUSH_OK=!IN_CLAUDE&&location.protocol==="https:"&&"serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window;
+function pushGet(){try{return JSON.parse(localStorage.getItem(PUSH_K)||"null");}catch(e){return null;}}
+function pushSet(o){try{o?localStorage.setItem(PUSH_K,JSON.stringify(o)):localStorage.removeItem(PUSH_K);}catch(e){}}
+function pushPlan(){
+ const out=[], now=Date.now(), before=+cfg().pmin||10, cc=srsCounts();
+ for(let i=0;i<14;i++){
+  const s=addD(todayS(),i), T=(SCHED[s]||[]).filter(x=>x.k!=="folga"); if(!T.length) continue;
+  const pend=T.filter(x=>!isDone(x.id)); if(!pend.length) continue;
+  const first=timeOf(pend[0].id).split("–")[0]; if(!first) continue;
+  const [H,M]=first.split(":").map(Number); const d=parse(s); d.setHours(H,M-before,0,0); if(d.getTime()<=now) continue;
+  const mins=pend.reduce((a,x)=>a+x.m,0);
+  out.push({t:d.getTime(),ti:"Em "+before+" min: "+pend[0].t.slice(0,60),b:pend.length+(pend.length===1?" tarefa":" tarefas")+" hoje ("+Math.round(mins/6)/10+" h)."+(i===0&&cc.due?" "+cc.due+" flashcards para revisar.":"")+" Toque para abrir.",u:"./"});
+ }
+ return out;
+}
+const b64u=s=>{const p="=".repeat((4-s.length%4)%4),b=atob((s+p).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from(b,c=>c.charCodeAt(0));};
+async function pushOn(){
+ const msg=$("#pushMsg");
+ try{
+  const perm=await Notification.requestPermission();
+  if(perm!=="granted"){if(msg)msg.textContent="As notificações foram bloqueadas. Libere nas configurações do navegador para este site.";return;}
+  const reg=await navigator.serviceWorker.ready;
+  const sub=(await reg.pushManager.getSubscription())||await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(VAPID_PUB)});
+  pushSet({sub:sub.toJSON(),h:""}); await pushSync(true);
+  toast("Pronto. Os avisos chegam mesmo com o app fechado.");
+ }catch(e){if(msg)msg.textContent="Não deu para ativar: "+(e.message||e);return;}
+ rerenderKeep();
+}
+async function pushOff(){
+ const o=pushGet(); pushSet(null);
+ try{if(o) await rpc("tp_push",{p_sub:o.sub,p_plan:[]});const reg=await navigator.serviceWorker.ready,s=await reg.pushManager.getSubscription();if(s)await s.unsubscribe();}catch(e){}
+ rerenderKeep();
+}
+let pushT=null;
+async function pushSync(now){
+ const o=pushGet(); if(!o||!PUSH_OK) return;
+ const plan=pushPlan(), h=JSON.stringify(plan);
+ if(!now&&h===o.h) return;
+ try{const r=await rpc("tp_push",{p_sub:o.sub,p_plan:plan});if(r!==undefined){o.h=h;o.at=Date.now();pushSet(o);}}catch(e){}
+}
+if(PUSH_OK){setTimeout(()=>pushSync(),4000);setInterval(()=>pushSync(),6*3600e3);}
+function pushKick(){if(!PUSH_OK||!pushGet())return;clearTimeout(pushT);pushT=setTimeout(()=>pushSync(),8000);}
+function pushPanel(){
+ const o=pushGet();
+ if(!PUSH_OK) return '<section class="panel"><h3>Notificações no celular</h3><p class="small">'+(IN_CLAUDE?"Aqui no claude.ai o navegador não permite avisos com a página fechada. Ative na versão instalável: ela avisa antes do primeiro bloco de cada dia, com a tarefa e as revisões pendentes.":"Este navegador não aceita notificações push. No iPhone, instale o app na tela de início (Compartilhar → Adicionar à Tela de Início) e abra por lá.")+'</p>'+(IN_CLAUDE?'<div class="row"><a class="btn ghost sm" href="'+GH_URL+(CL.code?"#sync="+CL.code:"")+'" target="_blank" rel="noopener">Abrir a versão instalável</a></div>':"")+'<p class="muted small">A Google Agenda continua avisando 30 min antes de cada bloco.</p></section>';
+ const nx=pushPlan()[0];
+ return '<section class="panel"><h3>Notificações no celular</h3><p class="small">'+(o?"Ligadas. O aviso chega "+(+cfg().pmin||10)+" min antes do primeiro bloco de cada dia, mesmo com o app fechado."+(nx?" Próximo: "+new Date(nx.t).toLocaleString("pt-BR",{weekday:"short",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})+".":""):"Receba um aviso antes do primeiro bloco de estudo de cada dia, com a tarefa e as revisões pendentes.")+'</p><div class="cfgrow"><label for="cPm">Avisar quantos minutos antes</label><select id="cPm">'+[0,5,10,15,30].map(v=>'<option value="'+v+'"'+((+cfg().pmin||10)===v||(v===0&&cfg().pmin===0)?" selected":"")+'>'+(v?v+" min":"Na hora")+'</option>').join("")+'</select></div><div class="row">'+(o?'<button class="btn ghost sm" id="pushOffB" type="button">Desligar</button><button class="btn ghost sm" id="pushTest" type="button">Testar agora</button>':'<button class="btn sm" id="pushOnB" type="button">Ativar notificações</button>')+'</div><p class="small muted" id="pushMsg" role="status"></p></section>';
+}
+
+/* ================= v4: TUTOR COM IA (capability sample, só no claude.ai) ================= */
+let SAMPLE=null, SAMPLE_ST="wait";
+setTimeout(async()=>{ try{ if(!IN_CLAUDE){SAMPLE_ST="off";return;} SAMPLE=await window.claude.use("sample"); SAMPLE_ST=SAMPLE?"ok":"off"; }catch(e){SAMPLE_ST="off";} if(current==="rev") rerenderKeep(); },0);
+const TUTOR_MODES={
+ erro:{n:"Explicar um erro",ph:"Cole a consulta SQL, a medida DAX ou o passo do Power Query e a mensagem de erro.",sys:"Você é um tutor paciente de SQL, DAX, Power Query e Excel para um iniciante brasileiro que está migrando para BI. Explique em português simples: 1) o que o erro quer dizer, 2) a causa mais provável no código enviado, 3) o código corrigido num bloco, 4) uma dica para não repetir. Seja breve."},
+ duvida:{n:"Tirar uma dúvida",ph:"Ex.: qual a diferença entre ALL e REMOVEFILTERS? Quando usar DirectQuery?",sys:"Você é um tutor de dados e Power BI para um iniciante brasileiro que vai fazer a certificação PL-300. Responda em português, direto, com um exemplo curto e prático (de preferência com dados administrativos, como documentos, prazos e compras). No fim, diga em uma linha se o tema costuma cair na PL-300."},
+ texto:{n:"Revisar texto (LinkedIn, currículo, post)",ph:"Cole o texto e diga onde vai usar.",sys:"Você revisa textos profissionais em português para alguém em transição de carreira: 8 anos como Cabo de Administração na Força Aérea Brasileira, formado em Análise e Desenvolvimento de Sistemas, buscando vaga de Analista de BI/Dados Júnior. Devolva: 1) a versão revisada, pronta para colar; 2) três ajustes que você fez e por quê. Regras: tom profissional e humano, verbos de ação, números quando houver, sem exagero nem clichês, sem jargão militar sem explicação. Nunca inclua informações internas da FAB. Enquanto ele for militar da ativa, não sugira oferecer serviços pagos."},
+ entrev:{n:"Simular entrevista",ph:"Escreva \"começar\" ou cole a descrição da vaga.",sys:"Você é um recrutador brasileiro entrevistando um candidato para Analista de BI/Dados Júnior. Faça UMA pergunta por vez (alternando comportamental e técnica de SQL, Power BI, DAX e Excel). Depois de cada resposta, dê uma nota de 0 a 10, um ponto forte, um ponto a melhorar e uma versão melhor da resposta em até 5 linhas (método STAR quando couber), e então faça a próxima pergunta. O candidato tem 8 anos de experiência administrativa na Força Aérea e está saindo em 2027. Responda sempre em português."}
+};
+let TUT={mode:"erro",msgs:[],busy:false,ctrl:null};
+async function tutorSend(txt){
+ txt=String(txt||"").trim(); if(!txt||TUT.busy) return; if(!SAMPLE){toast("O tutor funciona só no app do claude.ai.");return;}
+ const md=TUTOR_MODES[TUT.mode];
+ TUT.msgs.push({role:"user",content:txt}); TUT.msgs.push({role:"assistant",content:""}); TUT.busy=true; rerenderTutor();
+ const hist=TUT.msgs.slice(0,-1).slice(-12);
+ const input=[{role:"user",content:md.sys+"\n\n---\n\n"+hist[0].content}].concat(hist.slice(1));
+ TUT.ctrl=new AbortController();
+ try{
+  const r=await SAMPLE(input,{signal:TUT.ctrl.signal,cache:false,onText:({text})=>{TUT.msgs[TUT.msgs.length-1].content=text;updTutorLast();}});
+  TUT.msgs[TUT.msgs.length-1].content=r.text+(r.truncated?"\n\n(resposta cortada)":"");
+ }catch(e){
+  const c=e&&e.code; TUT.msgs[TUT.msgs.length-1].content=c==="not_granted"?"Sem permissão para usar o Claude nesta página. Libere no menu Permissões e tente de novo.":c==="rate_limited"?"Muitas perguntas seguidas. Espere um minuto e tente de novo.":(e&&e.text)||"Não deu para responder agora. Tente de novo em instantes.";
+  if(c==="not_granted"){SAMPLE_ST="denied";}
+ }
+ TUT.busy=false; TUT.ctrl=null; rerenderTutor();
+}
+function tutorMd(s){ return esc(s).replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g,(m,c)=>'<pre class="copybox">'+c+'</pre>').replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>").replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\n/g,"<br>"); }
+function tutorLog(){ if(!TUT.msgs.length) return '<p class="muted small">'+esc(TUTOR_MODES[TUT.mode].ph)+'</p>'; return TUT.msgs.map((m,i)=>'<div class="msg '+m.role+'"'+(i===TUT.msgs.length-1?' id="tutLast"':'')+'>'+(m.role==="assistant"&&!m.content?'<span class="muted">Pensando…</span>':tutorMd(m.content))+'</div>').join(""); }
+function updTutorLast(){ const e=$("#tutLast"); if(e){const m=TUT.msgs[TUT.msgs.length-1]; e.innerHTML=m.content?tutorMd(m.content):'<span class="muted">Pensando…</span>';} }
+function rerenderTutor(){ if(current==="rev"&&revSeg==="tut"){ const l=$("#tutLog"); if(l){l.innerHTML=tutorLog(); const b=$("#tutGo"); if(b){b.disabled=TUT.busy;b.textContent=TUT.busy?"Respondendo…":"Enviar";} const st=$("#tutStop"); if(st) st.hidden=!TUT.busy; } } }
+function tutorAsk(mode,txt){ TUT.mode=mode; TUT.msgs=[]; revSeg="tut"; go("rev"); setTimeout(()=>tutorSend(txt),50); }
+
+/* ================= v4: MODO ÁUDIO (flashcards falados) ================= */
+const AU={on:false,list:[],i:0,ph:0,rate:1,deck:"all",t:null};
+const TTS_OK="speechSynthesis" in window;
+function auVoice(){ const vs=speechSynthesis.getVoices(); return vs.find(v=>/pt[-_]BR/i.test(v.lang))||vs.find(v=>/^pt/i.test(v.lang))||null; }
+function auSay(txt,cb){ const u=new SpeechSynthesisUtterance(txt); const v=auVoice(); if(v) u.voice=v; u.lang="pt-BR"; u.rate=AU.rate; u.onend=cb; u.onerror=cb; speechSynthesis.speak(u); }
+function auStart(){
+ if(!TTS_OK){toast("Este navegador não tem leitura em voz alta.");return;}
+ const q=AU.deck==="due"?srsQueue("all").due:CARDS.filter(c=>AU.deck==="all"?deckOpen(c[0]):c[0]===AU.deck);
+ if(!q.length){toast("Nenhum card neste baralho ainda.");return;}
+ AU.list=q.slice().sort(()=>Math.random()-.5); AU.i=0; AU.on=true; speechSynthesis.cancel();
+ try{ if(navigator.mediaSession){ navigator.mediaSession.metadata=new MediaMetadata({title:"Flashcards · Carreira em Dados",artist:"Revisão em áudio"}); navigator.mediaSession.setActionHandler("pause",auStop); navigator.mediaSession.setActionHandler("nexttrack",auNext);} }catch(e){}
+ auStep(); auUI();
+}
+function auStep(){
+ if(!AU.on) return; if(AU.i>=AU.list.length){AU.on=false;auSay("Fim da revisão. Bom trabalho.",()=>{});auUI();return;}
+ const c=AU.list[AU.i]; auUI();
+ auSay("Pergunta. "+c[1],()=>{ if(!AU.on) return; AU.t=setTimeout(()=>{ if(!AU.on) return; auSay("Resposta. "+c[2],()=>{ if(!AU.on) return; AU.t=setTimeout(()=>{AU.i++;auStep();},1800); }); },+cfg().aupause*1000||4000); });
+}
+function auNext(){ clearTimeout(AU.t); speechSynthesis.cancel(); AU.i++; setTimeout(auStep,150); }
+function auStop(){ AU.on=false; clearTimeout(AU.t); if(TTS_OK) speechSynthesis.cancel(); auUI(); }
+function auUI(){ const e=$("#auNow"); if(!e) return; if(!AU.on){e.innerHTML='<p class="muted small">Parado.</p>';const b=$("#auGo");if(b)b.textContent="▶ Começar";return;} const c=AU.list[AU.i]; e.innerHTML=c?'<p class="small muted num">'+(AU.i+1)+' de '+AU.list.length+' · '+esc(DECKS[c[0]].n)+'</p><p><strong>'+esc(c[1])+'</strong></p><p class="small">'+esc(c[2])+'</p>':""; const b=$("#auGo"); if(b) b.textContent="■ Parar"; }
+
+
+/* ================= v4: ABA REVISAR ================= */
+let revSeg="cards", fcDeck="all", fcCur=null, fcShow=false, skOpen="prep";
+function vRev(){
+ const segs=[["cards","Flashcards"],["pl","Habilidades PL-300"],["au","Áudio e sons"],["tut","Tutor IA"]];
+ let h='<section class="panel"><h4>Revisar</h4><h2>Fixar o que você estudou</h2><p>Flashcards com revisão espaçada, o checklist oficial da PL-300, revisão em áudio e um tutor com IA para dúvidas e erros.</p><div class="seg" role="tablist">'+segs.map(([k,n])=>'<button role="tab" type="button" data-r="'+k+'" aria-selected="'+(revSeg===k)+'">'+n+'</button>').join("")+'</div></section>';
+ if(revSeg==="cards") h+=vCards(); else if(revSeg==="pl") h+=vSkills(); else if(revSeg==="au") h+=vAudio(); else h+=vTutor();
+ return h;
+}
+function vCards(){
+ const q=srsQueue(fcDeck), S=ST.srs||{};
+ const open=Object.keys(DECKS).filter(deckOpen);
+ let h='<section class="panel"><div class="dayhead"><h3>Revisão de hoje</h3><span class="pill pri num">'+q.due.length+' para revisar · '+q.fresh.length+' novos</span></div>';
+ h+='<div class="row" style="gap:6px"><button class="chip'+(fcDeck==="all"?" on":"")+'" data-dk="all" type="button">Todos liberados</button>'+Object.entries(DECKS).map(([k,d])=>'<button class="chip'+(fcDeck===k?" on":"")+'" data-dk="'+k+'" type="button"'+(deckOpen(k)?"":" disabled")+'>'+esc(d.n)+(deckOpen(k)?"":" 🔒")+'</button>').join("")+'</div>';
+ if(!open.length) h+='<p class="small">Os baralhos abrem sozinhos quando o curso ligado a eles começa na agenda (Excel abre em 07/12). Para estudar antes, ligue "Liberar todos os baralhos" em Configurações.</p>';
+ else if(!q.all.length) h+='<p class="small">Nada para revisar agora neste baralho. Volte amanhã: revisar no dia certo vale mais que revisar muito.</p>';
+ else {
+  if(!fcCur||!q.all.some(c=>c.id===fcCur)){fcCur=q.all[0].id;fcShow=false;}
+  const c=CARDS.find(x=>x.id===fcCur), e=S[c.id];
+  h+='<div class="fc" id="fc"><span class="muted small">'+esc(DECKS[c[0]].n)+(e?" · revisão":" · novo")+'</span><p class="fcq">'+esc(c[1])+'</p>'+(fcShow?'<p class="fca">'+esc(c[2])+'</p>':'')+'</div>';
+  if(!fcShow) h+='<div class="row"><button class="btn" id="fcShow" type="button">Mostrar resposta</button></div>';
+  else h+='<div class="fcg">'+[[1,"De novo"],[2,"Difícil"],[3,"Bom"],[4,"Fácil"]].map(([g,n])=>'<button class="btn '+(g===1?"warn":g===3?"":"ghost")+' sm" data-g="'+g+'" type="button">'+n+'<span class="small">'+srsIv(c.id,g)+'</span></button>').join("")+'</div>'+(SAMPLE?'<div class="row"><button class="linkbtn" id="fcAsk" type="button">Pedir explicação ao tutor</button></div>':"");
+ }
+ h+='</section>';
+ const tot=CARDS.length, seen=Object.keys(S).length, firm=Object.values(S).filter(e=>e.s>=21).length;
+ const fc=[]; for(let i=1;i<=7;i++){const d=addD(todayS(),i); fc.push([d,Object.values(S).filter(e=>e.d===d).length]);}
+ const mx=Math.max(1,...fc.map(x=>x[1]));
+ h+='<section class="panel"><h3>Seu progresso nos cards</h3><div class="grid g3"><div class="fact"><span class="k">Vistos</span><span class="big">'+seen+'</span><span class="muted small">de '+tot+'</span></div><div class="fact"><span class="k">Fixados (3+ semanas)</span><span class="big">'+firm+'</span></div><div class="fact"><span class="k">Revisados hoje</span><span class="big">'+((ST.rv&&ST.rv[todayS()])||0)+'</span></div></div><h4>Próximos 7 dias</h4><div class="fcst">'+fc.map(([d,n])=>'<div class="fcb"><span class="fcbar" style="height:'+Math.max(4,Math.round(n/mx*60))+'px"></span><span class="small num">'+n+'</span><span class="muted small">'+fmtShort(d).slice(0,2)+'</span></div>').join("")+'</div><p class="muted small">Como funciona: "De novo" volta hoje; "Bom" espaça cada vez mais (1, 3, 8, 20 dias…). É o mesmo método (FSRS) do app da Transpetro. Até '+(+cfg().newc||10)+' cards novos por dia (muda em Configurações).</p></section>';
+ return h;
+}
+function skLv(id){const e=ST.sk&&ST.sk[id];return e?e.v:0;}
+function skPct(d){const it=d.g.flatMap(g=>g.items);return it.reduce((a,x)=>a+skLv(x.id),0)/(it.length*2);}
+function vSkills(){
+ const ready=SKILLS.reduce((a,d)=>a+skPct(d)*d.w,0)/SKILLS.reduce((a,d)=>a+d.w,0);
+ let h='<section class="panel"><div class="dayhead"><h3>Prontidão para a PL-300</h3><span class="big">'+Math.round(ready*100)+'%</span></div><div class="track"><div class="fill'+(ready>=.8?" ok":"")+'" style="width:'+Math.round(ready*100)+'%"></div></div><p class="small">Marque cada habilidade como <strong>Estudei</strong> ou <strong>Domino</strong> (consegue fazer sem consultar). A média já considera o peso de cada área na prova. Agende a prova quando passar de 80% e acertar 75% ou mais no <a href="https://learn.microsoft.com/pt-br/credentials/certifications/exams/pl-300/practice/assessment?assessment-type=practice&assessmentId=48" target="_blank" rel="noopener">simulado gratuito da Microsoft</a>.</p></section>';
+ SKILLS.forEach(d=>{ const p=Math.round(skPct(d)*100);
+  h+='<section class="panel"><details class="acc" style="border:0;padding:0"'+(skOpen===d.id?" open":"")+' data-sko="'+d.id+'"><summary><span class="stack" style="gap:4px;flex:1;min-width:0"><span class="row" style="gap:8px"><strong>'+esc(d.n)+'</strong><span class="pill">'+(d.w===17.5?"15–20%":"25–30%")+' da prova</span></span><span class="track"><span class="fill'+(p>=80?" ok":"")+'" style="display:block;width:'+p+'%"></span></span><span class="muted small num">'+p+'% pronto</span></span><span class="chev">›</span></summary>'+d.g.map(g=>'<h4 style="margin-top:12px">'+esc(g[0])+'</h4>'+g.items.map(x=>'<div class="skr"><span class="small">'+esc(x.t)+'</span><span class="sks" role="radiogroup" aria-label="'+esc(x.t)+'">'+SK_LV.map((n,v)=>'<button type="button" role="radio" aria-checked="'+(skLv(x.id)===v)+'" data-sk="'+x.id+'" data-v="'+v+'">'+n+'</button>').join("")+'</span></div>').join("")).join("")+'</details></section>';
+ });
+ return h;
+}
+function vAudio(){
+ let h='<section class="panel"><h3>Revisão em áudio</h3><p class="small">O app lê a pergunta, espera alguns segundos para você responder de cabeça e lê a resposta. Bom para o ônibus, a academia ou lavando louça. Funciona com fone e com a tela bloqueada na maioria dos celulares.</p>'+(TTS_OK?'<div class="cfgrow"><label for="auDeck">O que ouvir</label><select id="auDeck"><option value="all"'+(AU.deck==="all"?" selected":"")+'>Todos os baralhos liberados</option><option value="due"'+(AU.deck==="due"?" selected":"")+'>Só os de revisão hoje</option>'+Object.entries(DECKS).filter(([k])=>deckOpen(k)).map(([k,d])=>'<option value="'+k+'"'+(AU.deck===k?" selected":"")+'>'+esc(d.n)+'</option>').join("")+'</select></div><div class="cfgrow"><label for="auRate">Velocidade da voz</label><select id="auRate">'+[[0.85,"Devagar"],[1,"Normal"],[1.2,"Rápida"]].map(([v,n])=>'<option value="'+v+'"'+(AU.rate===v?" selected":"")+'>'+n+'</option>').join("")+'</select></div><div class="row"><button class="btn" id="auGo" type="button">'+(AU.on?"■ Parar":"▶ Começar")+'</button><button class="btn ghost sm" id="auNx" type="button">Pular</button></div><div id="auNow" class="note" aria-live="polite"></div>':'<p class="small">Este navegador não tem leitura em voz alta.</p>')+'</section>';
+ h+='<section class="panel"><h3>Sons para concentrar</h3><p class="small">Gerados no próprio aparelho, sem internet. Ruído marrom é o mais usado para foco; chuva e ondas são mais suaves.</p><div class="seg" role="radiogroup" id="sndK">'+SND_K.map(([k,n])=>'<button type="button" role="radio" data-v="'+k+'" aria-selected="'+(SND.kind===k)+'">'+n+'</button>').join("")+'</div><div class="cfgrow"><label for="sndV">Volume</label><input type="range" id="sndV" min="0.05" max="0.8" step="0.05" value="'+SND.vol+'"></div><div class="cfgrow"><label for="sndA">Tocar sozinho durante o foco do cronômetro</label><input type="checkbox" id="sndA"'+(SND.auto?" checked":"")+'></div><div class="row"><button class="btn" data-snd-on type="button" aria-pressed="'+(SND.on?"true":"false")+'">'+(SND.on?"Parar som":"Tocar som")+'</button></div></section>';
+ return h;
+}
+function vTutor(){
+ if(SAMPLE_ST!=="ok") return '<section class="panel"><h3>Tutor com IA</h3><p class="small">'+(SAMPLE_ST==="wait"?"Conectando…":IN_CLAUDE?"O tutor não está disponível nesta visualização. Abra o app direto pelo claude.ai, entrando na sua conta.":"O tutor usa o Claude da sua conta, então funciona só no app do claude.ai (o mesmo progresso, sincronizado).")+'</p>'+(IN_CLAUDE?"":'<div class="row"><a class="btn ghost sm" href="https://claude.ai/artifact/3QgJ1QWWD8CrntaYdKDghu" target="_blank" rel="noopener">Abrir no claude.ai</a></div>')+'</section>';
+ return '<section class="panel"><h3>Tutor com IA</h3><div class="seg" role="tablist" id="tutM">'+Object.entries(TUTOR_MODES).map(([k,m])=>'<button type="button" role="tab" data-v="'+k+'" aria-selected="'+(TUT.mode===k)+'">'+esc(m.n)+'</button>').join("")+'</div><div id="tutLog" class="tutlog" aria-live="polite">'+tutorLog()+'</div><textarea id="tutIn" aria-label="Mensagem para o tutor" placeholder="'+esc(TUTOR_MODES[TUT.mode].ph)+'"></textarea><div class="row"><button class="btn" id="tutGo" type="button"'+(TUT.busy?" disabled":"")+'>'+(TUT.busy?"Respondendo…":"Enviar")+'</button><button class="btn ghost sm" id="tutStop" type="button"'+(TUT.busy?"":" hidden")+'>Parar</button><button class="btn ghost sm" id="tutNew" type="button">Nova conversa</button></div><p class="muted small">Não cole dados pessoais nem informações internas da FAB. A conversa não fica salva.</p></section>';
+}
+WIRES.rev=el=>{
+ el.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{revSeg=b.dataset.r;rerenderKeep();});
+ el.querySelectorAll("[data-dk]").forEach(b=>b.onclick=()=>{fcDeck=b.dataset.dk;fcCur=null;rerenderKeep();});
+ const sh=$("#fcShow"); if(sh) sh.onclick=()=>{fcShow=true;rerenderKeep();};
+ el.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{srsGrade(fcCur,+b.dataset.g);fcCur=null;fcShow=false;rerenderKeep();});
+ const fa=$("#fcAsk"); if(fa) fa.onclick=()=>{const c=CARDS.find(x=>x.id===fcCur); tutorAsk("duvida","Explique melhor este flashcard, com um exemplo prático:\nPergunta: "+c[1]+"\nResposta: "+c[2]);};
+ el.querySelectorAll("[data-sk]").forEach(b=>b.onclick=()=>{ST.sk=ST.sk||{};ST.sk[b.dataset.sk]={v:+b.dataset.v,t:Date.now()};changed();rerenderKeep();});
+ el.querySelectorAll("details[data-sko]").forEach(d=>d.addEventListener("toggle",()=>{if(d.open)skOpen=d.dataset.sko;}));
+ const ag=$("#auGo"); if(ag) ag.onclick=()=>{AU.on?auStop():auStart();}; const an=$("#auNx"); if(an) an.onclick=()=>{if(AU.on)auNext();};
+ const ad=$("#auDeck"); if(ad) ad.onchange=e=>{AU.deck=e.target.value;}; const ar=$("#auRate"); if(ar) ar.onchange=e=>{AU.rate=+e.target.value;};
+ auUI();
+ el.querySelectorAll("#sndK button").forEach(b=>b.onclick=()=>{SND.kind=b.dataset.v;sndStore();if(SND.on)sndPlay();rerenderKeep();});
+ const sv=$("#sndV"); if(sv) sv.oninput=e=>{SND.vol=+e.target.value;sndStore();if(SND.gain)SND.gain.gain.setTargetAtTime(SND.kind==="waves"?SND.vol*.6:SND.vol,SND.ctx.currentTime,.1);};
+ const sa=$("#sndA"); if(sa) sa.onchange=e=>{SND.auto=e.target.checked;sndStore();};
+ el.querySelectorAll("[data-snd-on]").forEach(b=>b.onclick=sndToggle);
+ el.querySelectorAll("#tutM button").forEach(b=>b.onclick=()=>{if(TUT.busy)return;TUT.mode=b.dataset.v;TUT.msgs=[];rerenderKeep();});
+ const tg=$("#tutGo"); if(tg) tg.onclick=()=>{const v=$("#tutIn").value;$("#tutIn").value="";tutorSend(v);};
+ const ts=$("#tutStop"); if(ts) ts.onclick=()=>{if(TUT.ctrl)TUT.ctrl.abort();};
+ const tn=$("#tutNew"); if(tn) tn.onclick=()=>{if(TUT.ctrl)TUT.ctrl.abort();TUT.msgs=[];TUT.busy=false;rerenderKeep();};
+ const ti=$("#tutIn"); if(ti) ti.onkeydown=e=>{if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){e.preventDefault();tg&&tg.click();}};
+};
+
+/* ================= v4: CANDIDATURAS (Perfil › Candidaturas) ================= */
+let apEdit=null, apFilter="ativas";
+function apList(){return Object.entries(ST.apps||{}).map(([id,p])=>Object.assign({id},p)).sort((a,b)=>(b.data||"").localeCompare(a.data||""));}
+const AP_ACTIVE=new Set(["env","tri","tec","ent","fin","prop"]);
+function apFollow(){ const t=todayS(); return apList().filter(p=>(p.etapa==="env"||p.etapa==="tri")&&p.data&&diff(p.data,t)>=10&&!(p.fu&&diff(p.fu,t)<7)); }
+function vApps(){
+ const L=apList(), t=todayS();
+ const n=L.length, act=L.filter(p=>AP_ACTIVE.has(p.etapa)).length, resp=L.filter(p=>!["env","sem"].includes(p.etapa)).length, ent=L.filter(p=>["ent","fin","prop"].includes(p.etapa)).length;
+ let h='<section class="panel"><h3>Controle de candidaturas</h3>'+(t<CIVIL?'<p class="small">Até a baixa ('+fmtShort(BAIXA)+'), candidate-se só para vagas com início depois dela e deixe isso claro no currículo ("disponível a partir de '+fmtShort(CIVIL)+'").</p>':'')+'<div class="grid g4"><div class="fact"><span class="k">Enviadas</span><span class="big">'+n+'</span></div><div class="fact"><span class="k">Em andamento</span><span class="big">'+act+'</span></div><div class="fact"><span class="k">Com resposta</span><span class="big">'+(n?Math.round(resp/n*100):0)+'%</span></div><div class="fact"><span class="k">Entrevistas</span><span class="big">'+ent+'</span></div></div>'+(n>=20&&!ent?'<p class="small tip">20 ou mais candidaturas sem entrevista costuma ser sinal de currículo ou portfólio. Use o tutor (Revisar › Tutor IA) para revisar o currículo e peça opinião a alguém da área.</p>':'')+'</section>';
+ const fu=apFollow();
+ if(fu.length) h+='<section class="panel"><h3>Cobrar retorno <span class="pill bad num">'+fu.length+'</span></h3><p class="small muted">Enviadas há 10 dias ou mais sem resposta. Mande uma mensagem curta ao recrutador no LinkedIn ou marque como "Sem retorno".</p>'+fu.map(p=>'<div class="cust"><div class="stack" style="gap:2px;min-width:0"><strong>'+esc(p.emp)+'</strong><span class="small muted">'+esc(p.vaga)+' · '+diff(p.data,t)+' dias</span></div><div class="row"><button class="btn ghost sm" data-fu="'+p.id+'" type="button">Cobrei</button><button class="btn ghost sm" data-sem="'+p.id+'" type="button">Sem retorno</button></div></div>').join("")+'</section>';
+ const e=apEdit&&apEdit!=="new"?Object.assign({id:apEdit},(ST.apps||{})[apEdit]):{data:t,etapa:"env",fonte:"LinkedIn"};
+ h+='<section class="panel"><details class="acc" style="border:0;padding:0"'+(apEdit?" open":"")+' id="apForm"><summary><h3>'+(apEdit&&apEdit!=="new"?"Editar candidatura":"+ Nova candidatura")+'</h3><span class="chev">›</span></summary><div class="stack"><div class="g2f"><label class="fl">Empresa<input type="text" id="apE" value="'+esc(e.emp||"")+'"></label><label class="fl">Vaga<input type="text" id="apV" value="'+esc(e.vaga||"")+'"></label><label class="fl">Data do envio<input type="date" id="apD" value="'+esc(e.data||t)+'"></label><label class="fl">Etapa<select id="apS">'+ETAPAS.map(([k,n])=>'<option value="'+k+'"'+(e.etapa===k?" selected":"")+'>'+n+'</option>').join("")+'</select></label><label class="fl">Onde achou<select id="apF">'+FONTES.map(f=>'<option'+(e.fonte===f?" selected":"")+'>'+f+'</option>').join("")+'</select></label><label class="fl">Link da vaga<input type="url" id="apL" value="'+esc(e.link||"")+'" placeholder="https://"></label></div><label class="fl">Anotações (salário, contato, próximos passos)<textarea id="apO">'+esc(e.obs||"")+'</textarea></label><div class="row"><button class="btn" id="apSave" type="button">Salvar</button>'+(apEdit&&apEdit!=="new"?'<button class="btn ghost sm" id="apCancel" type="button">Cancelar</button><button class="btn warn sm" id="apDel" type="button">Excluir</button>':'')+(SAMPLE?'<button class="linkbtn" id="apTut" type="button">Treinar entrevista para esta vaga</button>':'')+'</div></div></details></section>';
+ const F=L.filter(p=>apFilter==="todas"||(apFilter==="ativas"?AP_ACTIVE.has(p.etapa):!AP_ACTIVE.has(p.etapa)));
+ h+='<section class="panel"><div class="dayhead"><h3>Suas candidaturas</h3><div class="seg" id="apFl">'+[["ativas","Ativas"],["fechadas","Encerradas"],["todas","Todas"]].map(([k,nm])=>'<button type="button" data-v="'+k+'" aria-selected="'+(apFilter===k)+'">'+nm+'</button>').join("")+'</div></div>'+(F.length?F.map(p=>'<div class="apr"><div class="stack" style="gap:2px;min-width:0"><strong style="overflow-wrap:anywhere">'+esc(p.emp)+'</strong><span class="small">'+esc(p.vaga)+'</span><span class="small muted">'+(p.data?fmtShort(p.data):"")+' · '+esc(p.fonte||"")+(p.link?' · <a href="'+esc(p.link)+'" target="_blank" rel="noopener">vaga</a>':'')+'</span></div><div class="row" style="gap:6px"><select data-st="'+p.id+'" aria-label="Etapa de '+esc(p.emp)+'">'+ETAPAS.map(([k,n])=>'<option value="'+k+'"'+(p.etapa===k?" selected":"")+'>'+n+'</option>').join("")+'</select><button class="btn ghost sm" data-ed="'+p.id+'" type="button">Editar</button></div></div>').join(""):'<p class="muted small">'+(n?"Nenhuma nesta lista.":"Nenhuma candidatura registrada ainda. Registre cada envio: em poucas semanas você vê o que funciona (fonte, tipo de vaga, currículo).")+'</p>')+'</section>';
+ return h;
+}
+function apSet(id,o){ST.apps=ST.apps||{};ST.apps[id]=Object.assign({},ST.apps[id]||{},o,{u:Date.now()});changed();}
+function wireApps(el){
+ const v=id=>($("#"+id)||{}).value||"";
+ const sv=$("#apSave"); if(sv) sv.onclick=()=>{ const emp=v("apE").trim(), vaga=v("apV").trim(); if(!emp||!vaga){toast("Informe a empresa e a vaga.");return;} const link=v("apL").trim(); const id=apEdit&&apEdit!=="new"?apEdit:"a"+Date.now().toString(36)+Math.random().toString(36).slice(2,5); apSet(id,{emp,vaga,data:v("apD"),etapa:v("apS"),fonte:v("apF"),link:/^https?:\/\//.test(link)?link:"",obs:v("apO")}); apEdit=null; rerenderKeep(); toast("Candidatura salva."); };
+ const cc=$("#apCancel"); if(cc) cc.onclick=()=>{apEdit=null;rerenderKeep();};
+ const dl=$("#apDel"); if(dl) dl.onclick=e=>{const b=e.currentTarget; if(!b.dataset.arm){b.dataset.arm="1";b.textContent="Toque de novo para excluir";return;} delete ST.apps[apEdit]; changed(); apEdit=null; rerenderKeep(); toast("Candidatura excluída.");};
+ const tu=$("#apTut"); if(tu) tu.onclick=()=>tutorAsk("entrev","Vaga: "+v("apV")+" na empresa "+v("apE")+(v("apL")?" ("+v("apL")+")":"")+". "+(v("apO")?"Anotações: "+v("apO"):"")+" Comece a entrevista.");
+ const fm=$("#apForm"); if(fm) fm.addEventListener("toggle",()=>{if(fm.open&&!apEdit)apEdit="new"; if(!fm.open)apEdit=null;});
+ el.querySelectorAll("[data-ed]").forEach(b=>b.onclick=()=>{apEdit=b.dataset.ed;rerenderKeep();const f=$("#apForm");if(f)f.scrollIntoView({block:"start"});});
+ el.querySelectorAll("select[data-st]").forEach(s=>s.onchange=()=>{apSet(s.dataset.st,{etapa:s.value});toast("Etapa atualizada: "+ETAPA_N[s.value]+".");rerenderKeep();});
+ el.querySelectorAll("[data-fu]").forEach(b=>b.onclick=()=>{apSet(b.dataset.fu,{fu:todayS()});rerenderKeep();});
+ el.querySelectorAll("[data-sem]").forEach(b=>b.onclick=()=>{apSet(b.dataset.sem,{etapa:"sem"});rerenderKeep();});
+ el.querySelectorAll("#apFl button").forEach(b=>b.onclick=()=>{apFilter=b.dataset.v;rerenderKeep();});
+}
+
+/* ================= v4: DIÁRIO DE PROJETOS ================= */
+function diaryOf(pid){return Object.entries(ST.diary||{}).filter(([,e])=>e.p===pid).map(([id,e])=>Object.assign({id},e)).sort((a,b)=>(a.d+a.u)<(b.d+b.u)?-1:1);}
+function diaryAdd(pid,txt,tid){txt=String(txt||"").trim(); if(!txt) return false; ST.diary=ST.diary||{}; ST.diary["d"+Date.now().toString(36)+Math.random().toString(36).slice(2,5)]={p:pid,d:todayS(),txt,tid:tid||"",u:Date.now()}; changed(); return true;}
+function readmeFor(pid){
+ const p=PROJECTS.find(x=>x.id===pid), D=diaryOf(pid), steps=p.s.filter((_,i)=>isDone("p:"+pid+":"+i));
+ return "# "+p.n+"\n\n"+(/fict/i.test(p.src)?"> Dados 100% fictícios, criados para este estudo.\n\n":"")+"## Por que este projeto\n"+p.why+"\n\n## Fonte dos dados\n"+p.src+(p.u?" ("+p.u+")":"")+"\n\n## O que eu fiz\n"+(steps.length?steps.map(s=>"- "+s).join("\n"):"- (marque as etapas concluídas no app)")+"\n\n## Diário de desenvolvimento\n"+(D.length?D.map(e=>"- **"+fmtShort(e.d)+"**: "+e.txt.replace(/\n+/g," ")).join("\n"):"- (anote o que fez em cada sessão)")+"\n\n## Principais resultados\n1. \n2. \n3. \n\n## Prints\n![Visão geral](img/visao-geral.png)\n\n## Como reproduzir\n1. \n\n## Contato\nLinkedIn: linkedin.com/in/seu-nome\n";
+}
+function diaryHTML(pid){
+ const D=diaryOf(pid);
+ return '<div class="stack diary"><h4>Diário do projeto ('+D.length+')</h4>'+(D.length?'<ul class="plain">'+D.slice(-6).map(e=>'<li class="small"><strong class="num">'+fmtShort(e.d)+'</strong> '+esc(e.txt)+' <button class="linkbtn" data-dx="'+e.id+'" type="button" aria-label="Apagar anotação">apagar</button></li>').join("")+'</ul>'+(D.length>6?'<p class="muted small">Mais '+(D.length-6)+' anotações antigas entram no README.</p>':''):'<p class="muted small">Anote em 1 ou 2 linhas o que fez em cada sessão: decisões, problemas e resultados. Vira o README e assunto de entrevista.</p>')+'<textarea data-dt="'+pid+'" aria-label="Nova anotação" placeholder="Ex.: limpei datas no Power Query; 3% das linhas sem setor, criei categoria Não informado." style="min-height:64px"></textarea><div class="row"><button class="btn ghost sm" data-da="'+pid+'" type="button">Anotar</button><button class="btn ghost sm" data-rm="'+pid+'" type="button">Gerar README</button></div><pre class="copybox" id="rm-'+pid+'" hidden></pre></div>';
+}
+function wireDiary(el){
+ el.querySelectorAll("[data-da]").forEach(b=>b.onclick=()=>{const pid=b.dataset.da, ta=el.querySelector('[data-dt="'+pid+'"]'); if(diaryAdd(pid,ta.value)){ta.value="";rerenderKeep();toast("Anotado no diário.");} else toast("Escreva o que você fez.");});
+ el.querySelectorAll("[data-dx]").forEach(b=>b.onclick=()=>{if(!b.dataset.arm){b.dataset.arm="1";b.textContent="confirmar";return;} delete ST.diary[b.dataset.dx]; changed(); rerenderKeep();});
+ el.querySelectorAll("[data-rm]").forEach(b=>b.onclick=async()=>{const pid=b.dataset.rm, md=readmeFor(pid), pre=$("#rm-"+pid); pre.textContent=md; pre.hidden=false; try{await navigator.clipboard.writeText(md);toast("README copiado. Cole no GitHub e complete os resultados.");}catch(e){toast("README gerado abaixo. Selecione e copie.");}});
+}
+
+/* Tema */
+let theme="auto"; try{theme=localStorage.getItem(KEY+"-theme")||"auto";}catch(e){}
+const THL={auto:"Automático",light:"Claro",dark:"Escuro"};
+function applyTheme(){ if(theme==="auto") document.documentElement.removeAttribute("data-theme"); else document.documentElement.setAttribute("data-theme",theme); }
+let fz=1; try{fz=+localStorage.getItem(KEY+"-fz")||1;}catch(e){}
+function applyFz(){document.documentElement.style.setProperty("--fz",fz);}
+applyFz();
+$("#cfgBtn").onclick=()=>go("config");
+$("#cfgBtn").setAttribute("aria-current",current==="config"?"page":"false");
+applyTheme();
+render();
+if(TM) tmEnsureUI();
+setInterval(()=>{refreshHeader();},60000);
+</script>
+<script>if("serviceWorker" in navigator&&location.protocol==="https:"){const sw=navigator.serviceWorker;let had=!!sw.controller;sw.register("sw.js",{scope:"./"}).then(r=>{document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update().catch(()=>{});});}).catch(()=>{});sw.addEventListener("controllerchange",()=>{if(had)location.reload();had=true;});}</script></body></html>
