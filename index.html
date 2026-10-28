@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#2F5C9E"><link rel="manifest" href="manifest.json"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Carreira"><title>Carreira em Dados 2027</title>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#2F5C9E"><link rel="manifest" href="manifest.json"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Carreira"><title>Carreira em Dados 2027</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
 /* Layout: app de rotina — barra inferior no celular, abas no tablet, menu lateral no PC; conteúdo em coluna de leitura */
@@ -152,6 +152,16 @@ ul.plain{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
 @media (max-width:520px){.bar{grid-template-columns:minmax(0,1fr) 64px 48px}.big{font-size:26px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 [hidden]{display:none!important}
+/* v5 */
+.clchip{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font:600 12px var(--f);padding:6px 10px;min-height:32px;box-sizing:border-box;border-radius:99px;border:1px solid var(--line);color:var(--muted);white-space:nowrap;flex:none}
+.clchip i{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none}
+.clchip.ok i{background:var(--ok)}.clchip.bad i{background:var(--bad)}.clchip.wait i{background:var(--acc)}
+.clchip.bad{color:var(--bad);border-color:var(--bad)}
+.clchip:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+@media (max-width:520px){.clchip span{display:none}.clchip{padding:0;width:36px;height:36px;justify-content:center}}
+@media (min-width:1100px){.clchip{align-self:flex-start;order:2}}
+.banner{border:1.5px solid var(--pri);background:var(--pri-soft);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.banner.bad{border-color:var(--bad);background:var(--bad-soft)}
 /* v4 */
 nav.tabs{grid-template-columns:repeat(7,1fr)}
 @media (max-width:420px){nav.tabs button{font-size:10.5px;letter-spacing:-.01em}nav.tabs button svg{width:22px;height:22px}}
@@ -217,6 +227,7 @@ input[type=range]{accent-color:var(--pri);width:min(240px,100%)}
 
 <header class="band"><div class="hwrap">
   <div class="brand"><span class="bt">Carreira em Dados</span><span class="bs">Rumo a Analista de BI · plano desde 07/12/2026</span></div>
+  <button class="clchip" id="clChip" type="button" title="Sincronização"><i></i><span>Sincronização</span></button>
   <div class="count" id="cnt"><b id="cntN" class="num">–</b><span id="cntT">dias</span></div>
   <button class="themebtn" id="cfgBtn" type="button" aria-label="Configurações"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="tl">Configurações</span></button>
   <nav class="tabs" role="tablist" aria-label="Seções" id="tabs"></nav>
@@ -549,8 +560,9 @@ try{const r=localStorage.getItem(KEY);if(r)ST=Object.assign(ST,JSON.parse(r));}c
 rebuild();
 function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}}
 const SYNC={db:null,uid:null,st:"",at:null,t:null};
-function changed(){ST.upd=Date.now();saveLocal();clearTimeout(SYNC.t);SYNC.t=setTimeout(syncPush,600);if(typeof clKick==='function')clKick();if(typeof pushKick==='function')pushKick();}
-async function syncPush(){ if(!SYNC.db||!SYNC.uid) return; try{await SYNC.db.doc("data/users/"+SYNC.uid+"/carreira").set(JSON.parse(JSON.stringify(ST)));SYNC.st="ok";SYNC.at=new Date();}catch(e){SYNC.st="err";} syncLbl(); }
+function changed(){ST.upd=Date.now();saveLocal();clearTimeout(SYNC.t);SYNC.t=setTimeout(syncPush,600);if(typeof clKick==='function')clKick();try{pushKick();}catch(e){}}
+/* cópia na conta do claude.ai (db): só grava depois de ler a conta uma vez; se os dois lados mudaram, junta */
+async function syncPush(){ if(!SYNC.db||!SYNC.uid||!SYNC.ready) return; const body=JSON.parse(JSON.stringify(ST)); try{await SYNC.db.doc("data/users/"+SYNC.uid+"/carreira").set(body);SYNC.base=body;SYNC.st="ok";SYNC.at=new Date();}catch(e){SYNC.st="err";} syncLbl(); }
 setTimeout(async()=>{
  try{
   if(!window.claude||!window.claude.use){syncLbl();return;}
@@ -560,9 +572,17 @@ setTimeout(async()=>{
   SYNC.db=db;SYNC.uid=uid; let first=true;
   db.doc("data/users/"+uid+"/carreira").onSnapshot(snap=>{
    if(snap.metadata&&snap.metadata.hasPendingWrites) return;
-   if(snap.exists){const d=snap.data()||{}; if((d.upd||0)>(ST.upd||0)){ST=Object.assign({done:{},custom:[],upd:0},JSON.parse(JSON.stringify(d)));saveLocal();rebuild();rerenderKeep();clKick();} else if(first&&(ST.upd||0)>(d.upd||0)) syncPush(); SYNC.st="ok";SYNC.at=new Date();}
-   else{if(first&&ST.upd) syncPush(); SYNC.st="ok";SYNC.at=new Date();}
-   first=false; syncLbl();
+   const d=snap.exists?JSON.parse(JSON.stringify(snap.data()||{})):null, lu=ST.upd||0;
+   SYNC.ready=true;
+   if(d&&(d.upd||0)!==lu){
+    if((d.upd||0)>lu){
+     const localNew=first?(hasProgress(ST)&&hasProgress(d)):(SYNC.base&&lu>(SYNC.base.upd||0));
+     if(localNew){ ST=Object.assign({done:{},custom:[],upd:0},mergeST(ST,d,first?null:SYNC.base)); ST.upd=Math.max(Date.now(),(d.upd||0)+1); saveLocal(); rebuild(); rerenderKeep(); syncPush(); clKick(); }
+     else { ST=Object.assign({done:{},custom:[],upd:0},d); SYNC.base=d; saveLocal(); rebuild(); rerenderKeep(); clKick(); }
+    } else { if(first&&hasProgress(d)&&hasProgress(ST)){ ST=Object.assign({done:{},custom:[],upd:0},mergeST(ST,d,null)); ST.upd=Date.now(); saveLocal(); rebuild(); rerenderKeep(); } else SYNC.base=d; syncPush(); }
+   } else if(d) SYNC.base=d;
+   else if(lu) syncPush();
+   SYNC.st="ok"; SYNC.at=new Date(); first=false; syncLbl();
   },()=>{SYNC.st="err";syncLbl();});
  }catch(e){SYNC.st="err";syncLbl();}
 },0);
@@ -648,12 +668,13 @@ function mergeST(a,b,base){
  o.sk=mmap(a.sk,b.sk,null,(x,y)=>(x.t||0)>=(y.t||0)?x:y);
  o.apps=mmap(a.apps,b.apps,base&&Z.apps||null,(x,y)=>(x.u||0)>=(y.u||0)?x:y);
  o.diary=mmap(a.diary,b.diary,base&&Z.diary||null,(x,y)=>(x.u||0)>=(y.u||0)?x:y);
+ o.devs=mmap(a.devs,b.devs,null,(x,y)=>(x.at||0)>=(y.at||0)?x:y);
  return o;
 }
 const hasProgress=st=>!!st&&["done","srs","apps","diary","sk","log"].some(k=>Object.keys(st[k]||{}).length>0)||!!st&&(st.custom||[]).length>0;
 function clAdopt(st,upd){
  ST=Object.assign({done:{},custom:[],upd:0},st); ST.upd=upd; ST.cloud=CL.code;
- saveLocal(); rebuild(); syncPush(); rerenderKeep();
+ saveLocal(); rebuild(); syncPush(); rerenderKeep(); setTimeout(devMark,0);
 }
 async function clPush(){
  if(!CL.code||CL.busy) return;
@@ -722,6 +743,16 @@ async function clAllow(){CL.via="mcp";if(CL.perm==="denied"){try{const perm=awai
 async function clNew(){CL.code=newCode();CL.base=0;ST.cloud=CL.code;clStore();changed();await clPull();rerenderKeep();}
 function clOff(btn){if(!btn.dataset.arm){btn.dataset.arm="1";btn.textContent="Toque de novo para desconectar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.arm;btn.textContent="Desconectar este aparelho";}},4000);return;}
  CL.code=null;CL.base=0;CL.st="off";clStore();clSnap(null);delete ST.cloud;saveLocal();rerenderKeep();toast("Este aparelho parou de sincronizar.");}
+/* cada aparelho grava no progresso a versão do app, onde abriu e quando (lista em Configurações) */
+const APP_V=5;
+function devMark(){
+ let id="x"; try{id=localStorage.getItem(KEY+"-dev"); if(!id){id=Math.random().toString(36).slice(2,8); localStorage.setItem(KEY+"-dev",id);}}catch(e){}
+ const ua=navigator.userAgent, m=(/Android|iPhone|iPad|Windows|Mac OS X|CrOS|Linux/.exec(ua)||["?"])[0].replace("Mac OS X","Mac");
+ const w=IN_CLAUDE?"claude.ai":IS_PWA?((matchMedia("(display-mode: standalone)").matches||navigator.standalone)?"app instalado":"navegador"):"outro";
+ ST.devs=ST.devs||{}; const p=ST.devs[id];
+ if(!p||p.v!==APP_V||p.w!==w||Date.now()-(p.at||0)>3*3600e3){ST.devs[id]={v:APP_V,w,m,at:Date.now()};changed();}
+}
+setTimeout(function devWait(n){ const ready=IN_CLAUDE?(SYNC.ready||SYNC.st==="err"||n>20):(!CL.code||CL.st==="ok"||n>20); if(ready&&(!CL.code||CL.base||!IN_CLAUDE||n>20)) devMark(); else setTimeout(()=>devWait(n+1),3000); },2500,0);
 /* link #sync=código abre o app já conectado */
 (function(){const m=/[#&]sync=(cd-[a-z0-9-]+)/.exec(location.hash||"");if(!m) return;try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}if(m[1]!==CL.code) setTimeout(()=>clLink(m[1],true),400);})();
 setTimeout(clPull,1200);
@@ -737,10 +768,12 @@ function syncText(){
  if(CL.st==="err") return navigator.onLine?"Não deu para falar com a nuvem agora; o app tenta de novo sozinho. Nada se perde.":"Sem internet. O progresso fica salvo aqui e sobe quando a conexão voltar.";
  return "Conectando…";
 }
+var lastBn=null;
 function syncLbl(){
+ const bn=CL.st==="needmcp"?"m":(!CL.code&&!IN_CLAUDE)?"c":""; if(lastBn!==null&&bn!==lastBn&&current==="hoje"&&typeof rerenderKeep==="function"){lastBn=bn;setTimeout(rerenderKeep,0);} lastBn=bn;
  document.querySelectorAll(".synclbl").forEach(e=>{e.textContent=syncText();e.style.color=CL.code&&CL.st==="ok"?"var(--ok)":["err","needmcp","noconn"].includes(CL.st)?"var(--bad)":"";});
  const b=$("#clMcp"); if(b) b.hidden=CL.st!=="needmcp";
- const c=$("#syncDot"); if(c){c.dataset.st=!CL.code?"off":CL.st==="ok"?"ok":["err","needmcp","noconn"].includes(CL.st)?"bad":"wait";c.title=syncText();}
+ const c=$("#clChip"); if(c){const s=!CL.code?["","Não sincronizado"]:CL.st==="ok"?["ok","Sincronizado"]:CL.st==="needmcp"?["bad","Permitir sincronização"]:CL.st==="noconn"?["bad","Reconectar Supabase"]:CL.st==="err"?["bad",navigator.onLine?"Sincronização pendente":"Sem internet"]:["wait","Sincronizando…"]; c.className="clchip "+s[0]; c.querySelector("span").textContent=s[1]; c.title=s[1]+" · abrir Configurações"; c.setAttribute("aria-label",s[1]+". Abrir sincronização");}
 }
 function cfgSync(){
  const link=CL.code?GH_URL+"#sync="+CL.code:"";
@@ -748,6 +781,8 @@ function cfgSync(){
  if(CL.code) h+='<div class="stack"><strong>Conectar outro aparelho (uma vez só)</strong><p class="muted small">Abra este link no celular (pelo Chrome) ou no tablet. Ele entra conectado e junta o que já tiver lá. Depois, no menu do navegador, toque em "Instalar app" ou "Adicionar à tela inicial".</p><pre class="copybox">'+esc(link)+'</pre><div class="row"><button class="btn sm" id="clCopy" type="button">Copiar link</button>'+(navigator.share?'<button class="btn ghost sm" id="clShare" type="button">Enviar para…</button>':'')+'<button class="btn ghost sm" id="clNow" type="button">Sincronizar agora</button></div></div>';
  else h+='<div class="row"><button class="btn sm" id="clNew" type="button">Este é o primeiro aparelho: criar a sincronização</button></div>';
  h+='<details class="acc"'+(CL.code?"":" open")+'><summary><span>'+(CL.code?"Usar outro código":"Já tenho um código (de outro aparelho)")+'</span><span class="chev">›</span></summary><div class="stack">'+(CL.code?'<span class="muted small">Código atual: <span class="num">'+esc(CL.code)+'</span></span>':'')+'<input id="clIn" type="text" placeholder="cd-xxxx-xxxx-xxxx-xxxx-xxxx-xxxx" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Código de sincronização"><div class="row"><button class="btn sm" id="clGo" type="button">Conectar este aparelho</button>'+(CL.code?'<button class="btn ghost sm" id="clOff" type="button">Desconectar este aparelho</button>':'')+'</div></div></details>';
+ const dv=Object.entries(ST.devs||{}).sort((a,b)=>(b[1].at||0)-(a[1].at||0)).slice(0,6);
+ if(CL.code&&dv.length) h+='<details class="acc"><summary><span>Aparelhos que usaram este progresso ('+dv.length+')</span><span class="chev">›</span></summary><ul class="plain">'+dv.map(([id,d])=>'<li class="small">'+esc(d.m||"?")+' · '+esc(d.w||"")+' · versão '+esc(d.v)+' · '+new Date(d.at).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})+(id===(()=>{try{return localStorage.getItem(KEY+"-dev");}catch(e){return "";}})()?" (este)":"")+'</li>').join("")+'</ul><p class="muted small">Se o celular não aparecer aqui ou estiver numa versão antiga, abra o app nele e feche e abra de novo.</p></details>';
  h+='<p class="muted small">'+(IN_CLAUDE?'Aqui no claude.ai o progresso também acompanha a sua conta. ':'')+'App instalável (celular, tablet e PC): <a href="'+GH_URL+'" target="_blank" rel="noopener">'+GH_URL.replace("https://","")+'</a></p></section>';
  return h;
 }
@@ -825,8 +860,13 @@ function pipeHTML(){
  return '<div class="pipe" aria-hidden="true">'+seg+'</div><div class="pipe-l">'+lab+'</div>';
 }
 
+function syncBanner(){
+ if(CL.st==="needmcp") return '<section class="banner bad"><span class="small">Para o progresso daqui chegar ao celular, permita uma vez o uso do conector Supabase.</span><div class="row"><button class="btn sm" id="bnAllow" type="button">Permitir</button></div></section>';
+ if(!CL.code&&!IN_CLAUDE) return '<section class="banner"><strong>Este aparelho ainda não está sincronizado.</strong><span class="small">No app do claude.ai (ou de outro aparelho já conectado), abra Configurações › Sincronização e copie o código que começa com "cd-". Cole aqui:</span><div class="row"><input type="text" id="bnIn" placeholder="cd-xxxx-xxxx-xxxx-xxxx-xxxx-xxxx" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Código de sincronização" style="flex:1 1 220px"><button class="btn sm" id="bnGo" type="button">Conectar</button></div><span class="muted small">Ou toque em "Este é o primeiro aparelho" em Configurações para criar um código novo.</span></section>';
+ return "";
+}
 function vHoje(){
- const t=todayS(); const st=stats(); let h="";
+ const t=todayS(); const st=stats(); let h=syncBanner();
  const tipI=(diff("2026-01-01",t)%TIPS.length+TIPS.length)%TIPS.length; const tip=TIPS[tipI];
  if(t<START){
   const n=diff(t,START);
@@ -854,6 +894,8 @@ function vHoje(){
 }
 WIRES.hoje=el=>{
  const on=(id,f)=>{const b=el.querySelector("#"+id); if(b) b.onclick=f;};
+ on("bnAllow",clAllow); on("bnGo",()=>clLink($("#bnIn").value,true).then(()=>rerenderKeep()));
+ const bi=el.querySelector("#bnIn"); if(bi) bi.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("#bnGo").click();}};
  on("goCards",()=>{revSeg="cards";go("rev");}); on("goAudio",()=>{revSeg="au";go("rev");}); on("goApps",()=>{pfSeg="vagas";go("perfil");});
  on("rpGo",e=>{const b=e.currentTarget; if(!b.dataset.arm){b.dataset.arm="1";b.textContent="Toque de novo para confirmar";setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent="Estou atrasado: reorganizar o plano";}},4000);return;} replan();});
 };
@@ -1047,7 +1089,7 @@ function vConfig(){
  h+='<section class="panel"><h3>Aparência</h3><span class="muted small">Tema</span>'+segH("thSeg",theme,[["auto","Automático"],["light","Claro"],["dark","Escuro"]])+'<span class="muted small">Tamanho da letra</span>'+segH("fzSeg",String(fz),[["0.92","92%"],["1","100%"],["1.12","112%"],["1.25","125%"],["1.4","140%"]])+'<p class="muted small">Tema e letra valem só para este aparelho.</p></section>';
  h+='<section class="panel"><h3>Backup manual</h3><p class="muted small">Cópia do progresso por código, para guardar ou passar para outro aparelho. A importação substitui o progresso deste aparelho.</p><textarea id="bkTxt" aria-label="Código de backup" placeholder="Cole aqui o código de backup"></textarea><div class="row"><button class="btn ghost sm" id="bkGen" type="button">Gerar e copiar</button><button class="btn sm" id="bkImp" type="button">Importar código</button></div><p class="small muted" id="bkMsg" role="status"></p></section>';
  h+='<section class="panel"><h3>Zerar progresso</h3><p class="muted small">Apaga as tarefas marcadas, os cursos cadastrados e os ajustes, neste aparelho e na sua conta.</p><div class="row"><button class="btn warn sm" id="rst" type="button">Apagar todo o progresso</button></div></section>';
- h+='<section class="panel"><h3>Sobre</h3><p class="small">Versão 4 · '+TOTAL_TASKS+' tarefas de 07/12/2026 a '+fmt(lastDay())+'. Plano completo, até CDO: <a href="https://claude.ai/artifact/8hv4yXAzjq8wiUcX57jfv5" target="_blank" rel="noopener">Trilha até CDO</a>.</p></section>';
+ h+='<section class="panel"><h3>Sobre</h3><p class="small">Versão 5 · '+TOTAL_TASKS+' tarefas de 07/12/2026 a '+fmt(lastDay())+'. Plano completo, até CDO: <a href="https://claude.ai/artifact/8hv4yXAzjq8wiUcX57jfv5" target="_blank" rel="noopener">Trilha até CDO</a>.</p></section>';
  return h;
 }
 function setCfg(k,v){ST.cfg=Object.assign({},ST.cfg||{},{[k]:v});changed();}
@@ -1485,10 +1527,11 @@ let fz=1; try{fz=+localStorage.getItem(KEY+"-fz")||1;}catch(e){}
 function applyFz(){document.documentElement.style.setProperty("--fz",fz);}
 applyFz();
 $("#cfgBtn").onclick=()=>go("config");
+$("#clChip").onclick=()=>{go("config");setTimeout(()=>{const s=$("#cfgSync");if(s)s.scrollIntoView({block:"start"});},50);};
 $("#cfgBtn").setAttribute("aria-current",current==="config"?"page":"false");
 applyTheme();
 render();
 if(TM) tmEnsureUI();
 setInterval(()=>{refreshHeader();},60000);
 </script>
-<script>if("serviceWorker" in navigator&&location.protocol==="https:"){const sw=navigator.serviceWorker;let had=!!sw.controller;sw.register("sw.js",{scope:"./"}).then(r=>{document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update().catch(()=>{});});}).catch(()=>{});sw.addEventListener("controllerchange",()=>{if(had)location.reload();had=true;});}</script></body></html>
+<script>if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){const sw=navigator.serviceWorker;let had=!!sw.controller;sw.register("sw.js",{scope:"./"}).then(r=>{document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update().catch(()=>{});});}).catch(()=>{});sw.addEventListener("controllerchange",()=>{if(had)location.reload();had=true;});}</script></body></html>

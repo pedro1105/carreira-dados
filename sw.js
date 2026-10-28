@@ -1,5 +1,5 @@
-const C="carreira-v6";
-const FILES=["./","index.html","manifest.json","icons/icon-192.png","icons/icon-512.png"];
+const C="carreira-v7";
+const FILES=["./","index.html","manifest.json","icons/icon-192.png","icons/icon-512.png","icons/maskable-192.png","icons/apple-180.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(FILES.map(f=>new Request(f,{cache:"reload"})))));self.skipWaiting();});
 /* só apaga caches deste app; os da Transpetro, no mesmo site, ficam */
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith("carreira-")&&k!==C).map(k=>caches.delete(k)))));self.clients.claim();});

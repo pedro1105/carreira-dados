@@ -11,10 +11,10 @@ i = app.index('</style>') + len('</style>')
 head, body = app[:i], app[i:]
 head_add = ('<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">'
             '<meta name="theme-color" content="#2F5C9E"><link rel="manifest" href="manifest.json">'
-            '<link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png">'
+            '<link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-180.png">'
             '<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">'
             '<meta name="apple-mobile-web-app-title" content="Carreira">')
-sw = ('<script>if("serviceWorker" in navigator&&location.protocol==="https:"){const sw=navigator.serviceWorker;let had=!!sw.controller;'
+sw = ('<script>if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){const sw=navigator.serviceWorker;let had=!!sw.controller;'
       'sw.register("sw.js",{scope:"./"}).then(r=>{document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update().catch(()=>{});});}).catch(()=>{});'
       'sw.addEventListener("controllerchange",()=>{if(had)location.reload();had=true;});}</script>')
 out = '<!doctype html><html lang="pt-BR"><head>' + head_add + head + '</head><body>' + body + sw + '</body></html>'
