@@ -1,4 +1,4 @@
-const C="carreira-v10";
+const C="carreira-v11";
 const FILES=["./","index.html","carreira.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/maskable-192.png","icons/apple-180.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(FILES.map(f=>new Request(f,{cache:"reload"})))));self.skipWaiting();});
 /* só apaga caches deste app; os da Transpetro, no mesmo site, ficam */
@@ -6,7 +6,7 @@ self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.
 /* abre na hora pelo cache e atualiza em segundo plano; o resto (Supabase etc.) vai direto para a rede */
 self.addEventListener("fetch",e=>{
   const u=new URL(e.request.url);
-  if(e.request.method!=="GET"||u.origin!==location.origin||!u.pathname.includes("/carreira-dados/")) return;
+  if(e.request.method!=="GET"||u.origin!==location.origin||!u.href.startsWith(self.registration.scope)) return;
   e.respondWith(caches.open(C).then(c=>c.match(e.request,{ignoreSearch:true}).then(m=>{
     const net=fetch(e.request).then(r=>{if(r.ok)c.put(e.request,r.clone());return r;});
     if(m){e.waitUntil(net.catch(()=>{}));return m;}

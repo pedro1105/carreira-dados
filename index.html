@@ -598,10 +598,10 @@ async function copyText(txt,btn){try{await navigator.clipboard.writeText(txt);to
    conhecia (p_base); senão o app baixa, junta e envia de novo. No GitHub a chamada é direta; no claude.ai,
    se a página não puder acessar a internet, usa o conector Supabase da conta do Claude. */
 const SB_URL="https://xpfcmehgdfruhnveslmj.supabase.co", SB_KEY="sb_publishable_Bgf_LtyuT9ABzExDTuAyQg_krQ9yy9R", SB_REF="xpfcmehgdfruhnveslmj";
-const GH_URL="https://pedro1105.github.io/carreira-dados/";
+const GH_URL="https://carreira-em-dados-2027.netlify.app/";
 const CK=KEY+"-cloud", CSNAP=KEY+"-cloudsnap";
 const IN_CLAUDE=!!(window.claude&&window.claude.use);
-const IS_PWA=location.protocol==="https:"&&/github\.io$/.test(location.hostname);
+const IS_PWA=location.protocol==="https:"&&/(github\.io|netlify\.app)$/.test(location.hostname);
 const CL={code:null,base:0,st:"off",at:null,t:null,busy:false,via:"fetch",mcp:null,err:"",perm:null};
 try{const o=JSON.parse(localStorage.getItem(CK)||"{}");CL.code=o.code||null;CL.base=o.base||0;}catch(e){}
 if(!CL.code&&ST.cloud) CL.code=ST.cloud;
