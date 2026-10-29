@@ -788,9 +788,9 @@ async function clNew(){CL.code=newCode();CL.base=0;ST.cloud=CL.code;clStore();ch
 function clOff(btn){if(!btn.dataset.arm){btn.dataset.arm="1";btn.textContent="Toque de novo para desconectar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.arm;btn.textContent="Desconectar este aparelho";}},4000);return;}
  CL.code=null;CL.base=0;CL.st="off";clStore();clSnap(null);delete ST.cloud;saveLocal();rerenderKeep();toast("Este aparelho parou de sincronizar.");}
 /* cada aparelho grava no progresso a versão do app, onde abriu e quando (lista em Configurações) */
-const APP_V=9;
+const APP_V=10;
 /* o que mudou em cada versão (aparece uma vez depois que o app atualiza e fica em Configurações) */
-const NEWS={6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações.",8:"Inglês 3 vezes por semana (terça, quinta e sábado) nas férias e no meio expediente; texto de home office no Currículo.",9:"Preparação antes de 07/12 (contas e programas) e diagnóstico de Excel no primeiro dia."};
+const NEWS={6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações.",8:"Inglês 3 vezes por semana (terça, quinta e sábado) nas férias e no meio expediente; texto de home office no Currículo.",9:"Preparação antes de 07/12 (contas e programas) e diagnóstico de Excel no primeiro dia.",10:"A seção Sobre agora mostra a versão real do app."};
 const SEENK=KEY+"-seenV";
 /* versão nova baixada pelo service worker (app instalado): avisa e atualiza com um toque, como no app da Transpetro */
 function swUpdated(){
@@ -1165,7 +1165,7 @@ function vConfig(){
  h+='<section class="panel"><h3>Aparência</h3><span class="muted small">Tema</span>'+segH("thSeg",theme,[["auto","Automático"],["light","Claro"],["dark","Escuro"]])+'<span class="muted small">Tamanho da letra</span>'+segH("fzSeg",String(fz),[["0.92","92%"],["1","100%"],["1.12","112%"],["1.25","125%"],["1.4","140%"]])+'<p class="muted small">Tema e letra valem só para este aparelho.</p></section>';
  h+='<section class="panel"><h3>Backup manual</h3><p class="muted small">Cópia do progresso por código, para guardar ou passar para outro aparelho. A importação substitui o progresso deste aparelho.</p><textarea id="bkTxt" aria-label="Código de backup" placeholder="Cole aqui o código de backup"></textarea><div class="row"><button class="btn ghost sm" id="bkGen" type="button">Gerar e copiar</button><button class="btn sm" id="bkImp" type="button">Importar código</button></div><p class="small muted" id="bkMsg" role="status"></p></section>';
  h+='<section class="panel"><h3>Zerar progresso</h3><p class="muted small">Apaga as tarefas marcadas, os cursos cadastrados e os ajustes, neste aparelho e na sua conta.</p><div class="row"><button class="btn warn sm" id="rst" type="button">Apagar todo o progresso</button></div></section>';
- h+='<section class="panel"><h3>Sobre</h3><p class="small">Versão 5 · '+TOTAL_TASKS+' tarefas de 07/12/2026 a '+fmt(lastDay())+'. Plano completo, até CDO: <a href="https://claude.ai/artifact/8hv4yXAzjq8wiUcX57jfv5" target="_blank" rel="noopener">Trilha até CDO</a>.</p></section>';
+ h+='<section class="panel"><h3>Sobre</h3><p class="small">Versão '+APP_V+' · '+TOTAL_TASKS+' tarefas de 07/12/2026 a '+fmt(lastDay())+'. Plano completo, até CDO: <a href="https://claude.ai/artifact/8hv4yXAzjq8wiUcX57jfv5" target="_blank" rel="noopener">Trilha até CDO</a>.</p></section>';
  return h;
 }
 function setCfg(k,v){ST.cfg=Object.assign({},ST.cfg||{},{[k]:v});changed();}
