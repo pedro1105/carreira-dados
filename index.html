@@ -280,6 +280,9 @@ const PROJECTS=[
 /* ================= PERFIL PROFISSIONAL (fila) ================= */
 const BRAND=[
  {id:"pes",g:"car",t:"Seção de Pessoal: confirmar data do licenciamento, férias a gozar e compensação pecuniária",d:"Pergunte também quais documentos pedir na saída (certidão de tempo de serviço, alterações). A data define o 'disponível a partir de' do currículo."},
+ {id:"sc",g:"car",t:"Projeto Soldado Cidadão: perguntar na Seção de Pessoal se há turma antes da baixa",d:"Programa do Ministério da Defesa para temporários perto do licenciamento, com cursos de cerca de 160 h. Prefira um curso administrativo ou de informática. Página: gov.br/defesa, Projeto Soldado Cidadão."},
+ {id:"drv",g:"red",t:"Drive pessoal: apagar arquivos da FAB com dados de terceiros",d:"Fichas, telefones, identidades, placas e documentos internos não podem ficar no seu Drive (LGPD e segurança orgânica). Guarde só modelos sem dados reais. Nada disso entra no portfólio."},
+ {id:"exB",g:"car",t:"Certificado de Excel para o currículo (Caminho Digital ou Fundação Bradesco)",d:"Gratuitos e com certificado. Caminho Digital: gov.br/trabalho-e-emprego, Qualificação profissional. Fundação Bradesco: ev.org.br. Vale para a Frente B já em fevereiro."},
  {id:"mail",g:"red",t:"Criar e-mail profissional e definir seu nome profissional",d:"Formato nome.sobrenome@gmail.com. Use o nome completo do diploma ou uma forma curta fixa, igual em todas as redes."},
  {id:"gh1",g:"gh",t:"GitHub: criar a conta com usuário profissional",d:"Usuário curto e com seu nome, sem números aleatórios. Ex.: pedro-guedes-dados ou pedrohguedes."},
  {id:"gh2",g:"gh",t:"GitHub: foto, bio, cidade e link do LinkedIn",d:"Bio sugerida: 'Analista de Dados e BI em formação | Power BI · SQL · Python | Rio de Janeiro'."},
@@ -294,12 +297,14 @@ const BRAND=[
  {id:"li7",g:"li",t:"LinkedIn: banner",d:"Faça no Canva: fundo sóbrio, 'Dados · Power BI · SQL' e uma miniatura de dashboard seu."},
  {id:"li8",g:"li",t:"LinkedIn: URL personalizada",d:"linkedin.com/in/seu-nome. Use a mesma no currículo e no GitHub."},
  {id:"car1",g:"car",t:"Currículo: versão 1 (uma página, compatível com ATS)",d:"Modelo no plano mestre. Sem colunas, sem foto, fonte simples, PDF. Linha de topo: 'Disponível a partir de [data da baixa]'."},
+ {id:"carB",g:"car",t:"Currículo: versão B (administrativo com dados)",d:"Mesmo modelo, com o resumo B da aba Currículo e a experiência da FAB primeiro. Use para vagas de assistente ou analista administrativo, planejamento, controladoria e compras."},
  {id:"gh4",g:"gh",t:"GitHub: arrumar repositórios antigos da faculdade",d:"Arquive ou torne privados os que estão incompletos. Mantenha 1 ou 2 bons de ADS com README."},
  {id:"li9",g:"li",t:"LinkedIn: seguir 20 empresas-alvo e 15 profissionais de BI",d:"Inclua Transpetro, Petrobras, Embraer, empresas de logística e bancos do RJ. Comente com conteúdo útil, não só 'parabéns'."},
  {id:"car2",g:"car",t:"Criar a planilha de candidaturas",d:"Colunas: data, empresa, vaga, link, salário, status, contato, próximo passo. Vire seu próprio projeto de dados depois."},
  {id:"li10",g:"li",t:"LinkedIn: primeiro post sobre a sua transição",d:"Use o tema 1 da lista de posts. Curto, verdadeiro, com um print do projeto 1."},
  {id:"red2",g:"red",t:"Redes: mesma foto e mesmo nome em todas",d:"LinkedIn, GitHub, e-mail e WhatsApp com a foto profissional."},
  {id:"li11",g:"li",t:"LinkedIn: 'Open to Work' só para recrutadores",d:"Cargos: Analista de BI, Analista de Dados, Analista de Relatórios, Analista de Planejamento. Início: a partir da data da baixa."},
+ {id:"alB",g:"car",t:"Alertas de vagas das três frentes (LinkedIn, Gupy, InfoJobs, Indeed)",d:"Frente A: Analista de BI, Dados ou Relatórios Júnior. Frente B: Assistente ou Analista Administrativo, Planejamento, Controladoria. Frente C (rede): Supervisor de Controle de Acesso. Rio de Janeiro ou remoto."},
  {id:"pf",g:"gh",t:"Página de portfólio com links (GitHub Pages ou Notion)",d:"Uma página: foto, 3 frases sobre você, cards dos projetos com print e link. Vai no topo do currículo."},
  {id:"li12",g:"li",t:"Pedir 2 recomendações no LinkedIn",d:"De quem acompanhou seu trabalho: chefe de seção, colega da ENAP ou da faculdade. Ofereça escrever uma para a pessoa também."},
  {id:"car3",g:"car",t:"Currículo em inglês (versão simples)",d:"Mesmo conteúdo, revisado com ajuda de IA e conferido por você. Serve para multinacionais."},
@@ -353,6 +358,12 @@ const CATALOG=[
  {n:"EXIN Privacy & Data Protection Foundation (PDPF)",p:"EXIN · prova paga, com cursos preparatórios em português",tags:["gd","cert"],free:false,u:"https://www.exin.com/",note:"Certificação de privacidade e LGPD mais pedida em vagas. Meta depois da PL-300, já empregado."},
  {n:"CDMP – Certified Data Management Professional",p:"DAMA International",tags:["gd","cert"],free:false,u:"https://cdmp.info/",note:"A certificação de governança de dados. Meta de médio prazo (2029+), com experiência na área."},
  {n:"DAMA-DMBOK (guia de gestão de dados)",p:"DAMA International · livro",tags:["gd"],free:false,u:"https://www.dama.org/cpages/body-of-knowledge",note:"Leitura de referência para governança. Comece pelos capítulos de governança e qualidade de dados."},
+ {n:"Caminho Digital (antiga Escola do Trabalhador 4.0)",p:"Ministério do Trabalho + Microsoft",tags:["dados","ia"],free:true,u:"https://www.gov.br/trabalho-e-emprego/pt-br/servicos/trabalhador/qualificacao-profissional/caminho-digital",note:"Trilhas gratuitas de Excel, dados e IA com certificado. Mudou de endereço em outubro de 2026."},
+ {n:"Projeto Soldado Cidadão",p:"Ministério da Defesa",tags:["gestao"],free:true,u:"https://www.gov.br/defesa/pt-br/assuntos/programas-sociais/copy_of_projeto-soldado-cidadao",note:"Cursos de cerca de 160 h para militares temporários perto do licenciamento. Pergunte na Seção de Pessoal."},
+ {n:"Fundação Bradesco – Escola Virtual",p:"Fundação Bradesco",tags:["dados"],free:true,u:"https://www.ev.org.br/",note:"Excel do básico ao avançado e Power BI, com certificado."},
+ {n:"SQL Murder Mystery",p:"Knight Lab",tags:["dados"],free:true,u:"https://mystery.knightlab.com/",note:"Resolva um crime com consultas SQL. Lógica pura, bom para quem gosta de xadrez."},
+ {n:"Maven Analytics Challenges",p:"Maven Analytics",tags:["dados"],free:true,u:"https://mavenanalytics.io/challenges",note:"Desafios mensais com bases reais. Bom para os projetos 3 em diante e para aparecer no LinkedIn."},
+ {n:"NovyPro",p:"Portfólio de dashboards",tags:["dados"],free:true,u:"https://www.novypro.com/",note:"Publica o seu Power BI com link para o recrutador abrir sem instalar nada."},
  {n:"Catálogo da ENAP: ciência de dados, governança de dados e IA",p:"Escola Virtual.Gov",tags:["gov","dados","ia"],free:true,u:"https://www.escolavirtual.gov.br/",note:"Você já tem 5 certificados lá. Procure 'dados', 'governança' e 'inteligência artificial'."},
  {n:"Fundação Bradesco: Excel avançado e introdução à IA",p:"Escola Virtual Fundação Bradesco",tags:["dados","ia"],free:true,u:"https://www.ev.org.br/",note:"Certificados gratuitos em português."},
  {n:"Bootcamps DIO (Power BI, IA, dados)",p:"DIO",tags:["dados","ia"],free:true,u:"https://www.dio.me/",note:"Gratuitos com projetos práticos. Escolha um e termine."},
@@ -1010,15 +1021,26 @@ Hoje transformo esse tipo de controle em painéis de Power BI e consultas SQL. S
 O que trago: disciplina com prazos, cuidado com informação sensível e a visão de quem já esteve do lado de quem usa o relatório.
 
 Estou em transição para BI e Dados e disponível a partir de março de 2027. Meus projetos estão no GitHub: [link].`,
- exp:`Assistente Administrativo (Cabo) · Força Aérea Brasileira
+ exp:`Cabo, Administração · Força Aérea Brasileira
 mar/2019 – fev/2027 · Rio de Janeiro
-Terceiro Comando Aéreo Regional (III COMAR) desde nov/2023
 
-• Elaborei e controlei cerca de [N] documentos oficiais por mês, cumprindo prazos normativos.
-• Montei planilhas de controle em Excel que reduziram [tempo/erros] em [X%] no acompanhamento de [tema].
-• Consolidei dados de [área] em relatórios mensais para a chefia.
-• Instrutor de apoio no Curso de Combate a Incêndio para brigadistas do GAP-RJ (2026), com referência elogiosa formal.
-• Promovido a Cabo por merecimento (nota 8,75 no curso de formação).`,
+Auxiliar administrativo · Coordenação de Segurança e Atividades Operacionais (III COMAR) · fev/2024 – fev/2027
+• Elaborei documentos oficiais (ofícios, normas internas e relatórios anuais) no sistema de gestão documental do Comando.
+• Mantive o controle de acompanhamento de um programa de segurança em mais de 60 unidades, com status por unidade para a chefia.
+• Atualizei a apresentação semanal de acompanhamento das atividades usada nas reuniões da direção e preparei o material das reuniões da comissão de segurança.
+• Apoiei o coronel chefe no sistema de gestão de tarefas, atualizando prazos e andamentos.
+• Coordenei e fiscalizei o controle de acesso de pessoas, veículos e materiais de um complexo com [N] organizações, incluindo credenciamento, passes e autorizações.
+• Organizei a logística de eventos com até [N] participantes (marcha, instrução de tiro, competição esportiva), com transporte, apoio médico e alimentação.
+• Instrutor de apoio na formação da brigada de incêndio e primeiros socorros, com referência elogiosa formal (2026).
+
+Auxiliar administrativo · Batalhão de Segurança e Defesa do Rio de Janeiro · 2021 – fev/2024
+• Montei escalas de serviço, permutas e controle de faltas de um esquadrão de [N] militares.
+• Atuei nas seções de pessoal, de processos disciplinares e de patrimônio, com controle de documentos e prazos.
+• Treinei a tropa do Esquadrão de Honras Militares e atuei na recepção de autoridades.
+
+Promovido a Cabo por merecimento em 2025 (nota 8,75 no curso de formação).`,
+ resA:`Analista de Dados e BI em formação, com 8 anos de experiência em controles administrativos e indicadores na Força Aérea Brasileira. Tecnólogo em ADS, com projetos em Power BI, SQL e Excel publicados no GitHub e foco em qualidade e governança de dados. Disponível a partir de março de 2027.`,
+ resB:`Profissional administrativo com 8 anos na Força Aérea Brasileira: documentos oficiais, escalas, controle de acesso, logística de eventos e apresentações para a chefia. Domínio do pacote Office, com Excel aplicado a controles e relatórios. Tecnólogo em ADS. Disponível a partir de março de 2027.`,
  gh:`### Olá! Sou o Pedro Henrique
 
 Analista de Dados e BI em formação, vindo de 8 anos de gestão administrativa na Força Aérea Brasileira.
@@ -1055,6 +1077,8 @@ function vPerfil(){
   h+=vApps();
  } else {
   h+='<section class="panel">'+brandList("car")+'</section>';
+  h+='<section class="panel"><h3>Três frentes de vaga</h3><ul class="plain"><li><strong>A. Dados (alvo):</strong> Analista de BI, Dados ou Relatórios Júnior. Use o currículo A.</li><li><strong>B. Administrativo com dados (garantia):</strong> Assistente ou Analista Administrativo, Planejamento, Controladoria, Compras, Facilities. Use o currículo B.</li><li><strong>C. Segurança e controle de acesso (rede):</strong> só se chegar abril sem proposta das outras duas.</li></ul><p class="muted small">Candidaturas a partir de 15/02, início só depois da baixa. A primeira proposta boa que pagar as contas você aceita e segue estudando.</p></section>';
+  h+='<section class="panel stack">'+copyBlock("resA","Resumo do currículo A (dados)")+copyBlock("resB","Resumo do currículo B (administrativo)")+copyBlock("exp","Experiência na FAB")+'</section>';
   h+='<section class="panel"><h3>Currículo em uma página</h3><ul class="plain"><li><strong>Topo:</strong> nome, cidade, telefone, e-mail, LinkedIn, GitHub e "Disponível a partir de [data]".</li><li><strong>Resumo:</strong> 3 linhas, adaptadas a cada vaga.</li><li><strong>Projetos:</strong> antes da experiência, enquanto você não tiver vaga em dados.</li><li><strong>Experiência:</strong> FAB com os bullets da aba LinkedIn.</li><li><strong>Formação e certificações:</strong> ADS, PL-300 (quando tiver), cursos ENAP.</li><li><strong>Formato:</strong> PDF, uma coluna, sem foto e sem tabelas (sistemas de triagem leem melhor).</li></ul><p class="muted small">O modelo completo está no plano mestre "Trilha até CDO".</p></section>';
  }
  return h;
