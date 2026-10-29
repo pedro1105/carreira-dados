@@ -18,7 +18,7 @@ head_add = ('<meta charset="utf-8"><meta name="viewport" content="width=device-w
             '<style>#nl-badge-frame,iframe[title="Powered by Netlify"]{display:none!important}</style>')
 sw = ('<script>if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){const sw=navigator.serviceWorker;let had=!!sw.controller;'
       'sw.register("sw.js",{scope:"./"}).then(r=>{document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update().catch(()=>{});});}).catch(()=>{});'
-      'sw.addEventListener("controllerchange",()=>{if(had)location.reload();had=true;});}</script>')
+      'sw.addEventListener("controllerchange",()=>{if(had){if(typeof swUpdated==="function")swUpdated();else location.reload();}had=true;});}</script>')
 nl = ('<script>(function(){const q=\'#nl-badge-frame,iframe[title="Powered by Netlify"]\';const k=()=>document.querySelectorAll(q).forEach(e=>e.remove());'
       'k();new MutationObserver(k).observe(document.documentElement,{childList:true,subtree:true});})()</script>')
 out = '<!doctype html><html lang="pt-BR"><head>' + head_add + head + '</head><body>' + body + sw + nl + '</body></html>'

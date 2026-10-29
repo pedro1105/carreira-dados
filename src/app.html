@@ -626,7 +626,7 @@ setTimeout(async()=>{
 /* ================= UTIL ================= */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-let toastT;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),2600);}
+let toastT;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),m.length>80?7000:2600);}
 async function copyText(txt,btn){try{await navigator.clipboard.writeText(txt);toast("Texto copiado.");}catch(e){const pre=btn&&btn.closest(".stack")&&btn.closest(".stack").querySelector(".copybox");if(pre){const r=document.createRange();r.selectNodeContents(pre);const sel=getSelection();sel.removeAllRanges();sel.addRange(r);}toast("Selecione e copie o texto.");}}
 /* ================= SINCRONIZAÇÃO POR CÓDIGO (igual ao app da Transpetro) ================= */
 /* O progresso fica na mesma nuvem do Supabase do app da Transpetro (funções tp_get / tp_save / tp_ver),
@@ -780,10 +780,22 @@ async function clNew(){CL.code=newCode();CL.base=0;ST.cloud=CL.code;clStore();ch
 function clOff(btn){if(!btn.dataset.arm){btn.dataset.arm="1";btn.textContent="Toque de novo para desconectar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.arm;btn.textContent="Desconectar este aparelho";}},4000);return;}
  CL.code=null;CL.base=0;CL.st="off";clStore();clSnap(null);delete ST.cloud;saveLocal();rerenderKeep();toast("Este aparelho parou de sincronizar.");}
 /* cada aparelho grava no progresso a versão do app, onde abriu e quando (lista em Configurações) */
-const APP_V=6;
+const APP_V=7;
+/* o que mudou em cada versão (aparece uma vez depois que o app atualiza e fica em Configurações) */
+const NEWS={6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações."};
+const SEENK=KEY+"-seenV";
+/* versão nova baixada pelo service worker (app instalado): avisa e atualiza com um toque, como no app da Transpetro */
+function swUpdated(){
+ if(swUpdated.on) return; swUpdated.on=1;
+ const t=$("#toast"); clearTimeout(toastT);
+ t.innerHTML='<span><strong>Versão nova do app pronta.</strong> Seu progresso fica salvo.</span> <button type="button" class="btn sm" id="swGo">Atualizar</button>';
+ t.classList.add("on"); $("#swGo").onclick=()=>{saveLocal();location.reload();};
+}
+setTimeout(()=>{ let seen=0; try{seen=+localStorage.getItem(SEENK)||0;localStorage.setItem(SEENK,APP_V);}catch(e){return;}
+ if(seen&&seen<APP_V&&!swUpdated.on) toast("App atualizado para a versão "+APP_V+". "+(NEWS[APP_V]||"")); },1800);
 function devMark(){
  let id="x"; try{id=localStorage.getItem(KEY+"-dev"); if(!id){id=Math.random().toString(36).slice(2,8); localStorage.setItem(KEY+"-dev",id);}}catch(e){}
- const ua=navigator.userAgent, m=(["Android","iPhone","iPad","Windows","CrOS","Mac OS X","Linux"].find(k=>ua.includes(k))||"?").replace("Mac OS X","Mac");
+ const ua=navigator.userAgent, m=((/Android [\d.]+/.exec(ua)||[])[0]||["Android","iPhone","iPad","Windows","CrOS","Mac OS X","Linux"].find(k=>ua.includes(k))||"?").replace("Mac OS X","Mac");
  const w=IN_CLAUDE?"claude.ai":IS_PWA?((matchMedia("(display-mode: standalone)").matches||navigator.standalone)?"app instalado":"navegador"):"outro";
  ST.devs=ST.devs||{}; const p=ST.devs[id];
  if(!p||p.v!==APP_V||p.w!==w||Date.now()-(p.at||0)>3*3600e3){ST.devs[id]={v:APP_V,w,m,at:Date.now()};changed();}
@@ -820,7 +832,8 @@ function cfgSync(){
  else h+='<div class="row"><button class="btn sm" id="clNew" type="button">Este é o primeiro aparelho: criar a sincronização</button></div>';
  h+='<details class="acc"'+(CL.code?"":" open")+'><summary><span>'+(CL.code?"Usar outro código":"Já tenho um código (de outro aparelho)")+'</span><span class="chev">›</span></summary><div class="stack">'+(CL.code?'<span class="muted small">Código atual: <span class="num">'+esc(CL.code)+'</span></span>':'')+'<input id="clIn" type="text" placeholder="cd-xxxx-xxxx-xxxx-xxxx-xxxx-xxxx" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Código de sincronização"><div class="row"><button class="btn sm" id="clGo" type="button">Conectar este aparelho</button>'+(CL.code?'<button class="btn ghost sm" id="clOff" type="button">Desconectar este aparelho</button>':'')+'</div></div></details>';
  const dv=Object.entries(ST.devs||{}).sort((a,b)=>(b[1].at||0)-(a[1].at||0)).slice(0,6);
- if(CL.code&&dv.length) h+='<details class="acc"><summary><span>Aparelhos que usaram este progresso ('+dv.length+')</span><span class="chev">›</span></summary><ul class="plain">'+dv.map(([id,d])=>'<li class="small">'+esc(d.m||"?")+' · '+esc(d.w||"")+' · versão '+esc(d.v)+' · '+new Date(d.at).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})+(id===(()=>{try{return localStorage.getItem(KEY+"-dev");}catch(e){return "";}})()?" (este)":"")+'</li>').join("")+'</ul><p class="muted small">Se o celular não aparecer aqui ou estiver numa versão antiga, abra o app nele e feche e abra de novo.</p></details>';
+ if(CL.code&&dv.length) h+='<details class="acc"><summary><span>Aparelhos que usaram este progresso ('+dv.length+')</span><span class="chev">›</span></summary><ul class="plain">'+dv.map(([id,d])=>'<li class="small">'+esc(d.m||"?")+' · '+esc(d.w||"")+' · versão '+esc(d.v)+(d.v>=APP_V?' ✓ atualizado':' · desatualizado: abra o app nesse aparelho')+' · '+new Date(d.at).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})+(id===(()=>{try{return localStorage.getItem(KEY+"-dev");}catch(e){return "";}})()?" (este)":"")+'</li>').join("")+'</ul><p class="muted small">Se o celular não aparecer aqui ou estiver numa versão antiga, abra o app nele e feche e abra de novo.</p></details>';
+ h+='<p class="small"><strong>Versão do app neste aparelho: '+APP_V+'.</strong> <span class="muted">'+esc(NEWS[APP_V]||"")+'</span></p>';
  h+='<p class="muted small">'+(IN_CLAUDE?'Aqui no claude.ai o progresso também acompanha a sua conta. ':'')+'App instalável (celular, tablet e PC): <a href="'+GH_URL+'" target="_blank" rel="noopener">'+GH_URL.replace("https://","")+'</a></p></section>';
  return h;
 }
