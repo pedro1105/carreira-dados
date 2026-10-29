@@ -384,6 +384,7 @@ const WD=["dom","seg","ter","qua","qui","sex","sáb"];
 const MES=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
 const fmt=s=>{const d=parse(s);return WD[d.getDay()]+", "+d.getDate()+" "+MES[d.getMonth()];};
 const fmtShort=s=>{const d=parse(s);return pad(d.getDate())+"/"+pad(d.getMonth()+1);};
+const hrs=m=>String(Math.round(m/6)/10).replace(".",",");
 const diff=(a,b)=>Math.round((parse(b)-parse(a))/864e5);
 
 /* ================= v4: FLASHCARDS (revisão espaçada) ================= */
@@ -779,15 +780,17 @@ async function clNew(){CL.code=newCode();CL.base=0;ST.cloud=CL.code;clStore();ch
 function clOff(btn){if(!btn.dataset.arm){btn.dataset.arm="1";btn.textContent="Toque de novo para desconectar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.arm;btn.textContent="Desconectar este aparelho";}},4000);return;}
  CL.code=null;CL.base=0;CL.st="off";clStore();clSnap(null);delete ST.cloud;saveLocal();rerenderKeep();toast("Este aparelho parou de sincronizar.");}
 /* cada aparelho grava no progresso a versão do app, onde abriu e quando (lista em Configurações) */
-const APP_V=5;
+const APP_V=6;
 function devMark(){
  let id="x"; try{id=localStorage.getItem(KEY+"-dev"); if(!id){id=Math.random().toString(36).slice(2,8); localStorage.setItem(KEY+"-dev",id);}}catch(e){}
- const ua=navigator.userAgent, m=(/Android|iPhone|iPad|Windows|Mac OS X|CrOS|Linux/.exec(ua)||["?"])[0].replace("Mac OS X","Mac");
+ const ua=navigator.userAgent, m=(["Android","iPhone","iPad","Windows","CrOS","Mac OS X","Linux"].find(k=>ua.includes(k))||"?").replace("Mac OS X","Mac");
  const w=IN_CLAUDE?"claude.ai":IS_PWA?((matchMedia("(display-mode: standalone)").matches||navigator.standalone)?"app instalado":"navegador"):"outro";
  ST.devs=ST.devs||{}; const p=ST.devs[id];
  if(!p||p.v!==APP_V||p.w!==w||Date.now()-(p.at||0)>3*3600e3){ST.devs[id]={v:APP_V,w,m,at:Date.now()};changed();}
 }
 setTimeout(function devWait(n){ const ready=IN_CLAUDE?(SYNC.ready||SYNC.st==="err"||n>20):(!CL.code||CL.st==="ok"||n>20); if(ready&&(!CL.code||CL.base||!IN_CLAUDE||n>20)) devMark(); else setTimeout(()=>devWait(n+1),3000); },2500,0);
+/* a cópia antiga no GitHub Pages leva para o endereço do Netlify, já com o código deste aparelho, para os dois não ficarem com progressos separados */
+if(location.hostname==="pedro1105.github.io"&&location.pathname.startsWith("/carreira-dados")){location.replace(GH_URL+(CL.code?"#sync="+CL.code:""));}
 /* link #sync=código abre o app já conectado */
 (function(){const m=/[#&]sync=(cd-[a-z0-9-]+)/.exec(location.hash||"");if(!m) return;try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}if(m[1]!==CL.code) setTimeout(()=>clLink(m[1],true),400);})();
 setTimeout(clPull,1200);
@@ -912,7 +915,7 @@ function vHoje(){
   h+='<section class="panel"><h4>Plano de 2027 concluído</h4><h2>Hora de revisar as metas</h2><p>O cronograma diário ia até 30/09/2027. Abra o plano mestre para a fase Júnior e continue usando as abas Cursos, Portfólio e Perfil.</p></section>';
  } else {
   const ph=phaseOf(t); const T=SCHED[t]||[]; const real=T.filter(x=>x.k!=="folga"); const dn=real.filter(x=>isDone(x.id)).length; const mins=real.reduce((a,x)=>a+x.m,0);
-  h+='<section class="panel"><div class="dayhead"><div><h4>'+(ph?esc(ph.n):"")+'</h4><h2>'+fmt(t)+'</h2></div><span class="pill pri num">'+dn+'/'+real.length+' feitas · '+Math.round(mins/6)/10+' h</span></div>'+(real.length?'<div class="track" aria-hidden="true"><div class="fill'+(dn===real.length?" ok":"")+'" style="width:'+(real.length?Math.round(dn/real.length*100):0)+'%"></div></div>':"")+'<div class="tasks">'+T.map(x=>taskHTML(x)).join("")+'</div></section>';
+  h+='<section class="panel"><div class="dayhead"><div><h4>'+(ph?esc(ph.n):"")+'</h4><h2>'+fmt(t)+'</h2></div><span class="pill pri num">'+dn+'/'+real.length+' feitas · '+hrs(mins)+' h</span></div>'+(real.length?'<div class="track" aria-hidden="true"><div class="fill'+(dn===real.length?" ok":"")+'" style="width:'+(real.length?Math.round(dn/real.length*100):0)+'%"></div></div>':"")+'<div class="tasks">'+T.map(x=>taskHTML(x)).join("")+'</div></section>';
   const cc=srsCounts(), fu=apFollow(), dow=parse(t).getDay();
   if(cc.due||cc.fresh) h+='<section class="panel"><div class="dayhead"><h3>Revisões de hoje</h3><span class="pill pri num">'+cc.due+' para revisar · '+cc.fresh+' novos</span></div><p class="small">Cerca de '+Math.max(2,Math.round((cc.due+cc.fresh)*0.4))+' min de flashcards. Faça antes do curso do dia: aquece a cabeça.</p><div class="row"><button class="btn sm" id="goCards" type="button">Revisar agora</button>'+(TTS_OK?'<button class="btn ghost sm" id="goAudio" type="button">Ouvir em áudio</button>':'')+'</div></section>';
   if(fu.length) h+='<section class="panel"><div class="dayhead"><h3>Candidaturas para cobrar</h3><span class="pill bad num">'+fu.length+'</span></div><p class="small">'+fu.slice(0,3).map(p=>esc(p.emp)).join(", ")+(fu.length>3?" e mais "+(fu.length-3):"")+' sem resposta há 10 dias ou mais.</p><div class="row"><button class="btn ghost sm" id="goApps" type="button">Abrir candidaturas</button></div></section>';
@@ -924,7 +927,7 @@ function vHoje(){
   if(ph) h+='<section class="panel"><h4>Meta da fase · '+esc(ph.h)+'</h4><p>'+esc(ph.goal)+'</p>'+pipeHTML()+'</section>';
  }
  h+='<section class="tip"><strong>Dica do dia · '+esc(tip[0])+'</strong><span>'+esc(tip[1])+'</span></section>';
- h+='<section class="grid"><div class="panel fact"><span class="k">Sequência</span><span class="big">'+st.streak+' dia'+(st.streak===1?"":"s")+'</span></div><div class="panel fact"><span class="k">Horas estudadas</span><span class="big">'+Math.round(st.mins/6)/10+' h</span></div><div class="panel fact"><span class="k">Em dia com o plano</span><span class="big">'+(st.planned?Math.round(st.plannedDone/st.planned*100):100)+'%</span></div></section>';
+ h+='<section class="grid"><div class="panel fact"><span class="k">Sequência</span><span class="big">'+st.streak+' dia'+(st.streak===1?"":"s")+'</span></div><div class="panel fact"><span class="k">Horas estudadas</span><span class="big">'+hrs(st.mins)+' h</span></div><div class="panel fact"><span class="k">Em dia com o plano</span><span class="big">'+(st.planned?Math.round(st.plannedDone/st.planned*100):100)+'%</span></div></section>';
  return h;
 }
 WIRES.hoje=el=>{
@@ -1011,7 +1014,7 @@ const TREE=`nome-do-projeto/
 ├── img/             ← prints usados no README
 └── .gitignore`;
 function vPort(){
- let h='<section class="panel"><h4>Portfólio no GitHub</h4><h2>6 projetos ligados ao seu histórico</h2><p>Todos com dados públicos ou fictícios. Cada etapa é uma tarefa da agenda (sábados enquanto militar; segunda, quarta, sexta e sábado depois da baixa). Três bem feitos já sustentam candidaturas; os outros fortalecem.</p></section>';
+ let h='<section class="panel"><h4>Portfólio no GitHub</h4><h2>6 projetos ligados ao seu histórico</h2><p>Todos com dados públicos ou fictícios. Cada etapa é uma tarefa da agenda (quase todo dia nas férias e no meio expediente; sábados do Carnaval até a baixa; segunda, quarta, sexta e sábado depois). Três bem feitos já sustentam candidaturas; os outros fortalecem.</p></section>';
  PROJECTS.forEach((p,pi)=>{ const ids=p.s.map((_,i)=>"p:"+p.id+":"+i); const dn=ids.filter(isDone).length; const pct=Math.round(dn/ids.length*100); const a=(IDX[ids[0]]||{date:START}).date,b=(IDX[ids[ids.length-1]]||{date:END}).date;
   h+='<section class="panel"><details class="acc" style="border:0;padding:0"'+(pi===0?" open":"")+'><summary><span class="stack" style="gap:4px;flex:1;min-width:0"><span class="row" style="gap:8px"><strong>'+(pi+1)+'. '+esc(p.n)+'</strong>'+(pct===100?'<span class="pill free">publicado</span>':"")+'</span><span class="muted small">'+fmtShort(a)+' a '+fmtShort(b)+' · '+dn+'/'+ids.length+' etapas · repo <code>'+esc(p.repo)+'</code></span><span class="track"><span class="fill'+(pct===100?" ok":"")+'" style="display:block;width:'+pct+'%"></span></span></span><span class="chev">›</span></summary><p class="small"><strong>Por que:</strong> '+esc(p.why)+'</p><p class="small"><strong>Fonte:</strong> '+esc(p.src)+(p.u?' · <a href="'+esc(p.u)+'" target="_blank" rel="noopener">Abrir</a>':"")+'</p><p class="small"><strong>Mostra:</strong> '+esc(p.skills)+'</p><div class="tasks">'+ids.filter(id=>IDX[id]).map(id=>taskHTML(IDX[id],true)).join("")+'</div>'+diaryHTML(p.id)+'</details></section>'; });
  h+='<section class="panel stack"><h3>Estrutura padrão de cada repositório</h3><pre class="copybox">'+esc(TREE)+'</pre></section>';
@@ -1101,14 +1104,14 @@ function vProg(){
  const st=stats(), t=todayS();
  let h='';
  if(t>=START){ const w0=mondayOf(t); h+=weekCard(weekStats(w0),weekStats(addD(w0,-7)),"Esta semana"); }
- h+='<section class="grid"><div class="panel fact"><span class="k">Tarefas feitas</span><span class="big">'+st.doneN+'</span><span class="muted small">de '+TOTAL_TASKS+' no plano</span></div><div class="panel fact"><span class="k">Horas estudadas</span><span class="big">'+Math.round(st.mins/6)/10+' h</span></div><div class="panel fact"><span class="k">Sequência</span><span class="big">'+st.streak+' dia'+(st.streak===1?"":"s")+'</span></div><div class="panel fact"><span class="k">Em dia com o plano</span><span class="big">'+(st.planned?Math.round(st.plannedDone/st.planned*100):100)+'%</span><span class="muted small">'+st.plannedDone+'/'+st.planned+' até hoje</span></div></section>';
+ h+='<section class="grid"><div class="panel fact"><span class="k">Tarefas feitas</span><span class="big">'+st.doneN+'</span><span class="muted small">de '+TOTAL_TASKS+' no plano</span></div><div class="panel fact"><span class="k">Horas estudadas</span><span class="big">'+hrs(st.mins)+' h</span></div><div class="panel fact"><span class="k">Sequência</span><span class="big">'+st.streak+' dia'+(st.streak===1?"":"s")+'</span></div><div class="panel fact"><span class="k">Em dia com o plano</span><span class="big">'+(st.planned?Math.round(st.plannedDone/st.planned*100):100)+'%</span><span class="muted small">'+st.plannedDone+'/'+st.planned+' até hoje</span></div></section>';
  h+='<section class="panel"><h3>Fases</h3>'+pipeHTML()+PHASES.map(p=>'<p class="small"><strong>'+esc(p.n)+'</strong> · '+fmtShort(p.a)+' a '+fmtShort(p.b)+' · '+esc(p.goal)+'</p>').join("")+'</section>';
  h+='<section class="panel"><h3>Por área</h3>'+Object.keys(KINDS).filter(k=>st.byK[k]).map(k=>{const x=st.byK[k];const p=Math.round(x.d/x.n*100);return '<div class="bar"><span class="kchip" style="--kc:var(--k-'+k+')">'+KINDS[k]+'</span><span class="track"><span class="fill" style="display:block;width:'+p+'%;background:var(--k-'+k+')"></span></span><span class="num small">'+x.d+'/'+x.n+'</span></div>';}).join("")+'</section>';
  let cells=""; for(let i=13;i>=0;i--){const s=addD(t,-i); let n=0; for(const id in ST.done) if(ST.done[id]===s) n++; cells+='<div class="hc '+(n>=4?"l3":n>=2?"l2":n>=1?"l1":"")+'" title="'+fmtShort(s)+': '+n+'">'+parse(s).getDate()+'</div>';}
  h+='<section class="panel"><h3>Últimos 14 dias</h3><div class="heat">'+cells+'</div><p class="muted small">Cada quadrado é um dia; quanto mais escuro, mais tarefas concluídas.</p></section>';
  h+='<section class="panel"><h3>Semanas: planejado x feito</h3>'+weeksChart(8)+'</section>';
  const tmTot=Object.values(ST.log||{}).reduce((a,x)=>a+x,0), pr=projection(), L=apList(), sk=SKILLS.reduce((a,d)=>a+skPct(d)*d.w,0)/SKILLS.reduce((a,d)=>a+d.w,0), cardsSeen=Object.keys(ST.srs||{}).length;
- h+='<section class="panel"><h3>Mais números</h3><div class="grid g4"><div class="fact"><span class="k">Foco no cronômetro</span><span class="big">'+Math.round(tmTot/6)/10+' h</span></div><div class="fact"><span class="k">PL-300</span><span class="big">'+Math.round(sk*100)+'%</span><span class="muted small">prontidão</span></div><div class="fact"><span class="k">Flashcards</span><span class="big">'+cardsSeen+'</span><span class="muted small">de '+CARDS.length+' vistos</span></div><div class="fact"><span class="k">Candidaturas</span><span class="big">'+L.length+'</span><span class="muted small">'+L.filter(p=>["ent","fin","prop"].includes(p.etapa)).length+' com entrevista</span></div></div>'+(pr?'<p class="small">No ritmo das últimas 4 semanas ('+(Math.round(pr.rate*10)/10)+' sessões de curso por semana), a trilha de cursos termina por volta de <strong>'+fmt(pr.end)+'</strong>'+(pr.plan?(pr.end>pr.plan?', depois do planejado ('+fmtShort(pr.plan)+'). Se a diferença passar de 2 semanas, use "Reorganizar o plano" em Hoje.':', dentro do planejado ('+fmtShort(pr.plan)+').'):'.')+'</p>':'<p class="muted small">A previsão de término aparece depois das primeiras semanas de curso.</p>')+'</section>';
+ h+='<section class="panel"><h3>Mais números</h3><div class="grid g4"><div class="fact"><span class="k">Foco no cronômetro</span><span class="big">'+hrs(tmTot)+' h</span></div><div class="fact"><span class="k">PL-300</span><span class="big">'+Math.round(sk*100)+'%</span><span class="muted small">prontidão</span></div><div class="fact"><span class="k">Flashcards</span><span class="big">'+cardsSeen+'</span><span class="muted small">de '+CARDS.length+' vistos</span></div><div class="fact"><span class="k">Candidaturas</span><span class="big">'+L.length+'</span><span class="muted small">'+L.filter(p=>["ent","fin","prop"].includes(p.etapa)).length+' com entrevista</span></div></div>'+(pr?'<p class="small">No ritmo das últimas 4 semanas ('+(Math.round(pr.rate*10)/10)+' sessões de curso por semana), a trilha de cursos termina por volta de <strong>'+fmt(pr.end)+'</strong>'+(pr.plan?(pr.end>pr.plan?', depois do planejado ('+fmtShort(pr.plan)+'). Se a diferença passar de 2 semanas, use "Reorganizar o plano" em Hoje.':', dentro do planejado ('+fmtShort(pr.plan)+').'):'.')+'</p>':'<p class="muted small">A previsão de término aparece depois das primeiras semanas de curso.</p>')+'</section>';
  h+='<section class="panel"><details class="acc" style="border:0;padding:0"><summary><h3>Todas as dicas de preparo ('+TIPS.length+')</h3><span class="chev">›</span></summary><div class="stack">'+TIPS.map(x=>'<p class="small"><strong>'+esc(x[0])+'.</strong> '+esc(x[1])+'</p>').join("")+'</div></details></section>';
  return h;
 }
@@ -1320,11 +1323,12 @@ function weekCard(ws,prev,title){
  const best=Object.entries(ws.byK).sort((x,y)=>y[1]-x[1])[0];
  let msg;
  if(!ws.planned) msg="Semana sem tarefas no plano.";
+ else if(todayS()<=ws.b&&diff(ws.a,todayS())<3&&pct<70) msg="Semana começando. Faça as tarefas de hoje; o balanço vale mais no fim da semana.";
  else if(pct>=90) msg="Semana excelente. Mantenha o ritmo e não acrescente coisas novas: constância vence intensidade.";
  else if(pct>=70) msg="Boa semana. Veja o que ficou pendente e escolha só o mais importante (curso ou projeto) para recuperar.";
  else if(pct>=40) msg="Semana pela metade. Se foi falta de tempo, use \"Reorganizar o plano\" em Hoje em vez de acumular.";
  else msg="Semana difícil. Sem culpa: reorganize o plano e recomece com o mínimo (uma tarefa por dia).";
- return '<section class="panel"><h4>'+title+' · '+fmtShort(ws.a)+' a '+fmtShort(ws.b)+'</h4><div class="grid g4"><div class="fact"><span class="k">Em dia</span><span class="big">'+pct+'%</span><span class="muted small num">'+ws.pd+'/'+ws.planned+' planejadas</span></div><div class="fact"><span class="k">Feitas</span><span class="big">'+ws.done+'</span>'+cmp(ws.done,prev&&prev.done)+'</div><div class="fact"><span class="k">Foco no cronômetro</span><span class="big">'+Math.round(ws.tm/6)/10+' h</span>'+cmp(Math.round(ws.tm/6)/10,prev&&Math.round(prev.tm/6)/10," h")+'</div><div class="fact"><span class="k">Flashcards</span><span class="big">'+ws.cards+'</span>'+(ws.cand?'<span class="muted small">'+ws.cand+' candidatura'+(ws.cand>1?"s":"")+'</span>':"")+'</div></div><p class="small">'+esc(msg)+(best?' Área mais forte: '+KINDS[best[0]].toLowerCase()+'.':'')+'</p></section>';
+ return '<section class="panel"><h4>'+title+' · '+fmtShort(ws.a)+' a '+fmtShort(ws.b)+'</h4><div class="grid g4"><div class="fact"><span class="k">Em dia</span><span class="big">'+pct+'%</span><span class="muted small num">'+ws.pd+'/'+ws.planned+' planejadas</span></div><div class="fact"><span class="k">Feitas</span><span class="big">'+ws.done+'</span>'+cmp(ws.done,prev&&prev.done)+'</div><div class="fact"><span class="k">Foco no cronômetro</span><span class="big">'+hrs(ws.tm)+' h</span>'+cmp(Math.round(ws.tm/6)/10,prev&&Math.round(prev.tm/6)/10," h")+'</div><div class="fact"><span class="k">Flashcards</span><span class="big">'+ws.cards+'</span>'+(ws.cand?'<span class="muted small">'+ws.cand+' candidatura'+(ws.cand>1?"s":"")+'</span>':"")+'</div></div><p class="small">'+esc(msg)+(best?' Área mais forte: '+KINDS[best[0]].toLowerCase()+'.':'')+'</p></section>';
 }
 function weeksChart(n){
  const t=todayS(); let m=mondayOf(t<START?START:t); const rows=[];
@@ -1355,7 +1359,7 @@ function pushPlan(){
   const first=timeOf(pend[0].id).split("–")[0]; if(!first) continue;
   const [H,M]=first.split(":").map(Number); const d=parse(s); d.setHours(H,M-before,0,0); if(d.getTime()<=now) continue;
   const mins=pend.reduce((a,x)=>a+x.m,0);
-  out.push({t:d.getTime(),ti:"Em "+before+" min: "+pend[0].t.slice(0,60),b:pend.length+(pend.length===1?" tarefa":" tarefas")+" hoje ("+Math.round(mins/6)/10+" h)."+(i===0&&cc.due?" "+cc.due+" flashcards para revisar.":"")+" Toque para abrir.",u:"./"});
+  out.push({t:d.getTime(),ti:"Em "+before+" min: "+pend[0].t.slice(0,60),b:pend.length+(pend.length===1?" tarefa":" tarefas")+" hoje ("+hrs(mins)+" h)."+(i===0&&cc.due?" "+cc.due+" flashcards para revisar.":"")+" Toque para abrir.",u:"./"});
  }
  return out;
 }
