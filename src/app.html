@@ -238,11 +238,13 @@ input[type=range]{accent-color:var(--pri);width:min(240px,100%)}
 <script>
 /* ================= DATAS-CHAVE ================= */
 const START="2026-12-07", END="2027-09-30"; let BAIXA="2027-02-28", CIVIL="2027-03-01";
-const DEF_CFG={baixa:"2027-02-28",h1:"19:00",h2:"09:00",hw:"09:00",eng:true,sql:true,post:true,home:"hoje"};
+/* férias de 03/12 a 03/01 e meio expediente (08h–12h) de 04/01 até a Quarta de Cinzas */
+const FERIAS_END="2027-01-03", MEIO_END="2027-02-10";
+const DEF_CFG={baixa:"2027-02-28",h1:"19:00",h2:"09:00",hw:"09:00",hf:"09:00",hm:"14:00",eng:true,sql:true,post:true,home:"hoje"};
 const OFF=new Set(["2026-12-24","2026-12-25","2026-12-31","2027-01-01","2027-02-08","2027-02-09","2027-03-26","2027-04-21","2027-05-27","2027-09-07"]);
 const PHASES=[
- {id:"f0",n:"Fase 0 · Base",a:"2026-12-07",b:"2027-01-03",h:"8–10 h/semana",goal:"Excel e Power Query revisados, Git funcionando, SQL iniciado, LinkedIn e GitHub com cara profissional."},
- {id:"f1",n:"Fase 1 · Fundamentos",a:"2027-01-04",b:"2027-02-28",h:"12–15 h/semana (ainda militar)",goal:"SQL e Power BI do curso completo, modelagem e DAX, projetos 1 e 2 publicados, currículo pronto e candidaturas para início em março."},
+ {id:"f0",n:"Fase 0 · Base (férias)",a:"2026-12-07",b:"2027-01-03",h:"cerca de 20 h/semana (férias)",goal:"Excel intermediário com certificado, Git, SQL básico, primeiro painel no Power BI, currículos A e B, LinkedIn e GitHub com cara profissional."},
+ {id:"f1",n:"Fase 1 · Fundamentos",a:"2027-01-04",b:"2027-02-28",h:"cerca de 15 h/semana até o Carnaval (tardes livres), depois 10 h (noites)",goal:"SQL e Power BI do curso completo, modelagem e DAX, projetos 1 e 2 publicados, currículo pronto e candidaturas para início em março."},
  {id:"f2",n:"Fase 2 · Certificação",a:"2027-03-01",b:"2027-05-31",h:"cerca de 20 h/semana de estudo + busca de vaga (civil)",goal:"PL-300 aprovada, projetos 3 a 5 publicados, IA aplicada a dados, 15 candidaturas por semana."},
  {id:"f3",n:"Fase 3 · Primeira vaga",a:"2027-06-01",b:"2027-09-30",h:"cerca de 20 h/semana de estudo + busca de vaga",goal:"Projeto com IA publicado, Python e estatística, networking semanal. Meta: vaga até 30/06 (otimista) ou 30/09 (realista)."}
 ];
@@ -530,7 +532,7 @@ const SQLP_C="Desafio SQL 20 min (sql-practice.com, HackerRank SQL ou LeetCode S
    que ainda não foi feito; o que estava atrasado sai dos dias passados e vem para a frente. */
 const HARD_END="2027-12-31";
 function build(o){
- const S={}, IDX={}, MB=msBaixa(); let mi=0,pi=0,bi=0,po=0,xm=0,sqlOn=false;
+ const S={}, IDX={}, MB=msBaixa(); let mi=0,pi=0,bi=0,po=0,xm=0,sqlOn=false,pbiN=0;
  const rp=o.rp&&o.rp>START&&o.rp<=HARD_END?o.rp:null, D0=(typeof ST!=="undefined"&&ST.done)||{};
  const keep=id=>D0[id]&&D0[id]<rp;
  let mQ=MAINQ,pQ=PROJQ,bQ=BRANDQ;
@@ -538,8 +540,9 @@ function build(o){
  for(let s=START;s<=END||(rp&&s<=HARD_END&&(mi<mQ.length||pi<pQ.length||bi<bQ.length));s=addD(s,1)){
   if(rp&&s===rp){mQ=MAINQ.filter(q=>!keep(q.id));pQ=PROJQ.filter(q=>!keep(q.id));bQ=BRANDQ.filter(q=>!keep(q.id));mi=pi=bi=0;}
   const d=parse(s), wd=d.getDay(), civ=s>=CIVIL, f0=s<"2027-01-04", T=[];
-  const main=()=>{ if(mi<mQ.length){const q=mQ[mi++]; if(q.c==="sql")sqlOn=true; push(T,q,s);} else push(T,{id:"x:"+s+":m",k:"curso",t:EXTRA_MAIN[(xm++)%EXTRA_MAIN.length],m:75,d:"A fila de cursos do plano terminou. Use este horário para aprofundar ou fazer um curso da sua lista."},s); };
-  const proj=()=>{ if(pi<pQ.length) push(T,pQ[pi++],s); else push(T,{id:"x:"+s+":p",k:"projeto",t:"Melhorar um projeto publicado (visual, README ou nova análise)",m:90,d:"Projetos vivos mostram evolução. Faça um commit por melhoria."},s); };
+  const main=()=>{ if(mi<mQ.length){const q=mQ[mi++]; if(q.c==="sql")sqlOn=true; if(q.c==="pbi")pbiN++; push(T,q,s);} else push(T,{id:"x:"+s+":m",k:"curso",t:EXTRA_MAIN[(xm++)%EXTRA_MAIN.length],m:75,d:"A fila de cursos do plano terminou. Use este horário para aprofundar ou fazer um curso da sua lista."},s); };
+  /* projetos só depois do básico de Power BI (8 sessões, até DAX); antes disso o horário vira curso */
+  const proj=()=>{ if(pi<pQ.length&&pbiN<8&&!(rp&&s>=rp&&pQ!==PROJQ&&pQ.length<PROJQ.length)){ main(); return; } if(pi<pQ.length) push(T,pQ[pi++],s); else push(T,{id:"x:"+s+":p",k:"projeto",t:"Melhorar um projeto publicado (visual, README ou nova análise)",m:90,d:"Projetos vivos mostram evolução. Faça um commit por melhoria."},s); };
   const brand=()=>{ if(bi<bQ.length) push(T,bQ[bi++],s); };
   const eng=()=>o.eng&&push(T,{id:"r:"+s+":en",k:"ingles",t:ENG_C,m:30},s);
   const sqlp=()=>{ if(sqlOn&&o.sql) push(T,{id:"r:"+s+":sq",k:"pratica",t:SQLP_C,m:20},s); };
@@ -550,7 +553,17 @@ function build(o){
   if(MB[s]) push(T,{id:"m:b"+(s===BAIXA?"0":s<BAIXA?"1":"2"),k:"marco",t:MB[s][0],m:15,d:MB[s][1]},s);
   if(d.getDate()===1&&s>START) push(T,{id:"r:"+s+":mo",k:"rev",t:"Revisão do mês: atualizar currículo e LinkedIn com o que concluiu",m:30,d:"Acrescente cursos, projetos e números novos. Veja na aba Progresso se o ritmo está em dia."},s);
   if(OFF.has(s)){ if(!T.length) T.push({id:"o:"+s,k:"folga",t:"Folga",m:0}); S[s]=T; continue; }
-  if(!civ){
+  const fer=s<=FERIAS_END, meio=!fer&&s<=MEIO_END;
+  if(!civ&&fer){
+   if(wd>=1&&wd<=5){ main(); main(); proj(); if(wd===2||wd===4) eng(); if(wd===1||wd===3) sqlp(); if(wd===5) brand(); }
+   else if(wd===6){ main(); proj(); }
+   else { rev(); brand(); }
+  } else if(!civ&&meio){
+   if(wd>=1&&wd<=5){ main(); proj(); if(wd===2||wd===4) eng(); if(wd===1||wd===3) sqlp(); if(wd===5) brand(); }
+   else if(wd===6){ main(); proj(); }
+   else { rev(); brand(); if(s>="2027-01-10") post(); }
+   if(s>="2027-02-15"&&(wd===1||wd===4)) cand(5);
+  } else if(!civ){
    if(wd>=1&&wd<=4){ main(); if(wd===2||wd===4) eng(); if(wd===1||wd===3) sqlp(); }
    else if(wd===5){ if(!f0) eng(); brand(); }
    else if(wd===6){ main(); proj(); if(!f0) proj(); if(!f0) eng(); }
@@ -821,7 +834,7 @@ const isDone=id=>!!ST.done[id];
 function toggle(id){ if(ST.done[id]) delete ST.done[id]; else ST.done[id]=todayS(); changed(); }
 function phaseOf(s){return PHASES.find(p=>s>=p.a&&s<=p.b)||null;}
 function hm(m){return pad(Math.floor(m/60)%24)+":"+pad(m%60);}
-function timeOf(id){const x=IDX[id]; if(!x) return ""; const s=x.date; if(!TCACHE[s]){const c=cfg(), wd=parse(s).getDay(); const st=(wd===0||wd===6)?c.hw:(s>=CIVIL?c.h2:c.h1); const [H,M]=(st||"19:00").split(":").map(Number); let m=H*60+M; const o={}; (SCHED[s]||[]).forEach(t=>{if(t.k==="folga")return; o[t.id]=hm(m)+"–"+hm(m+t.m); m+=t.m+10;}); TCACHE[s]=o;} return TCACHE[s][id]||"";}
+function timeOf(id){const x=IDX[id]; if(!x) return ""; const s=x.date; if(!TCACHE[s]){const c=cfg(), wd=parse(s).getDay(); const st=(wd===0||wd===6)?c.hw:(s>=CIVIL?c.h2:s<=FERIAS_END?c.hf:s<=MEIO_END?c.hm:c.h1); const [H,M]=(st||"19:00").split(":").map(Number); let m=H*60+M; const o={}; (SCHED[s]||[]).forEach(t=>{if(t.k==="folga")return; o[t.id]=hm(m)+"–"+hm(m+t.m); m+=t.m+10;}); TCACHE[s]=o;} return TCACHE[s][id]||"";}
 function taskHTML(t,showDate){
  if(t.k==="folga") return '<div class="task folga"><div class="tb"><span class="tt muted">Folga. Descanse: consistência também é saber parar.</span></div></div>';
  const dn=isDone(t.id);
@@ -1113,7 +1126,7 @@ function vConfig(){
  const ck=(id,on,lbl)=>'<div class="cfgrow"><label for="'+id+'">'+lbl+'</label><input type="checkbox" id="'+id+'"'+(on?" checked":"")+'></div>';
  let h='<section class="stack"><h2>Configurações</h2><p class="muted">Ajustes deste app. O progresso é salvo sozinho a cada tarefa marcada.</p></section>';
  h+=cfgSync();
- h+='<section class="panel"><h3>Rotina de estudo</h3><div class="cfgrow"><label for="cH1">Início nos dias úteis, até a baixa</label><input type="time" id="cH1" value="'+c.h1+'"></div><div class="cfgrow"><label for="cH2">Início nos dias úteis, depois da baixa</label><input type="time" id="cH2" value="'+c.h2+'"></div><div class="cfgrow"><label for="cHW">Início no sábado e no domingo</label><input type="time" id="cHW" value="'+c.hw+'"></div><p class="muted small">Hoje e Agenda mostram o horário de cada tarefa a partir daqui, com pausa de 10 min entre elas.</p></section>';
+ h+='<section class="panel"><h3>Rotina de estudo</h3><div class="cfgrow"><label for="cHF">Início nos dias úteis das férias (até 03/01)</label><input type="time" id="cHF" value="'+c.hf+'"></div><div class="cfgrow"><label for="cHM">Início nos dias úteis de meio expediente (04/01 a 10/02)</label><input type="time" id="cHM" value="'+c.hm+'"></div><div class="cfgrow"><label for="cH1">Início nos dias úteis, do Carnaval até a baixa</label><input type="time" id="cH1" value="'+c.h1+'"></div><div class="cfgrow"><label for="cH2">Início nos dias úteis, depois da baixa</label><input type="time" id="cH2" value="'+c.h2+'"></div><div class="cfgrow"><label for="cHW">Início no sábado e no domingo</label><input type="time" id="cHW" value="'+c.hw+'"></div><p class="muted small">Hoje e Agenda mostram o horário de cada tarefa a partir daqui, com pausa de 10 min entre elas.</p></section>';
  h+='<section class="panel"><h3>Data da baixa</h3><div class="cfgrow"><label for="cBx">Último dia de serviço</label><input type="date" id="cBx" min="2027-01-04" max="2027-06-30" value="'+c.baixa+'"></div><p class="muted small">Confirme com a Seção de Pessoal. Mudar a data muda o ritmo do cronograma (militar para civil), os marcos da saída e a contagem do topo. O que você já marcou continua marcado. A Google Agenda não muda sozinha: peça o ajuste na conversa.</p></section>';
  h+='<section class="panel"><h3>O que entra no cronograma</h3>'+ck("cEng",c.eng,"Inglês (30 min)")+ck("cSql",c.sql,"Desafio SQL (20 min)")+ck("cPost",c.post,"Post semanal no LinkedIn")+'<p class="muted small">Cursos, projetos, perfil profissional e candidaturas ficam sempre.</p></section>';
  h+='<section class="panel"><h3>Cronômetro e revisões</h3><div class="cfgrow"><label for="cFoc">Foco e pausa</label><select id="cFoc">'+[["50/10","50 + 10 min"],["45/15","45 + 15 min"],["25/5","25 + 5 min (pomodoro)"]].map(([v,n])=>'<option value="'+v+'"'+((c.foc||50)+"/"+(c.brk||10)===v?" selected":"")+'>'+n+'</option>').join("")+'</select></div>'+ck("cBeep",c.beep!==false,"Bipe e vibração ao fim de cada etapa")+'<div class="cfgrow"><label for="cNew">Flashcards novos por dia</label><select id="cNew">'+[5,10,15,20].map(v=>'<option'+((+c.newc||10)===v?" selected":"")+'>'+v+'</option>').join("")+'</select></div>'+ck("cAll",!!c.allDecks,"Liberar todos os baralhos (sem esperar o curso começar)")+'<p class="muted small">O cronômetro marca a tarefa como feita quando você completa os minutos dela. O tempo de foco aparece em Progresso.</p></section>';
@@ -1137,7 +1150,7 @@ function wireCfg(el){
  const pm=$("#cPm"); if(pm) pm.onchange=e=>{setCfg("pmin",+e.target.value);pushSync(true);};
  const po=$("#pushOnB"); if(po) po.onclick=pushOn; const pf=$("#pushOffB"); if(pf) pf.onclick=pushOff;
  const pt=$("#pushTest"); if(pt) pt.onclick=async()=>{try{const r=await navigator.serviceWorker.ready;r.showNotification("Teste · Carreira em Dados",{body:"As notificações estão funcionando.",icon:"icons/icon-192.png"});}catch(e){toast("Não deu para mostrar o teste.");}};
- [["cH1","h1"],["cH2","h2"],["cHW","hw"]].forEach(([id,k])=>{$("#"+id).onchange=e=>{if(!e.target.value)return;setCfg(k,e.target.value);TCACHE={};toast("Horário salvo.");};});
+ [["cHF","hf"],["cHM","hm"],["cH1","h1"],["cH2","h2"],["cHW","hw"]].forEach(([id,k])=>{$("#"+id).onchange=e=>{if(!e.target.value)return;setCfg(k,e.target.value);TCACHE={};toast("Horário salvo.");};});
  $("#cBx").onchange=e=>{const v=e.target.value; if(!v||v<"2027-01-04"||v>"2027-06-30"){toast("Escolha uma data entre 04/01 e 30/06/2027.");return;} setCfg("baixa",v);rebuild();refreshHeader();toast("Cronograma recalculado para a baixa em "+fmtShort(v)+".");};
  [["cEng","eng"],["cSql","sql"],["cPost","post"]].forEach(([id,k])=>{$("#"+id).onchange=e=>{setCfg(k,e.target.checked);rebuild();toast(e.target.checked?"Incluído no cronograma.":"Retirado do cronograma.");};});
  el.querySelectorAll("#homeSeg button").forEach(b=>b.onclick=()=>{setCfg("home",b.dataset.v);rerenderKeep();toast("Tela inicial salva.");});
