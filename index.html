@@ -511,9 +511,16 @@ const FONTES=["LinkedIn","Gupy","Indicação","Site da empresa","Catho / Indeed"
 
 const MAINQ=[];COURSES.forEach(c=>{c.s.forEach((t,i)=>MAINQ.push({id:"c:"+c.id+":"+i,k:"curso",t:c.n+" · "+t,m:75,c:c.id,d:c.src,u:c.u}));if(c.exam)MAINQ.push({id:"c:"+c.id+":exam",k:"marco",t:c.exam,m:150,c:c.id,d:"Agende com 2 semanas de antecedência, de preferência num horário em que você rende bem. Faça em casa (online) ou num centro de provas.",u:c.u});});
 const PROJQ=[];PROJECTS.forEach(p=>p.s.forEach((t,i)=>PROJQ.push({id:"p:"+p.id+":"+i,k:"projeto",t:p.n+" · "+t,m:90,p:p.id,d:"Repositório: "+p.repo+". Fonte: "+p.src+".",u:p.u})));
+/* preparação antes de 07/12 (fora do cronograma diário): contas e programas prontos para o primeiro dia */
+const PREP=[
+ {id:"prep:gh",k:"marca",t:"Criar a conta do GitHub",m:10,d:"Nome de usuário curto e profissional (ex.: nome-sobrenome), a mesma foto do LinkedIn e e-mail pessoal, não o da FAB.",u:"https://github.com/signup"},
+ {id:"prep:li",k:"marca",t:"LinkedIn: conta com foto profissional e título provisório",m:15,d:"Título provisório: \"Analista de Dados em formação | Excel · SQL · Power BI | 8 anos de experiência administrativa\". O texto completo está em Perfil › LinkedIn.",u:"https://www.linkedin.com/"},
+ {id:"prep:ms",k:"marca",t:"Criar o perfil no Microsoft Learn",m:5,d:"Entre com uma conta Microsoft pessoal. É onde ficam a trilha grátis da PL-300, as conquistas e, depois, a certificação.",u:"https://learn.microsoft.com/pt-br/"},
+ {id:"prep:sw",k:"marca",t:"Instalar no notebook: Power BI Desktop, Git e VS Code",m:15,d:"Power BI Desktop pela Microsoft Store (atualiza sozinho); Git em git-scm.com; VS Code em code.visualstudio.com. Seu Windows 11 Pro com 16 GB roda tudo com folga.",u:"https://apps.microsoft.com/detail/9ntxr16hnw1t"}
+];
 const BRANDQ=BRAND.map(b=>({id:"b:"+b.id,k:"marca",t:b.t,m:30,d:b.d}));
 const MS={
- "2026-12-07":["Início do plano: defina seus horários fixos de estudo e leia a aba Hoje","Escolha 4 noites e o sábado de manhã. Bloqueie na agenda do celular."],
+ "2026-12-07":["Início do plano: diagnóstico rápido de Excel (20 min)","Sem consultar nada, tente fazer numa planilha sua: 1) PROCX ou PROCV, 2) SE aninhado, 3) SOMASES, 4) tabela dinâmica, 5) formatação condicional, 6) gráfico, 7) lista suspensa (validação de dados) e 8) importar um CSV pelo Power Query. Se fizer 6 dos 8, marque como feitas na aba Cursos as sessões de Excel do que você já domina e use o horário livre para adiantar o SQL. Os horários das férias (9h às 13h30) já estão na agenda.",20],
  "2027-01-11":["Conferir se saiu o resultado da Transpetro","Se aprovado, siga estudando normalmente: a convocação pode levar meses."],
  "2027-02-01":["Conferir o resultado ou a convocação da Transpetro",""],
  "2027-06-30":["Checkpoint: meta otimista da primeira vaga","Se ainda não houve entrevistas, revise currículo e portfólio antes de enviar mais."],
@@ -526,7 +533,7 @@ function msBaixa(){const o={};
  o[CIVIL]=["Primeiro dia civil: mudar o LinkedIn para disponibilidade imediata","Atualize título, Open to Work e a linha de topo do currículo. Confira também a Transpetro."];
  return o;}
 const EXTRA_MAIN=["Sessão de curso extra (aba Cursos → Meus cursos ou Catálogo)","Desafio de DAX: recrie 3 medidas de um projeto sem consultar","Estudar uma vaga real e listar o que falta aprender","Sessão de curso extra (aba Cursos → Meus cursos ou Catálogo)","Refazer um visual de um projeto para ficar mais claro"];
-const ENG_C="Inglês 30 min: uma lição (Duolingo, Cambly ou BBC Learning English) e 1 artigo técnico de dados em inglês";
+const ENG_C="Inglês 30 min (nível básico a intermediário): uma lição (Duolingo, Cambly ou BBC Learning English) e 1 página da documentação do Power BI em inglês";
 const SQLP_C="Desafio SQL 20 min (sql-practice.com, HackerRank SQL ou LeetCode SQL 50)";
 
 /* o.rp (Reorganizar): a partir dessa data, as filas de cursos, projetos e perfil recomeçam pelo
@@ -538,6 +545,7 @@ function build(o){
  const keep=id=>D0[id]&&D0[id]<rp;
  let mQ=MAINQ,pQ=PROJQ,bQ=BRANDQ;
  const push=(arr,t,s)=>{arr.push(t);IDX[t.id]=Object.assign({date:s},t);};
+ PREP.forEach(t=>{IDX[t.id]=Object.assign({date:addD(START,-1)},t);});
  for(let s=START;s<=END||(rp&&s<=HARD_END&&(mi<mQ.length||pi<pQ.length||bi<bQ.length));s=addD(s,1)){
   if(rp&&s===rp){mQ=MAINQ.filter(q=>!keep(q.id));pQ=PROJQ.filter(q=>!keep(q.id));bQ=BRANDQ.filter(q=>!keep(q.id));mi=pi=bi=0;}
   const d=parse(s), wd=d.getDay(), civ=s>=CIVIL, f0=s<"2027-01-04", T=[];
@@ -550,18 +558,18 @@ function build(o){
   const rev=()=>push(T,{id:"r:"+s+":rv",k:"rev",t:"Revisão da semana e plano da próxima",m:20,d:"Veja o que ficou pendente na aba Agenda, anote 3 coisas que aprendeu e confira os horários da semana."},s);
   const post=()=>{if(!o.post)return;const p=POSTS[(po++)%POSTS.length];push(T,{id:"r:"+s+":po",k:"marca",t:"Post no LinkedIn: "+p,m:40,d:"Curto (até 1.300 caracteres), com um print ou gráfico seu e uma pergunta no fim. Responda os comentários no mesmo dia."},s);};
   const cand=n=>push(T,{id:"r:"+s+":ca",k:"cand",t:n+" candidaturas personalizadas e registro na planilha",m:n>=5?60:45,d:"Ajuste o resumo do currículo às palavras da vaga. Alterne vagas de BI/Dados Júnior e vagas híbridas (administrativo, planejamento, controladoria com Power BI)."},s);
-  if(MS[s]) push(T,{id:"m:"+s,k:"marco",t:MS[s][0],m:15,d:MS[s][1]},s);
+  if(MS[s]) push(T,{id:"m:"+s,k:"marco",t:MS[s][0],m:MS[s][2]||15,d:MS[s][1]},s);
   if(MB[s]) push(T,{id:"m:b"+(s===BAIXA?"0":s<BAIXA?"1":"2"),k:"marco",t:MB[s][0],m:15,d:MB[s][1]},s);
   if(d.getDate()===1&&s>START) push(T,{id:"r:"+s+":mo",k:"rev",t:"Revisão do mês: atualizar currículo e LinkedIn com o que concluiu",m:30,d:"Acrescente cursos, projetos e números novos. Veja na aba Progresso se o ritmo está em dia."},s);
   if(OFF.has(s)){ if(!T.length) T.push({id:"o:"+s,k:"folga",t:"Folga",m:0}); S[s]=T; continue; }
   const fer=s<=FERIAS_END, meio=!fer&&s<=MEIO_END;
   if(!civ&&fer){
    if(wd>=1&&wd<=5){ main(); main(); proj(); if(wd===2||wd===4) eng(); if(wd===1||wd===3) sqlp(); if(wd===5) brand(); }
-   else if(wd===6){ main(); proj(); }
+   else if(wd===6){ main(); proj(); eng(); }
    else { rev(); brand(); }
   } else if(!civ&&meio){
    if(wd>=1&&wd<=5){ main(); proj(); if(wd===2||wd===4) eng(); if(wd===1||wd===3) sqlp(); if(wd===5) brand(); }
-   else if(wd===6){ main(); proj(); }
+   else if(wd===6){ main(); proj(); eng(); }
    else { rev(); brand(); if(s>="2027-01-10") post(); }
    if(s>="2027-02-15"&&(wd===1||wd===4)) cand(5);
   } else if(!civ){
@@ -780,9 +788,9 @@ async function clNew(){CL.code=newCode();CL.base=0;ST.cloud=CL.code;clStore();ch
 function clOff(btn){if(!btn.dataset.arm){btn.dataset.arm="1";btn.textContent="Toque de novo para desconectar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.arm;btn.textContent="Desconectar este aparelho";}},4000);return;}
  CL.code=null;CL.base=0;CL.st="off";clStore();clSnap(null);delete ST.cloud;saveLocal();rerenderKeep();toast("Este aparelho parou de sincronizar.");}
 /* cada aparelho grava no progresso a versão do app, onde abriu e quando (lista em Configurações) */
-const APP_V=7;
+const APP_V=9;
 /* o que mudou em cada versão (aparece uma vez depois que o app atualiza e fica em Configurações) */
-const NEWS={6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações."};
+const NEWS={6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações.",8:"Inglês 3 vezes por semana (terça, quinta e sábado) nas férias e no meio expediente; texto de home office no Currículo.",9:"Preparação antes de 07/12 (contas e programas) e diagnóstico de Excel no primeiro dia."};
 const SEENK=KEY+"-seenV";
 /* versão nova baixada pelo service worker (app instalado): avisa e atualiza com um toque, como no app da Transpetro */
 function swUpdated(){
@@ -916,12 +924,14 @@ function syncBanner(){
  if(!CL.code&&!IN_CLAUDE) return '<section class="banner"><strong>Este aparelho ainda não está sincronizado.</strong><span class="small">No app do claude.ai (ou de outro aparelho já conectado), abra Configurações › Sincronização e copie o código que começa com "cd-". Cole aqui:</span><div class="row"><input type="text" id="bnIn" placeholder="cd-xxxx-xxxx-xxxx-xxxx-xxxx-xxxx" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Código de sincronização" style="flex:1 1 220px"><button class="btn sm" id="bnGo" type="button">Conectar</button></div><span class="muted small">Ou toque em "Este é o primeiro aparelho" em Configurações para criar um código novo.</span></section>';
  return "";
 }
+function prepHTML(){ const dn=PREP.filter(x=>isDone(x.id)).length; return '<section class="panel"><div class="dayhead"><h3>Preparação antes de 07/12</h3><span class="pill num">'+dn+'/'+PREP.length+'</span></div><div class="tasks">'+PREP.map(x=>taskHTML(IDX[x.id])).join("")+'</div></section>'; }
 function vHoje(){
  const t=todayS(); const st=stats(); let h=syncBanner();
  const tipI=(diff("2026-01-01",t)%TIPS.length+TIPS.length)%TIPS.length; const tip=TIPS[tipI];
  if(t<START){
   const n=diff(t,START);
-  h+='<section class="panel"><h4>Antes da largada</h4><h2>Faltam '+n+' dias para o plano começar</h2><p>Até 06/12 a prioridade é a prova da Transpetro. Este app começa no dia seguinte, 07/12/2026, com o cronograma diário já montado. Se sobrar energia num fim de semana, adiante só o que é leve: e-mail profissional e foto para o LinkedIn.</p>'+pipeHTML()+'</section>';
+  h+='<section class="panel"><h4>Antes da largada</h4><h2>Faltam '+n+' dias para o plano começar</h2><p>Até 06/12 a prioridade é a prova da Transpetro. Este app começa no dia seguinte, 07/12/2026, com o cronograma diário já montado. Antes disso, só a preparação abaixo (uns 45 min, num dia de folga), para o primeiro dia começar direto no estudo.</p>'+pipeHTML()+'</section>';
+  h+=prepHTML();
   h+='<section class="panel"><div class="dayhead"><h3>Prévia do primeiro dia · '+fmt(START)+'</h3></div><div class="tasks">'+SCHED[START].map(x=>taskHTML(x)).join("")+'</div></section>';
   h+='<section class="panel"><h3>Resto da primeira semana</h3>'+weekList(addD(START,1),6)+'</section>';
  } else if(t>lastDay()){
@@ -929,6 +939,7 @@ function vHoje(){
  } else {
   const ph=phaseOf(t); const T=SCHED[t]||[]; const real=T.filter(x=>x.k!=="folga"); const dn=real.filter(x=>isDone(x.id)).length; const mins=real.reduce((a,x)=>a+x.m,0);
   h+='<section class="panel"><div class="dayhead"><div><h4>'+(ph?esc(ph.n):"")+'</h4><h2>'+fmt(t)+'</h2></div><span class="pill pri num">'+dn+'/'+real.length+' feitas · '+hrs(mins)+' h</span></div>'+(real.length?'<div class="track" aria-hidden="true"><div class="fill'+(dn===real.length?" ok":"")+'" style="width:'+(real.length?Math.round(dn/real.length*100):0)+'%"></div></div>':"")+'<div class="tasks">'+T.map(x=>taskHTML(x)).join("")+'</div></section>';
+  if(t<addD(START,14)&&PREP.some(x=>!isDone(x.id))) h+=prepHTML();
   const cc=srsCounts(), fu=apFollow(), dow=parse(t).getDay();
   if(cc.due||cc.fresh) h+='<section class="panel"><div class="dayhead"><h3>Revisões de hoje</h3><span class="pill pri num">'+cc.due+' para revisar · '+cc.fresh+' novos</span></div><p class="small">Cerca de '+Math.max(2,Math.round((cc.due+cc.fresh)*0.4))+' min de flashcards. Faça antes do curso do dia: aquece a cabeça.</p><div class="row"><button class="btn sm" id="goCards" type="button">Revisar agora</button>'+(TTS_OK?'<button class="btn ghost sm" id="goAudio" type="button">Ouvir em áudio</button>':'')+'</div></section>';
   if(fu.length) h+='<section class="panel"><div class="dayhead"><h3>Candidaturas para cobrar</h3><span class="pill bad num">'+fu.length+'</span></div><p class="small">'+fu.slice(0,3).map(p=>esc(p.emp)).join(", ")+(fu.length>3?" e mais "+(fu.length-3):"")+' sem resposta há 10 dias ou mais.</p><div class="row"><button class="btn ghost sm" id="goApps" type="button">Abrir candidaturas</button></div></section>';
@@ -1067,6 +1078,7 @@ Auxiliar administrativo · Batalhão de Segurança e Defesa do Rio de Janeiro ·
 
 Promovido a Cabo por merecimento em 2025 (nota 8,75 no curso de formação).`,
  resA:`Analista de Dados e BI em formação, com 8 anos de experiência em controles administrativos e indicadores na Força Aérea Brasileira. Tecnólogo em ADS, com projetos em Power BI, SQL e Excel publicados no GitHub e foco em qualidade e governança de dados. Disponível a partir de março de 2027.`,
+ ho:`Estrutura para home office: notebook Intel Core i7 (11ª geração), 16 GB de RAM, SSD e placa de vídeo dedicada, com Windows 11 Pro e monitor secundário. Internet de alta velocidade e estável e ambiente isolado para reuniões.`,
  resB:`Profissional administrativo com 8 anos na Força Aérea Brasileira: documentos oficiais, escalas, controle de acesso, logística de eventos e apresentações para a chefia. Domínio do pacote Office, com Excel aplicado a controles e relatórios. Tecnólogo em ADS. Disponível a partir de março de 2027.`,
  gh:`### Olá! Sou o Pedro Henrique
 
@@ -1105,7 +1117,7 @@ function vPerfil(){
  } else {
   h+='<section class="panel">'+brandList("car")+'</section>';
   h+='<section class="panel"><h3>Três frentes de vaga</h3><ul class="plain"><li><strong>A. Dados (alvo):</strong> Analista de BI, Dados ou Relatórios Júnior. Use o currículo A.</li><li><strong>B. Administrativo com dados (garantia):</strong> Assistente ou Analista Administrativo, Planejamento, Controladoria, Compras, Facilities. Use o currículo B.</li><li><strong>C. Segurança e controle de acesso (rede):</strong> só se chegar abril sem proposta das outras duas.</li></ul><p class="muted small">Candidaturas a partir de 15/02, início só depois da baixa. A primeira proposta boa que pagar as contas você aceita e segue estudando.</p></section>';
-  h+='<section class="panel stack">'+copyBlock("resA","Resumo do currículo A (dados)")+copyBlock("resB","Resumo do currículo B (administrativo)")+copyBlock("exp","Experiência na FAB")+'</section>';
+  h+='<section class="panel stack">'+copyBlock("resA","Resumo do currículo A (dados)")+copyBlock("resB","Resumo do currículo B (administrativo)")+copyBlock("exp","Experiência na FAB")+copyBlock("ho","Home office (no fim do currículo e em vagas remotas)")+'</section>';
   h+='<section class="panel"><h3>Currículo em uma página</h3><ul class="plain"><li><strong>Topo:</strong> nome, cidade, telefone, e-mail, LinkedIn, GitHub e "Disponível a partir de [data]".</li><li><strong>Resumo:</strong> 3 linhas, adaptadas a cada vaga.</li><li><strong>Projetos:</strong> antes da experiência, enquanto você não tiver vaga em dados.</li><li><strong>Experiência:</strong> FAB com os bullets da aba LinkedIn.</li><li><strong>Formação e certificações:</strong> ADS, PL-300 (quando tiver), cursos ENAP.</li><li><strong>Formato:</strong> PDF, uma coluna, sem foto e sem tabelas (sistemas de triagem leem melhor).</li></ul><p class="muted small">O modelo completo está no plano mestre "Trilha até CDO".</p></section>';
  }
  return h;
