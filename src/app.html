@@ -110,6 +110,33 @@ nav.tabs button:focus-visible{outline:2px solid var(--pri);outline-offset:-2px}
 .pill{display:inline-block;font:600 12px var(--f);padding:2px 9px;border-radius:99px;background:var(--line);color:var(--muted);white-space:nowrap}
 .pill.free{background:var(--ok-soft);color:var(--ok)}
 .pill.now{background:var(--pri);color:var(--onpri)}
+.aumodes{display:grid;grid-template-columns:1fr;gap:6px}
+@media (min-width:720px){.aumodes{grid-template-columns:1fr 1fr}}
+.aumode{position:relative;display:flex;flex-direction:column;gap:2px;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer}
+.aumode input{position:absolute;opacity:0;pointer-events:none}
+.aumode.on{border-color:var(--pri);background:var(--pri-soft)}
+.aumode:focus-within{outline:2px solid var(--pri)}
+.aunow{gap:10px}
+.auq{font:600 18px/1.4 var(--f);margin:0}
+.aua{margin:0;color:var(--muted)}.aua.on{color:var(--ink);font-weight:600}
+.auctl{justify-content:center;gap:10px}.auctl .btn{min-width:56px}.aupp{min-width:120px!important}
+.sndgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (min-width:720px){.sndgrid{grid-template-columns:repeat(3,1fr)}}
+.sndbtn{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:3px;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface);min-width:0}
+.sndbtn span{font-size:13px;line-height:1.35}
+.sndbtn.on{border-color:var(--pri);background:var(--pri-soft)}
+.sndbtn:focus-visible{outline:2px solid var(--pri)}
+.sst{color:var(--pri);font-weight:600}
+#sndBar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;gap:2px;background:var(--pri);color:var(--onpri);border-radius:999px;padding:4px;box-shadow:0 4px 14px rgba(0,0,0,.2);max-width:calc(100vw - 32px)}
+body.hastm #sndBar{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+#sndBar button{all:unset;cursor:pointer;padding:6px 12px;border-radius:999px;font:600 13px var(--f);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sndBar .sbx{background:rgba(255,255,255,.18)}
+@media (min-width:760px){#sndBar{bottom:20px;left:24px;transform:none}body.hastm #sndBar{bottom:20px}}
+#pocket{position:fixed;inset:0;z-index:100;background:#000;display:flex;flex-direction:column;gap:12px;padding:24px 16px calc(24px + env(safe-area-inset-bottom,0px));box-sizing:border-box}
+#pocket button{all:unset;box-sizing:border-box;cursor:pointer;text-align:center;border-radius:20px;color:#bbb;font:600 22px var(--f)}
+#pocket .pk1{flex:2;background:#111;border:1px solid #222}#pocket .pk2{flex:1;background:#0b0b0b;border:1px solid #1d1d1d}
+#pocket .pkt{color:#555;text-align:center;margin:0;font-size:13px}#pocket .pkx{flex:none;font-size:14px;color:#666;padding:12px}
+
 .trf details.acc{border-top:none;border-left:3px solid var(--pri-soft);padding:2px 0 2px 10px;margin-left:4px}
 .pill.paid{background:var(--acc-soft);color:var(--acc)}
 .pill.pri{background:var(--pri-soft);color:var(--pri)}
@@ -790,9 +817,9 @@ async function clNew(){CL.code=newCode();CL.base=0;ST.cloud=CL.code;clStore();ch
 function clOff(btn){if(!btn.dataset.arm){btn.dataset.arm="1";btn.textContent="Toque de novo para desconectar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.arm;btn.textContent="Desconectar este aparelho";}},4000);return;}
  CL.code=null;CL.base=0;CL.st="off";clStore();clSnap(null);delete ST.cloud;saveLocal();rerenderKeep();toast("Este aparelho parou de sincronizar.");}
 /* cada aparelho grava no progresso a versão do app, onde abriu e quando (lista em Configurações) */
-const APP_V=15;
+const APP_V=16;
 /* o que mudou em cada versão (aparece uma vez depois que o app atualiza e fica em Configurações) */
-const NEWS={6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações.",8:"Inglês 3 vezes por semana (terça, quinta e sábado) nas férias e no meio expediente; texto de home office no Currículo.",9:"Preparação antes de 07/12 (contas e programas) e diagnóstico de Excel no primeiro dia.",10:"A seção Sobre agora mostra a versão real do app.",11:"Checklist dos cursos da Udemy na aba Cursos.",12:"Plano usa os cursos que você já tem na Udemy; SQL agora em MySQL.",13:"Novo checklist de cursos complementares gratuitos na aba Cursos.",14:"Checklist do que fazer depois da PL-300, com o link de cada curso e certificação.",15:"Trilha completa do início ao CDO, em 9 fases, na aba Cursos; curso de governança no cronograma; revisão geral."};
+const NEWS={6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações.",8:"Inglês 3 vezes por semana (terça, quinta e sábado) nas férias e no meio expediente; texto de home office no Currículo.",9:"Preparação antes de 07/12 (contas e programas) e diagnóstico de Excel no primeiro dia.",10:"A seção Sobre agora mostra a versão real do app.",11:"Checklist dos cursos da Udemy na aba Cursos.",12:"Plano usa os cursos que você já tem na Udemy; SQL agora em MySQL.",13:"Novo checklist de cursos complementares gratuitos na aba Cursos.",14:"Checklist do que fazer depois da PL-300, com o link de cada curso e certificação.",15:"Trilha completa do início ao CDO, em 9 fases, na aba Cursos; curso de governança no cronograma; revisão geral.",16:"Áudio igual ao do app da Transpetro: 4 modos, pausa para pensar, botões do fone, modo bolso e 7 sons que seguem nas outras telas."};
 const SEENK=KEY+"-seenV";
 /* versão nova baixada pelo service worker (app instalado): avisa e atualiza com um toque, como no app da Transpetro */
 function swUpdated(){
@@ -901,7 +928,7 @@ $("#tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.v));
 const VIEWS={hoje:vHoje,agenda:vAgenda,cursos:vCursos,rev:vRev,port:vPort,perfil:vPerfil,prog:vProg,config:vConfig};
 function go(v){current=v;try{localStorage.setItem(KEY+"-tab",v);}catch(e){} $("#tabs").querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===v)); $("#cfgBtn").setAttribute("aria-current",v==="config"?"page":"false"); render(); window.scrollTo({top:0});}
 let lastV=null;
-function render(){ const el=$("#view"); const op=lastV===current?new Set([...el.querySelectorAll("details[data-k]")].filter(d=>d.open).map(d=>d.dataset.k)):null; const cl=lastV===current?new Set([...el.querySelectorAll("details[data-k]")].filter(d=>!d.open).map(d=>d.dataset.k)):null; lastV=current; el.innerHTML=VIEWS[current](); if(op) el.querySelectorAll("details[data-k]").forEach(d=>{if(op.has(d.dataset.k))d.open=true; else if(cl.has(d.dataset.k))d.open=false;}); wireChecks(el); (WIRES[current]||(()=>{}))(el); syncLbl(); refreshHeader(); }
+function render(){ const el=$("#view"); const op=lastV===current?new Set([...el.querySelectorAll("details[data-k]")].filter(d=>d.open).map(d=>d.dataset.k)):null; const cl=lastV===current?new Set([...el.querySelectorAll("details[data-k]")].filter(d=>!d.open).map(d=>d.dataset.k)):null; lastV=current; el.innerHTML=VIEWS[current](); if(op) el.querySelectorAll("details[data-k]").forEach(d=>{if(op.has(d.dataset.k))d.open=true; else if(cl.has(d.dataset.k))d.open=false;}); wireChecks(el); (WIRES[current]||(()=>{}))(el); syncLbl(); refreshHeader(); if(typeof sndBar==="function") sndBar(); }
 function rerender(){render();}
 function rerenderKeep(){const y=window.scrollY;render();window.scrollTo({top:y});}
 const WIRES={};
@@ -1290,41 +1317,120 @@ document.addEventListener("visibilitychange",()=>{if(document.visibilityState===
 function toastUndo(m,undo){const t=$("#toast");t.innerHTML='<span>'+esc(m)+'</span> <button type="button" class="linkbtn" id="tUndo">Desfazer</button>';t.classList.add("on");$("#tUndo").onclick=()=>{undo();t.classList.remove("on");};clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),6000);}
 
 /* ================= v4: SONS PARA CONCENTRAR (gerados no aparelho) ================= */
+/* ===== Sons para concentrar: mesma ideia do app da Transpetro (gerados aqui, tocam num <audio>, seguem nas outras telas) ===== */
 const SNDK=KEY+"-snd";
-const SND={on:false,kind:"brown",vol:0.35,auto:false,ctx:null,node:null,gain:null};
-try{const o=JSON.parse(localStorage.getItem(SNDK)||"{}");if(o.kind)SND.kind=o.kind;if(o.vol!=null)SND.vol=o.vol;if(o.auto!=null)SND.auto=o.auto;}catch(e){}
-const SND_K=[["brown","Ruído marrom"],["pink","Ruído rosa"],["white","Ruído branco"],["rain","Chuva"],["waves","Ondas"]];
-function sndStore(){try{localStorage.setItem(SNDK,JSON.stringify({kind:SND.kind,vol:SND.vol,auto:SND.auto}));}catch(e){}}
+const SNDS=[
+ ["brown","Ruído marrom","Grave e uniforme. O que melhor abafa barulho de rua, ônibus e conversa."],
+ ["pink","Ruído rosa","Equilibrado, mais suave que o branco. Bom para ler e fazer exercícios."],
+ ["white","Ruído branco","Mais agudo, como um chiado. Abafa vozes por perto."],
+ ["rain","Chuva","Chuva constante com gotas. Relaxa sem distrair."],
+ ["waves","Ondas do mar","Ondas lentas, a cada 8 segundos. Bom para revisar com calma."],
+ ["pad","Ambiente lo-fi","Acordes suaves e lentos, sem letra e sem batida forte."],
+ ["piano","Piano calmo","Notas soltas de piano com eco, bem espaçadas."]
+];
+const SND_SR=22050, SND_CACHE={};
+const SND={k:null,last:"brown",auto:false,duck:false,on:false,ctx:null};
+try{const o=JSON.parse(localStorage.getItem(SNDK)||"{}");if(o.k||o.kind)SND.last=o.k||o.kind;if(o.auto!=null)SND.auto=o.auto;}catch(e){}
+function sndStore(){try{localStorage.setItem(SNDK,JSON.stringify({k:SND.k||SND.last,auto:SND.auto}));}catch(e){}}
 function sndCtx(){return SND.ctx;}
-function sndBuf(c,kind){
- const n=c.sampleRate*4, b=c.createBuffer(2,n,c.sampleRate);
- for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch); let l=0,b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
-  for(let i=0;i<n;i++){const w=Math.random()*2-1; let v;
-   if(kind==="white") v=w*0.25;
-   else if(kind==="pink"){b0=.99886*b0+w*.0555179;b1=.99332*b1+w*.0750759;b2=.969*b2+w*.153852;b3=.8665*b3+w*.3104856;b4=.55*b4+w*.5329522;b5=-.7616*b5-w*.016898;v=(b0+b1+b2+b3+b4+b5+b6+w*.5362)*.06;b6=w*.115926;}
-   else { l=(l+0.02*w)/1.02; v=l*3.2; }
-   d[i]=v;}
-  /* emenda suave do loop */
-  for(let i=0;i<2000;i++){const f=i/2000; d[n-2000+i]=d[n-2000+i]*(1-f)+d[i]*f;}
+function wavBlob(chs,sr){
+ const n=chs[0].length,nc=chs.length,buf=new ArrayBuffer(44+n*nc*2),v=new DataView(buf),w=(o,t)=>{for(let i=0;i<t.length;i++)v.setUint8(o+i,t.charCodeAt(i));};
+ w(0,"RIFF");v.setUint32(4,36+n*nc*2,true);w(8,"WAVE");w(12,"fmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,nc,true);
+ v.setUint32(24,sr,true);v.setUint32(28,sr*nc*2,true);v.setUint16(32,nc*2,true);v.setUint16(34,16,true);w(36,"data");v.setUint32(40,n*nc*2,true);
+ let o=44;for(let i=0;i<n;i++)for(let c=0;c<nc;c++){const x=Math.max(-1,Math.min(1,chs[c][i]));v.setInt16(o,x<0?x*32768:x*32767,true);o+=2;}
+ return new Blob([buf],{type:"audio/wav"});
+}
+function noiseCh(kind,n){
+ const out=new Float32Array(n);let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0,last=0;
+ for(let i=0;i<n;i++){const wn=Math.random()*2-1;
+  if(kind==="white") out[i]=wn*.22;
+  else if(kind==="pink"){b0=.99886*b0+wn*.0555179;b1=.99332*b1+wn*.0750759;b2=.969*b2+wn*.153852;b3=.8665*b3+wn*.3104856;b4=.55*b4+wn*.5329522;b5=-.7616*b5-wn*.016898;out[i]=(b0+b1+b2+b3+b4+b5+b6+wn*.5362)*.06;b6=wn*.115926;}
+  else {last=(last+.02*wn)/1.02;out[i]=last*2.8;}
  }
- return b;
+ return out;
 }
-function sndPlay(){
- try{
-  const A=window.AudioContext||window.webkitAudioContext; if(!SND.ctx) SND.ctx=new A(); const c=SND.ctx; if(c.state==="suspended") c.resume();
-  sndStop(true);
-  const src=c.createBufferSource(); src.buffer=sndBuf(c,SND.kind==="rain"||SND.kind==="waves"?(SND.kind==="rain"?"pink":"brown"):SND.kind); src.loop=true;
-  const g=c.createGain(); g.gain.value=0; let out=src;
-  if(SND.kind==="rain"){const f=c.createBiquadFilter();f.type="highpass";f.frequency.value=900;src.connect(f);out=f;}
-  if(SND.kind==="waves"){const f=c.createBiquadFilter();f.type="lowpass";f.frequency.value=500;src.connect(f);const lfo=c.createOscillator(),lg=c.createGain();lfo.frequency.value=0.09;lg.gain.value=0.5;lfo.connect(lg).connect(g.gain);lfo.start();SND.lfo=lfo;out=f;}
-  out.connect(g).connect(c.destination); src.start();
-  g.gain.setTargetAtTime(SND.kind==="waves"?SND.vol*0.6:SND.vol,c.currentTime,0.4);
-  SND.node=src; SND.gain=g; SND.on=true;
- }catch(e){SND.on=false;toast("Este navegador não tocou o som.");}
+function loopFix(x,n,f){const o=new Float32Array(n);o.set(x.subarray(0,n));for(let i=0;i<f;i++){const t=i/f;o[i]=x[i]*Math.sqrt(t)+x[n+i]*Math.sqrt(1-t);}return o;}
+function sndNoise(kind,sec){const n=SND_SR*sec,f=SND_SR;return [0,1].map(()=>loopFix(noiseCh(kind,n+f),n,f));}
+function sndRain(sec){
+ const n=SND_SR*sec,f=SND_SR,ch=[0,1].map(()=>{const p=noiseCh("pink",n+f),b=noiseCh("brown",n+f),o=new Float32Array(n+f);let lp=0;for(let i=0;i<n+f;i++){lp+=.08*(p[i]-lp);o[i]=(p[i]-lp)*1.3+b[i]*.12;}return o;});
+ for(let d=0;d<sec*28;d++){const at=Math.floor(Math.random()*(n-800)),len=40+Math.floor(Math.random()*220),amp=.05+Math.random()*.18,pan=Math.random();
+  for(let i=0;i<len;i++){const v=(Math.random()*2-1)*amp*Math.exp(-i/(len/4));ch[0][at+i]+=v*(1-pan);ch[1][at+i]+=v*pan;}}
+ return ch.map(x=>loopFix(x,n,f));
 }
-function sndStop(quick){ if(SND.node){const n=SND.node,g=SND.gain,c=SND.ctx; try{g.gain.setTargetAtTime(0,c.currentTime,quick?0.02:0.5);setTimeout(()=>{try{n.stop();}catch(e){}},quick?80:1500);}catch(e){} } if(SND.lfo){try{SND.lfo.stop();}catch(e){}SND.lfo=null;} SND.node=null; SND.on=false; }
-function sndToggle(){ if(SND.on) sndStop(); else sndPlay(); syncSndUI(); }
-function sndAuto(on){ if(!SND.auto) return; if(on&&!SND.on) sndPlay(); else if(!on&&SND.on) sndStop(); syncSndUI(); }
+function sndWaves(sec){
+ const n=SND_SR*sec;return [0,1].map(c=>{const x=loopFix(noiseCh("brown",n+SND_SR),n,SND_SR),y=loopFix(noiseCh("pink",n+SND_SR),n,SND_SR),o=new Float32Array(n);
+  for(let i=0;i<n;i++){const t=i/SND_SR+c*.35,e=Math.pow(.5-.5*Math.cos(2*Math.PI*t/8),1.6);o[i]=x[i]*(.35+.9*e)+y[i]*(.15+.9*e*e);}return o;});
+}
+const nf=m=>440*Math.pow(2,(m-69)/12);
+async function sndPad(sec){
+ const oc=new OfflineAudioContext(2,SND_SR*sec,SND_SR), lp=oc.createBiquadFilter();lp.type="lowpass";lp.frequency.value=950;lp.Q.value=.3;
+ const master=oc.createGain();master.gain.value=.16;lp.connect(master);master.connect(oc.destination);
+ const CH=[[57,60,64,67],[53,57,60,64],[48,52,55,59],[55,59,62,64]], L8=sec/4;
+ const play=(notes,t0,t1,fadeIn)=>notes.forEach((m,j)=>[-4,4].forEach(dt=>{const o=oc.createOscillator(),g=oc.createGain(),pn=oc.createStereoPanner?oc.createStereoPanner():null;
+  o.type="triangle";o.frequency.value=nf(m);o.detune.value=dt;g.gain.setValueAtTime(fadeIn?0:.22,Math.max(0,t0));if(fadeIn)g.gain.linearRampToValueAtTime(.22,t0+2.5);
+  g.gain.setValueAtTime(.22,t1-2.5);g.gain.linearRampToValueAtTime(0,t1);o.connect(g);if(pn){pn.pan.value=(j-1.5)/3;g.connect(pn);pn.connect(lp);}else g.connect(lp);o.start(Math.max(0,t0));o.stop(t1);}));
+ CH.forEach((c,i)=>{play(c,i*L8,(i+1)*L8+2.5,true);const bo=oc.createOscillator(),bg=oc.createGain();bo.type="sine";bo.frequency.value=nf(c[0]-12);bg.gain.setValueAtTime(0,i*L8);bg.gain.linearRampToValueAtTime(.35,i*L8+1.5);bg.gain.setValueAtTime(.35,(i+1)*L8-1);bg.gain.linearRampToValueAtTime(0,(i+1)*L8+1);bo.connect(bg);bg.connect(master);bo.start(i*L8);bo.stop((i+1)*L8+1.2);});
+ play(CH[3],-L8,2.5,false);
+ const buf=await oc.startRendering(), hiss=[noiseCh("pink",buf.length),noiseCh("pink",buf.length)];
+ return [0,1].map(c=>{const x=buf.getChannelData(c);for(let i=0;i<x.length;i++)x[i]+=hiss[c][i]*.025;return x;});
+}
+async function sndPiano(sec){
+ const oc=new OfflineAudioContext(2,SND_SR*sec,SND_SR), master=oc.createGain();master.gain.value=.5;
+ const dl=oc.createDelay(1),fb=oc.createGain(),wet=oc.createGain();dl.delayTime.value=.42;fb.gain.value=.38;wet.gain.value=.35;
+ master.connect(oc.destination);master.connect(dl);dl.connect(fb);fb.connect(dl);dl.connect(wet);wet.connect(oc.destination);
+ const sc=[57,60,62,64,67,69,72,74,76], seq=[];let t=.3;
+ while(t<sec-4){seq.push([t,sc[Math.floor(Math.random()*sc.length)]]);if(Math.random()<.3)seq.push([t+.02,sc[Math.floor(Math.random()*4)]-12]);t+=.7+Math.random()*1.6;}
+ seq.forEach(([t0,m])=>[1,2,3].forEach((h,k)=>{const o=oc.createOscillator(),g=oc.createGain();o.type="sine";o.frequency.value=nf(m)*h;const a=[.28,.08,.03][k];
+  g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(a,t0+.01);g.gain.exponentialRampToValueAtTime(.0005,t0+2.8/h);o.connect(g);g.connect(master);o.start(t0);o.stop(t0+3);}));
+ const buf=await oc.startRendering();return [0,1].map(c=>buf.getChannelData(c));
+}
+async function sndUrl(k){
+ if(SND_CACHE[k]) return SND_CACHE[k];
+ await new Promise(r=>setTimeout(r,20));
+ const ch=k==="rain"?sndRain(20):k==="waves"?sndWaves(24):k==="pad"?await sndPad(32):k==="piano"?await sndPiano(40):sndNoise(k,20);
+ let sq=0,pk=0,n=0;ch.forEach(x=>{for(let i=0;i<x.length;i+=3){sq+=x[i]*x[i];n++;const a=Math.abs(x[i]);if(a>pk)pk=a;}});
+ const g=Math.min(.09/Math.sqrt(sq/n||1e-9),.92/(pk||1));ch.forEach(x=>{for(let i=0;i<x.length;i++)x[i]*=g;});
+ return SND_CACHE[k]=URL.createObjectURL(wavBlob(ch,SND_SR));
+}
+function sndEl(){let el=$("#sndEl");if(!el){el=document.createElement("audio");el.id="sndEl";el.loop=true;el.preload="auto";el.setAttribute("playsinline","");document.body.appendChild(el);
+ el.addEventListener("pause",()=>{if(SND.k&&!SND.fading&&!SND.busy){SND.paused=SND.k;SND.k=null;SND.on=false;sndDrawAll();}});
+ el.addEventListener("play",()=>{if(!SND.k&&SND.paused){SND.k=SND.paused;SND.paused=null;SND.on=true;sndDrawAll();}});}return el;}
+let sndFadeT=null;
+function sndVolTo(to,ms){const el=$("#sndEl");if(!el)return Promise.resolve();clearInterval(sndFadeT);const from=el.volume,t0=Date.now();
+ return new Promise(res=>{if(!ms){try{el.volume=to;}catch(e){}res();return;}sndFadeT=setInterval(()=>{const k=Math.min(1,(Date.now()-t0)/ms);try{el.volume=from+(to-from)*k;}catch(e){}if(k>=1){clearInterval(sndFadeT);res();}},50);});}
+function sndDuck(on){SND.duck=on;sndVolTo(on?.4:1,300);}
+async function sndPlay(k){
+ k=k||SND.last||"brown";
+ if(SND.k===k){sndStop();return;}
+ SND.k=k; SND.on=true; SND.busy=k; sndDrawAll();
+ try{const url=await sndUrl(k); if(SND.k!==k) return; const el=sndEl(); el.src=url; SND.paused=null; try{el.volume=0;}catch(e){} await el.play(); sndVolTo(SND.duck?.4:1,1500); sndMedia();
+ }catch(e){SND.k=null;SND.on=false;toast("Não deu para tocar. Toque de novo; confira se o aparelho não está no silencioso.");}
+ SND.busy=null; SND.last=k; sndStore(); sndDrawAll(); auTimerArm();
+}
+function sndStop(fade){const el=$("#sndEl");SND.paused=null;
+ if(el&&fade&&!el.paused){SND.fading=true;sndVolTo(0,typeof fade==="number"?fade:600).then(()=>{if(!SND.k)el.pause();SND.fading=false;});}else if(el){SND.fading=true;el.pause();SND.fading=false;}
+ SND.k=null;SND.on=false;sndStore();sndDrawAll();}
+function sndMedia(){
+ if(!("mediaSession" in navigator)||(AU&&AU.play)||!SND.k) return;
+ try{navigator.mediaSession.metadata=new MediaMetadata({title:SNDS.find(x=>x[0]===SND.k)[1],artist:"Sons para estudar · Carreira em Dados"});
+  navigator.mediaSession.setActionHandler("play",()=>{sndEl().play().catch(()=>{});});
+  navigator.mediaSession.setActionHandler("pause",()=>{const el=$("#sndEl");if(el)el.pause();});
+  navigator.mediaSession.setActionHandler("nexttrack",()=>{const i=SNDS.findIndex(x=>x[0]===(SND.k||SND.last));sndPlay(SNDS[(i+1)%SNDS.length][0]);});
+  navigator.mediaSession.setActionHandler("previoustrack",null);}catch(e){}
+}
+function sndDrawAll(){
+ document.querySelectorAll(".sndbtn").forEach(b=>{const on=b.dataset.k===SND.k;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on);const st=b.querySelector(".sst");if(st)st.textContent=SND.busy===b.dataset.k?"preparando…":on?"tocando · toque para parar":"";});
+ syncSndUI(); sndBar(); if(typeof tmRender==="function"&&TM) tmRender();
+}
+function sndBar(){
+ let el=$("#sndBar"); const show=SND.k&&!(current==="rev"&&revSeg==="au");
+ if(!show){if(el)el.remove();return;}
+ if(!el){el=document.createElement("div");el.id="sndBar";document.body.appendChild(el);}
+ el.innerHTML='<button type="button" class="sbname" id="sbGo">♪ '+esc(SNDS.find(x=>x[0]===SND.k)[1])+'</button><button type="button" class="sbx" id="sbX" aria-label="Parar o som">Parar</button>';
+ $("#sbGo").onclick=()=>{revSeg="au";go("rev");}; $("#sbX").onclick=()=>sndStop();
+}
+function sndToggle(){ if(SND.k) sndStop(); else sndPlay(SND.last); }
+function sndAuto(on){ if(!SND.auto) return; if(on&&!SND.k) sndPlay(SND.last); else if(!on&&SND.k) sndStop(800); }
 function syncSndUI(){ document.querySelectorAll("[data-snd-on]").forEach(b=>{b.setAttribute("aria-pressed",SND.on?"true":"false");b.textContent=SND.on?"Parar som":"Tocar som";}); }
 
 /* ================= v4: REVISÃO ESPAÇADA (FSRS, igual ao app da Transpetro) ================= */
@@ -1496,26 +1602,74 @@ function rerenderTutor(){ if(current==="rev"&&revSeg==="tut"){ const l=$("#tutLo
 function tutorAsk(mode,txt){ TUT.mode=mode; TUT.msgs=[]; revSeg="tut"; go("rev"); setTimeout(()=>tutorSend(txt),50); }
 
 /* ================= v4: MODO ÁUDIO (flashcards falados) ================= */
-const AU={on:false,list:[],i:0,ph:0,rate:1,deck:"all",t:null};
+/* ===== Estudo em áudio: mesma ideia do app da Transpetro (fila de trechos falados, pausa para pensar, botões do fone, modo bolso) ===== */
 const TTS_OK="speechSynthesis" in window;
-function auVoice(){ const vs=speechSynthesis.getVoices(); return vs.find(v=>/pt[-_]BR/i.test(v.lang))||vs.find(v=>/^pt/i.test(v.lang))||null; }
-function auSay(txt,cb){ const u=new SpeechSynthesisUtterance(txt); const v=auVoice(); if(v) u.voice=v; u.lang="pt-BR"; u.rate=AU.rate; u.onend=cb; u.onerror=cb; speechSynthesis.speak(u); }
-function auStart(){
- if(!TTS_OK){toast("Este navegador não tem leitura em voz alta.");return;}
- const q=AU.deck==="due"?srsQueue("all").due:CARDS.filter(c=>AU.deck==="all"?deckOpen(c[0]):c[0]===AU.deck);
- if(!q.length){toast("Nenhum card neste baralho ainda.");return;}
- AU.list=q.slice().sort(()=>Math.random()-.5); AU.i=0; AU.on=true; speechSynthesis.cancel();
- try{ if(navigator.mediaSession){ navigator.mediaSession.metadata=new MediaMetadata({title:"Flashcards · Carreira em Dados",artist:"Revisão em áudio"}); navigator.mediaSession.setActionHandler("pause",auStop); navigator.mediaSession.setActionHandler("nexttrack",auNext);} }catch(e){}
- auStep(); auUI();
+const AU_MODES=[["mix","Mix do dia","dica, pontos da PL-300 e flashcards"],["fc","Flashcards","pergunta, pausa para pensar e resposta"],["pl","Guia da PL-300","os pontos da prova que você ainda não domina"],["dicas","Dicas de carreira","estudo, portfólio, currículo e entrevista"]];
+const AUK=KEY+"-au";
+let AU=null, AUC=null;
+function auCfg(){ if(!AUC){ try{AUC=JSON.parse(localStorage.getItem(AUK)||"null");}catch(e){} AUC=Object.assign({mode:"mix",src:"open",rate:1,pause:6,timer:0,n:0},AUC||{}); } return AUC; }
+function auSave(){ try{localStorage.setItem(AUK,JSON.stringify(AUC));}catch(e){} }
+const shuf=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+function auCards(src){ if(src==="due") return srsQueue("all").all; if(src==="open") return CARDS.filter(c=>deckOpen(c[0])); return CARDS.filter(c=>c[0]===src); }
+function auItemsFc(src,n){ const pz=auCfg().pause*1000, S=ST.srs||{}, t=todayS(); const pool=auCards(src); const due=pool.filter(c=>S[c.id]&&S[c.id].d<=t);
+ return (src==="due"?pool:due.concat(shuf(pool.filter(c=>!due.includes(c))))).slice(0,n).map(c=>({k:"Flashcard",lb:DECKS[c[0]].n,show:[c[1],c[2]],segs:[{t:c[1],w:pz},{t:c[2],w:1500,rev:1}]})); }
+function auItemsPl(n){ const pz=auCfg().pause*1000, out=[]; SKILLS.forEach(d=>d.g.forEach(gr=>gr.items.forEach(o=>{ const g=gr[0], x=o.t; if(skLv(o.id)<2) out.push({k:"PL-300",lb:d.n+" · "+g,show:[x,"Explique de cabeça como faria no Power BI. Se travou, revise este ponto no Guia PL-300."],segs:[{t:"Guia da PL-300. "+g+". "+x+". Explique de cabeça como faria.",w:pz},{t:"Se travou, marque para revisar.",w:1200,rev:1}]}); })));
+ return shuf(out).slice(0,n); }
+function auItemsTips(n,first){ const out=TIPS.map(([a,b])=>({k:"Dica",lb:a,show:[a,b],segs:[{t:"Dica. "+a+". "+b,w:1500}]})); const tipI=(diff("2026-01-01",todayS())%TIPS.length+TIPS.length)%TIPS.length; return first?[out[tipI]]:shuf(out).slice(0,n); }
+function auBuild(){ const c=auCfg(); if(c.mode==="fc") return auItemsFc(c.src,25); if(c.mode==="pl") return auItemsPl(15); if(c.mode==="dicas") return auItemsTips(12); return [].concat(auItemsTips(1,true),auItemsPl(3),auItemsFc(c.src,10)); }
+function auVoice(){ const vs=TTS_OK?speechSynthesis.getVoices():[]; return vs.find(v=>/pt[-_]BR/i.test(v.lang))||vs.find(v=>/^pt/i.test(v.lang))||null; }
+if(TTS_OK) try{speechSynthesis.getVoices();}catch(e){}
+function auSay(text,run){
+ return new Promise(res=>{
+  if(!TTS_OK||!text){res();return;}
+  const parts=String(text).match(/[^.!?;:]+[.!?;:]?/g)||[text], ch=[]; let cur="";
+  parts.forEach(p=>{if((cur+p).length>200){if(cur)ch.push(cur);cur=p;}else cur+=p;}); if(cur) ch.push(cur);
+  const v=auVoice(); sndDuck(true);
+  const next=()=>{if(!AU||AU.run!==run||!ch.length){sndDuck(false);res();return;}
+   const u=new SpeechSynthesisUtterance(ch.shift().trim());u.lang="pt-BR";if(v)u.voice=v;u.rate=auCfg().rate;u.onend=next;u.onerror=next;speechSynthesis.speak(u);};
+  next();
+ });
 }
-function auStep(){
- if(!AU.on) return; if(AU.i>=AU.list.length){AU.on=false;auSay("Fim da revisão. Bom trabalho.",()=>{});auUI();return;}
- const c=AU.list[AU.i]; auUI();
- auSay("Pergunta. "+c[1],()=>{ if(!AU.on) return; AU.t=setTimeout(()=>{ if(!AU.on) return; auSay("Resposta. "+c[2],()=>{ if(!AU.on) return; AU.t=setTimeout(()=>{AU.i++;auStep();},1800); }); },+cfg().aupause*1000||4000); });
+const auWait=(ms,run)=>new Promise(r=>{const t0=Date.now(),tk=()=>{if(!AU||AU.run!==run||Date.now()-t0>=ms){r();return;}AU.tw=setTimeout(tk,Math.min(250,ms));};tk();});
+async function auLoop(run){
+ while(AU&&AU.run===run&&AU.i<AU.items.length){
+  const it=AU.items[AU.i];
+  for(;AU.seg<it.segs.length;AU.seg++){ const sg=it.segs[AU.seg]; auDraw(); await auSay(sg.t,run); if(!AU||AU.run!==run) return; await auWait(sg.w||800,run); if(!AU||AU.run!==run) return; }
+  AU.i++; AU.seg=0; auCfg().n++;
+ }
+ if(AU&&AU.run===run){AU.play=false;auLock(false);auDraw();auSave();sndMedia();}
 }
-function auNext(){ clearTimeout(AU.t); speechSynthesis.cancel(); AU.i++; setTimeout(auStep,150); }
-function auStop(){ AU.on=false; clearTimeout(AU.t); if(TTS_OK) speechSynthesis.cancel(); auUI(); }
-function auUI(){ const e=$("#auNow"); if(!e) return; if(!AU.on){e.innerHTML='<p class="muted small">Parado.</p>';const b=$("#auGo");if(b)b.textContent="▶ Começar";return;} const c=AU.list[AU.i]; e.innerHTML=c?'<p class="small muted num">'+(AU.i+1)+' de '+AU.list.length+' · '+esc(DECKS[c[0]].n)+'</p><p><strong>'+esc(c[1])+'</strong></p><p class="small">'+esc(c[2])+'</p>':""; const b=$("#auGo"); if(b) b.textContent="■ Parar"; }
+function auStart(){ if(!TTS_OK){toast("Este navegador não tem leitura em voz alta.");return;} const it=auBuild(); if(!it.length){toast("Nada para tocar: escolha outro baralho ou outro modo.");return;} AU={items:it,i:0,seg:0,play:false,run:0}; auPlay(); }
+function auPlay(){ if(!AU){auStart();return;} if(AU.play){auPause();return;} if(AU.i>=AU.items.length){AU.i=0;AU.seg=0;} AU.play=true; AU.run++; auLock(true); auTimerArm(); auMedia(); auLoop(AU.run); auDraw(); }
+function auPause(){ if(!AU) return; AU.play=false; AU.run++; clearTimeout(AU.tw); try{speechSynthesis.cancel();}catch(e){} sndDuck(false); auLock(false); auDraw(); sndMedia(); }
+function auStop(){ auPause(); }
+function auSkip(d){ if(!AU) return; const was=AU.play; auPause(); AU.i=Math.min(AU.items.length-1,Math.max(0,AU.i+d)); AU.seg=0; if(was) auPlay(); else auDraw(); }
+let auWL=null;
+async function auLock(on){try{if(on&&!auWL&&navigator.wakeLock){auWL=await navigator.wakeLock.request("screen");auWL.addEventListener("release",()=>{auWL=null;});}else if(!on&&auWL){await auWL.release();auWL=null;}}catch(e){auWL=null;}}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&AU&&AU.play)auLock(true);});
+let auTT=null;
+function auTimerArm(){ clearTimeout(auTT); const m=auCfg().timer; if(m) auTT=setTimeout(()=>{auPause();sndStop(8000);toast("Áudio pausado: o tempo que você escolheu terminou.");},m*60000); }
+function auMedia(){
+ if(!("mediaSession" in navigator)||!AU) return;
+ if(!AU.play&&SND.k){sndMedia();return;}
+ try{const it=AU.items[AU.i]||{}; navigator.mediaSession.metadata=new MediaMetadata({title:(it.k||"Estudo")+": "+(it.lb||""),artist:"Carreira em Dados",album:AU_MODES.find(m=>m[0]===auCfg().mode)[1]});
+  navigator.mediaSession.setActionHandler("play",()=>{if(!AU.play)auPlay();}); navigator.mediaSession.setActionHandler("pause",auPause);
+  navigator.mediaSession.setActionHandler("nexttrack",()=>auSkip(1)); navigator.mediaSession.setActionHandler("previoustrack",()=>auSkip(-1));}catch(e){}
+}
+function auDraw(){
+ auMedia(); pocketDraw();
+ const box=$("#auNow"); if(!box) return;
+ if(!AU){box.innerHTML="";return;}
+ const it=AU.items[AU.i]||AU.items[AU.items.length-1], rev=(it.segs[AU.seg]&&it.segs[AU.seg].rev)||AU.seg>=it.segs.length;
+ box.innerHTML='<section class="panel stack aunow"><div class="row" style="justify-content:space-between;gap:8px"><span class="pill pri">'+esc(it.k)+' · '+Math.min(AU.i+1,AU.items.length)+' de '+AU.items.length+'</span><span class="muted small">'+esc(it.lb)+'</span></div><p class="auq">'+esc(it.show[0])+'</p><p class="aua'+(rev?" on":"")+'">'+(rev||it.k==="Dica"?esc(it.show[1]):"…")+'</p><div class="track"><div class="fill" style="width:'+Math.round(AU.i/AU.items.length*100)+'%"></div></div><div class="row auctl"><button class="btn ghost" type="button" id="auPrev" aria-label="Anterior">⏮</button><button class="btn aupp" type="button" id="auPP">'+(AU.play?"Pausar":"Tocar")+'</button><button class="btn ghost" type="button" id="auNext" aria-label="Próximo">⏭</button></div><button class="btn ghost sm" type="button" id="auPk">Modo bolso (tela escura)</button></section>';
+ $("#auPrev").onclick=()=>auSkip(-1); $("#auPP").onclick=auPlay; $("#auNext").onclick=()=>auSkip(1); $("#auPk").onclick=pocketOn;
+}
+let pocket=false;
+function pocketOn(){pocket=true;let el=$("#pocket");if(!el){el=document.createElement("div");el.id="pocket";document.body.appendChild(el);}pocketDraw();}
+function pocketOff(){pocket=false;const el=$("#pocket");if(el)el.remove();}
+function pocketDraw(){const el=$("#pocket");if(!el||!pocket)return;const it=AU&&AU.items[AU.i];
+ el.innerHTML='<button type="button" class="pk1" id="pk1">'+(AU&&AU.play?"❚❚  Pausar":"▶  Tocar")+'</button><button type="button" class="pk2" id="pk2">⏭  Próximo</button><p class="pkt">'+(it?esc(it.k+" · "+it.lb):"")+'</p><button type="button" class="pkx" id="pkx">Sair do modo bolso</button>';
+ $("#pk1").onclick=auPlay; $("#pk2").onclick=()=>auSkip(1); $("#pkx").onclick=pocketOff;}
 
 
 /* ================= v4: ABA REVISAR ================= */
@@ -1558,8 +1712,21 @@ function vSkills(){
  return h;
 }
 function vAudio(){
- let h='<section class="panel"><h3>Revisão em áudio</h3><p class="small">O app lê a pergunta, espera alguns segundos para você responder de cabeça e lê a resposta. Bom para o ônibus, a academia ou lavando louça. Funciona com fone e com a tela bloqueada na maioria dos celulares.</p>'+(TTS_OK?'<div class="cfgrow"><label for="auDeck">O que ouvir</label><select id="auDeck"><option value="all"'+(AU.deck==="all"?" selected":"")+'>Todos os baralhos liberados</option><option value="due"'+(AU.deck==="due"?" selected":"")+'>Só os de revisão hoje</option>'+Object.entries(DECKS).filter(([k])=>deckOpen(k)).map(([k,d])=>'<option value="'+k+'"'+(AU.deck===k?" selected":"")+'>'+esc(d.n)+'</option>').join("")+'</select></div><div class="cfgrow"><label for="auRate">Velocidade da voz</label><select id="auRate">'+[[0.85,"Devagar"],[1,"Normal"],[1.2,"Rápida"]].map(([v,n])=>'<option value="'+v+'"'+(AU.rate===v?" selected":"")+'>'+n+'</option>').join("")+'</select></div><div class="row"><button class="btn" id="auGo" type="button">'+(AU.on?"■ Parar":"▶ Começar")+'</button><button class="btn ghost sm" id="auNx" type="button">Pular</button></div><div id="auNow" class="note" aria-live="polite"></div>':'<p class="small">Este navegador não tem leitura em voz alta.</p>')+'</section>';
- h+='<section class="panel"><h3>Sons para concentrar</h3><p class="small">Gerados no próprio aparelho, sem internet. Ruído marrom é o mais usado para foco; chuva e ondas são mais suaves.</p><div class="seg" role="radiogroup" id="sndK">'+SND_K.map(([k,n])=>'<button type="button" role="radio" data-v="'+k+'" aria-selected="'+(SND.kind===k)+'">'+n+'</button>').join("")+'</div><div class="cfgrow"><label for="sndV">Volume</label><input type="range" id="sndV" min="0.05" max="0.8" step="0.05" value="'+SND.vol+'"></div><div class="cfgrow"><label for="sndA">Tocar sozinho durante o foco do cronômetro</label><input type="checkbox" id="sndA"'+(SND.auto?" checked":"")+'></div><div class="row"><button class="btn" data-snd-on type="button" aria-pressed="'+(SND.on?"true":"false")+'">'+(SND.on?"Parar som":"Tocar som")+'</button></div></section>';
+ const c=auCfg(), dk=Object.entries(DECKS).filter(([k])=>deckOpen(k));
+ let h='<section class="panel stack"><h3>Estudo em áudio</h3><p class="small">Para o ônibus, a academia ou lavando louça, de fone e sem mexer no celular. Escolha o que ouvir, toque em Tocar e guarde o celular. Os botões do fone pausam e pulam.</p>';
+ if(TTS_OK){
+  h+='<div class="aumodes" role="radiogroup">'+AU_MODES.map(([k,t,d])=>'<label class="aumode'+(c.mode===k?" on":"")+'"><input type="radio" name="auMode" value="'+k+'"'+(c.mode===k?" checked":"")+'><b>'+t+'</b><span class="muted small">'+d+'</span></label>').join("")+'</div>';
+  h+='<div class="cfgrow"><label for="auSrc">Flashcards de</label><select id="auSrc"><option value="open"'+(c.src==="open"?" selected":"")+'>Todos os baralhos liberados</option><option value="due"'+(c.src==="due"?" selected":"")+'>Só a revisão de hoje</option>'+dk.map(([k,d])=>'<option value="'+k+'"'+(c.src===k?" selected":"")+'>'+esc(d.n)+'</option>').join("")+'</select></div>';
+  h+='<div class="cfgrow"><label for="auRate">Velocidade da voz</label><select id="auRate">'+[[.85,"Devagar"],[1,"Normal"],[1.15,"Um pouco rápida"],[1.3,"Rápida"],[1.5,"Muito rápida"]].map(([v,t])=>'<option value="'+v+'"'+(v===c.rate?" selected":"")+'>'+t+'</option>').join("")+'</select></div>';
+  h+='<div class="cfgrow"><label for="auPause">Tempo para pensar</label><select id="auPause">'+[4,6,8,12,20].map(v=>'<option value="'+v+'"'+(v===c.pause?" selected":"")+'>'+v+' segundos</option>').join("")+'</select></div>';
+  h+='<div class="cfgrow"><label for="auTimer">Parar sozinho depois de</label><select id="auTimer">'+[[0,"Não parar"],[15,"15 min"],[30,"30 min"],[45,"45 min"],[60,"1 hora"],[90,"1h30"]].map(([v,t])=>'<option value="'+v+'"'+(v===c.timer?" selected":"")+'>'+t+'</option>').join("")+'</select></div>';
+  h+='<button class="btn" type="button" id="auGo">'+(AU?"Montar de novo e tocar":"Tocar")+'</button><p class="muted small">A voz é a do próprio aparelho e funciona sem internet. Com a tela apagada, o celular costuma calar a voz: enquanto toca, o app mantém a tela acesa, e o <strong>Modo bolso</strong> deixa tudo escuro com dois botões grandes. '+(c.n?c.n+' trechos ouvidos até agora.':'')+'</p>';
+ } else h+='<p class="small">Este navegador não tem leitura em voz alta. Tente pelo Chrome (Android) ou pelo Safari (iPhone).</p>';
+ h+='</section><div id="auNow" aria-live="polite"></div>';
+ h+='<section class="panel stack"><h3>Sons para concentrar</h3><p class="small">Gerados aqui mesmo, sem internet e sem gastar dados. Tocam junto com a voz (que abaixa o som enquanto fala) e continuam nas outras telas, por exemplo enquanto você faz um curso.</p><div class="sndgrid">'+SNDS.map(([k,t,d])=>'<button type="button" class="sndbtn'+(SND.k===k?" on":"")+'" data-k="'+k+'" aria-pressed="'+(SND.k===k)+'"><b>'+t+'</b><span class="muted">'+d+'</span><span class="sst"></span></button>').join("")+'</div>';
+ h+='<div class="cfgrow"><label for="sndA">Tocar sozinho durante o foco do cronômetro</label><input type="checkbox" id="sndA"'+(SND.auto?" checked":"")+'></div>';
+ h+='<p class="muted small">O volume é o do celular: use os botões de volume do aparelho. Pelo fone ou pela tela bloqueada dá para pausar e, no botão de próxima, trocar de som.</p>';
+ h+='<details class="acc"><summary><strong>Qual escolher e outras opções de música</strong><span class="chev">›</span></summary><div class="stack" style="gap:8px"><p class="small"><strong>Rua ou ônibus:</strong> ruído marrom, que cobre o ronco grave. Volume baixo a médio.</p><p class="small"><strong>Para fazer curso, SQL ou DAX:</strong> ruído rosa, chuva ou ambiente lo-fi. <strong>Evite música com letra</strong>: palavras cantadas disputam atenção com a leitura.</p><p class="small"><strong>Para ouvir o estudo em áudio:</strong> deixe o volume num nível em que a voz fique clara; o som de fundo já toca mais baixo que ela.</p><p class="small"><strong>Se preferir música de verdade</strong> (precisa de internet): lo-fi sem letra, piano calmo ou trilhas instrumentais.</p><div class="row" style="gap:6px;flex-wrap:wrap"><a class="btn ghost sm" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=lofi+hip+hop+radio+beats+to+study">Lo-fi (YouTube)</a><a class="btn ghost sm" target="_blank" rel="noopener" href="https://open.spotify.com/search/foco%20profundo">Foco profundo (Spotify)</a><a class="btn ghost sm" target="_blank" rel="noopener" href="https://open.spotify.com/search/peaceful%20piano">Peaceful Piano (Spotify)</a><a class="btn ghost sm" target="_blank" rel="noopener" href="https://mynoise.net/noiseMachines.php">myNoise</a><a class="btn ghost sm" target="_blank" rel="noopener" href="https://www.noisli.com/">Noisli</a></div><p class="muted small">Para música de outro app tocar junto com a voz, abra a música primeiro e depois volte aqui. Alguns celulares pausam um áudio quando o outro começa.</p></div></details></section>';
  return h;
 }
 function vTutor(){
@@ -1574,13 +1741,15 @@ WIRES.rev=el=>{
  const fa=$("#fcAsk"); if(fa) fa.onclick=()=>{const c=CARDS.find(x=>x.id===fcCur); tutorAsk("duvida","Explique melhor este flashcard, com um exemplo prático:\nPergunta: "+c[1]+"\nResposta: "+c[2]);};
  el.querySelectorAll("[data-sk]").forEach(b=>b.onclick=()=>{ST.sk=ST.sk||{};ST.sk[b.dataset.sk]={v:+b.dataset.v,t:Date.now()};changed();rerenderKeep();});
  el.querySelectorAll("details[data-sko]").forEach(d=>d.addEventListener("toggle",()=>{if(d.open)skOpen=d.dataset.sko;}));
- const ag=$("#auGo"); if(ag) ag.onclick=()=>{AU.on?auStop():auStart();}; const an=$("#auNx"); if(an) an.onclick=()=>{if(AU.on)auNext();};
- const ad=$("#auDeck"); if(ad) ad.onchange=e=>{AU.deck=e.target.value;}; const ar=$("#auRate"); if(ar) ar.onchange=e=>{AU.rate=+e.target.value;};
- auUI();
- el.querySelectorAll("#sndK button").forEach(b=>b.onclick=()=>{SND.kind=b.dataset.v;sndStore();if(SND.on)sndPlay();rerenderKeep();});
- const sv=$("#sndV"); if(sv) sv.oninput=e=>{SND.vol=+e.target.value;sndStore();if(SND.gain)SND.gain.gain.setTargetAtTime(SND.kind==="waves"?SND.vol*.6:SND.vol,SND.ctx.currentTime,.1);};
- const sa=$("#sndA"); if(sa) sa.onchange=e=>{SND.auto=e.target.checked;sndStore();};
+ const c=auCfg();
+ el.querySelectorAll("input[name=auMode]").forEach(r=>r.onchange=()=>{c.mode=r.value;auSave();el.querySelectorAll(".aumode").forEach(l=>l.classList.toggle("on",l.querySelector("input").checked));});
+ const sv=(id,f,num)=>{const e=el.querySelector("#"+id);if(e)e.onchange=()=>{c[f]=num?+e.value:e.value;auSave();if(f==="timer")auTimerArm();};};
+ sv("auSrc","src"); sv("auRate","rate",1); sv("auPause","pause",1); sv("auTimer","timer",1);
+ const ag=el.querySelector("#auGo"); if(ag) ag.onclick=()=>{auPause();AU=null;auStart();};
+ el.querySelectorAll(".sndbtn").forEach(b=>b.onclick=()=>sndPlay(b.dataset.k));
+ const sa=el.querySelector("#sndA"); if(sa) sa.onchange=e=>{SND.auto=e.target.checked;sndStore();};
  el.querySelectorAll("[data-snd-on]").forEach(b=>b.onclick=sndToggle);
+ auDraw(); sndDrawAll();
  el.querySelectorAll("#tutM button").forEach(b=>b.onclick=()=>{if(TUT.busy)return;TUT.mode=b.dataset.v;TUT.msgs=[];rerenderKeep();});
  const tg=$("#tutGo"); if(tg) tg.onclick=()=>{const v=$("#tutIn").value;$("#tutIn").value="";tutorSend(v);};
  const ts=$("#tutStop"); if(ts) ts.onclick=()=>{if(TUT.ctrl)TUT.ctrl.abort();};
