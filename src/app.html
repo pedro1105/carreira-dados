@@ -172,6 +172,36 @@ details.acc>summary::-webkit-details-marker{display:none}
 details.acc>summary .chev{transition:transform .15s;color:var(--muted)}
 details.acc[open]>summary .chev{transform:rotate(90deg)}
 .copybox{font:14px/1.55 ui-monospace,Consolas,monospace;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+.medals{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px;margin-top:10px}
+.medal{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;opacity:.55}
+.medal.on{opacity:1;border-color:var(--pri);background:var(--pri-soft)}
+.medal .mi{font-size:22px;line-height:1;color:var(--pri)}
+.trmap{display:flex;gap:4px;overflow-x:auto;padding:6px 2px 10px;margin:4px 0 8px;scroll-snap-type:x proximity}
+.trn{all:unset;cursor:pointer;flex:0 0 auto;width:92px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;scroll-snap-align:start;border-radius:12px;padding:6px 2px}
+.trn:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.trr{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--pri) calc(var(--p)*1%),var(--line) 0)}
+.trr .num{width:46px;height:46px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font:700 13px var(--f)}
+.trn.ok .trr{background:conic-gradient(var(--ok) 100%,var(--line) 0)}
+.trn.now .trr{box-shadow:0 0 0 3px var(--pri-soft)}
+.trl{display:flex;flex-direction:column;gap:1px;font-size:12.5px;line-height:1.25}
+.tra{align-self:center;color:var(--muted);flex:0 0 auto;margin-top:-28px}
+textarea.mono{font:14px/1.5 ui-monospace,Consolas,monospace}
+.sqout{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.sqout table{border-collapse:collapse;width:100%;font-size:13.5px}
+.sqout th,.sqout td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.sqout th{background:var(--bg);font-weight:600}
+#report{position:fixed;inset:0;z-index:80;background:var(--bg);overflow:auto;padding:16px}
+.rpbar{display:flex;gap:8px;flex-wrap:wrap;max-width:760px;margin:0 auto 12px}
+.rpdoc{max-width:760px;margin:0 auto;background:#fff;color:#1a1a1a;border-radius:12px;padding:24px;font:15px/1.5 var(--f)}
+.rpdoc h1{margin:0 0 4px;font-size:24px}.rpdoc h2{font-size:17px;margin:20px 0 6px}
+.rpdoc .muted{color:#555}
+.rpgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.rpgrid div{border:1px solid #ddd;border-radius:10px;padding:10px;display:flex;flex-direction:column}
+.rpgrid .k{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:#555}.rpgrid b{font-size:22px}
+.rpdoc table{border-collapse:collapse;width:100%}.rpdoc th,.rpdoc td{border-bottom:1px solid #ddd;padding:6px 8px;text-align:left}
+body.printing{overflow:hidden}
+@media (max-width:520px){.rpgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.rpdoc{padding:16px}}
+@media print{body.printing>*:not(#report){display:none!important}body.printing{overflow:visible;background:#fff}#report{position:static;padding:0;background:#fff;overflow:visible}.noprint{display:none!important}.rpdoc{max-width:none;border-radius:0;padding:0}}
 ul.plain{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
 .cust{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
 .cust .ctr{display:flex;gap:6px;align-items:center}
@@ -742,9 +772,13 @@ function mergeST(a,b,base){
  o.apps=mmap(a.apps,b.apps,base&&Z.apps||null,(x,y)=>(x.u||0)>=(y.u||0)?x:y);
  o.diary=mmap(a.diary,b.diary,base&&Z.diary||null,(x,y)=>(x.u||0)>=(y.u||0)?x:y);
  o.devs=mmap(a.devs,b.devs,null,(x,y)=>(x.at||0)>=(y.at||0)?x:y);
+ o.certs=mmap(a.certs,b.certs,base&&Z.certs||null,(x,y)=>(x.u||0)>=(y.u||0)?x:y);
+ o.net=mmap(a.net,b.net,base&&Z.net||null,(x,y)=>(x.u||0)>=(y.u||0)?x:y);
+ o.iv=mmap(a.iv,b.iv,null,(x,y)=>Math.max(x,y));
+ o.sqlc=mmap(a.sqlc,b.sqlc,null,(x,y)=>x<y?x:y);
  return o;
 }
-const hasProgress=st=>!!st&&["done","srs","apps","diary","sk","log"].some(k=>Object.keys(st[k]||{}).length>0)||!!st&&(st.custom||[]).length>0;
+const hasProgress=st=>!!st&&["done","srs","apps","diary","sk","log","certs","net","iv","sqlc"].some(k=>Object.keys(st[k]||{}).length>0)||!!st&&(st.custom||[]).length>0;
 function clAdopt(st,upd){
  ST=Object.assign({done:{},custom:[],upd:0},st); ST.upd=upd; ST.cloud=CL.code;
  saveLocal(); rebuild(); syncPush(); rerenderKeep(); setTimeout(devMark,0);
@@ -817,9 +851,9 @@ async function clNew(){CL.code=newCode();CL.base=0;ST.cloud=CL.code;clStore();ch
 function clOff(btn){if(!btn.dataset.arm){btn.dataset.arm="1";btn.textContent="Toque de novo para desconectar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.arm;btn.textContent="Desconectar este aparelho";}},4000);return;}
  CL.code=null;CL.base=0;CL.st="off";clStore();clSnap(null);delete ST.cloud;saveLocal();rerenderKeep();toast("Este aparelho parou de sincronizar.");}
 /* cada aparelho grava no progresso a versão do app, onde abriu e quando (lista em Configurações) */
-const APP_V=16;
+const APP_V=17;
 /* o que mudou em cada versão (aparece uma vez depois que o app atualiza e fica em Configurações) */
-const NEWS={6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações.",8:"Inglês 3 vezes por semana (terça, quinta e sábado) nas férias e no meio expediente; texto de home office no Currículo.",9:"Preparação antes de 07/12 (contas e programas) e diagnóstico de Excel no primeiro dia.",10:"A seção Sobre agora mostra a versão real do app.",11:"Checklist dos cursos da Udemy na aba Cursos.",12:"Plano usa os cursos que você já tem na Udemy; SQL agora em MySQL.",13:"Novo checklist de cursos complementares gratuitos na aba Cursos.",14:"Checklist do que fazer depois da PL-300, com o link de cada curso e certificação.",15:"Trilha completa do início ao CDO, em 9 fases, na aba Cursos; curso de governança no cronograma; revisão geral.",16:"Áudio igual ao do app da Transpetro: 4 modos, pausa para pensar, botões do fone, modo bolso e 7 sons que seguem nas outras telas."};
+const NEWS={6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações.",8:"Inglês 3 vezes por semana (terça, quinta e sábado) nas férias e no meio expediente; texto de home office no Currículo.",9:"Preparação antes de 07/12 (contas e programas) e diagnóstico de Excel no primeiro dia.",10:"A seção Sobre agora mostra a versão real do app.",11:"Checklist dos cursos da Udemy na aba Cursos.",12:"Plano usa os cursos que você já tem na Udemy; SQL agora em MySQL.",13:"Novo checklist de cursos complementares gratuitos na aba Cursos.",14:"Checklist do que fazer depois da PL-300, com o link de cada curso e certificação.",15:"Trilha completa do início ao CDO, em 9 fases, na aba Cursos; curso de governança no cronograma; revisão geral.",16:"Áudio igual ao do app da Transpetro: 4 modos, pausa para pensar, botões do fone, modo bolso e 7 sons que seguem nas outras telas.",17:"Novidades: analisador de vaga, treino de entrevista, cofre de certificados, contatos e planejador da transição (Perfil); desafio de SQL (Revisar); nível, medalhas, meta semanal e relatório em PDF (Progresso); mapa da trilha (Cursos). Currículo com compras, SIAFI e SILOMS."};
 const SEENK=KEY+"-seenV";
 /* versão nova baixada pelo service worker (app instalado): avisa e atualiza com um toque, como no app da Transpetro */
 function swUpdated(){
@@ -1042,7 +1076,7 @@ function trCur(){ const t=todayS(); if(t<START) return TRILHA[0]; const f=TRILHA
 function trCheck(id,n,w,h,u,opt){ const d=isDone(id); return '<label class="task'+(d?" done":"")+'"><input type="checkbox" data-id="'+id+'"'+(d?" checked":"")+'><span class="stack" style="gap:2px;min-width:0"><strong>'+esc(n)+(opt?' <span class="pill">opcional</span>':"")+'</strong><span class="muted small"><strong>Onde:</strong> '+esc(w)+'</span>'+(h?'<span class="muted small"><strong>Como:</strong> '+esc(h)+'</span>':"")+(u?'<span class="small"><a href="'+esc(u)+'" target="_blank" rel="noopener">Abrir o site</a></span>':"")+'</span></label>'; }
 function trilhaHTML(){
  const cur=trCur(); const all=TRILHA.map(trPct); const tot=Math.round(all.reduce((a,b)=>a+b,0)/TRILHA.length*100);
- let h='<section class="panel" id="trilha"><div class="dayhead"><h3>Trilha completa: do início ao CDO</h3><span class="pill num">'+tot+'%</span></div><p class="muted small">Todos os cursos, certificações e especializações, fase por fase, com onde fazer e como achar. Os cursos do cronograma abrem as sessões; marcar aqui ou na agenda é o mesmo registro. Você está na <strong>'+esc(cur.n)+'</strong>.</p>';
+ let h='<section class="panel" id="trilha"><div class="dayhead"><h3>Trilha completa: do início ao CDO</h3><span class="pill num">'+tot+'%</span></div><p class="muted small">Todos os cursos, certificações e especializações, fase por fase, com onde fazer e como achar. Os cursos do cronograma abrem as sessões; marcar aqui ou na agenda é o mesmo registro. Você está na <strong>'+esc(cur.n)+'</strong>.</p>'+trMapHTML();
  TRILHA.forEach((f,k)=>{ const pc=Math.round(all[k]*100); const its=trItems(f);
   h+='<details class="acc trf" data-k="'+f.id+'"'+(f===cur?" open":"")+'><summary><span class="stack" style="gap:4px;min-width:0;flex:1"><span class="row" style="gap:8px"><strong>'+esc(f.n)+'</strong>'+(pc===100?'<span class="pill free">concluída</span>':f===cur?'<span class="pill now">agora</span>':"")+'</span><span class="muted small">'+esc(trRange(f))+' · '+pc+'%</span><span class="track"><span class="fill'+(pc===100?" ok":"")+'" style="display:block;width:'+pc+'%"></span></span></span><span class="chev">›</span></summary><p class="small"><strong>Objetivo:</strong> '+esc(f.goal)+'</p><div class="stack" style="gap:6px">';
   its.forEach(o=>{ if(o.c) h+=courseAcc(o.c); else if(o.p) h+=trCheck(o.p.id,o.p.t,"Grátis",o.p.d,o.p.u); else h+=trCheck(o.x.id,o.x.n,o.x.w,o.x.h,o.x.u,o.x.opt); });
@@ -1060,6 +1094,8 @@ function vCursos(){
 }
 function custHTML(){ if(!ST.custom.length) return '<p class="muted small">Nenhum curso adicionado ainda. Exemplo: "Power BI Avançado (Udemy), 120 aulas".</p>'; return ST.custom.map((c,i)=>{const pct=Math.round(c.done/c.tot*100); return '<div class="cust"><div class="stack" style="gap:4px;min-width:0"><strong style="overflow-wrap:anywhere">'+esc(c.n)+'</strong><span class="muted small num">'+c.done+'/'+c.tot+' aulas · '+pct+'%'+(c.u?' · <a href="'+esc(c.u)+'" target="_blank" rel="noopener">abrir</a>':"")+'</span><span class="track"><span class="fill'+(pct>=100?" ok":"")+'" style="display:block;width:'+Math.min(100,pct)+'%"></span></span></div><div class="ctr"><button class="btn ghost sm" data-cu="'+i+'" data-op="-1" type="button" aria-label="Menos uma aula">−</button><button class="btn sm" data-cu="'+i+'" data-op="1" type="button" aria-label="Mais uma aula">+1</button><button class="btn ghost sm" data-cu="'+i+'" data-op="x" type="button" aria-label="Remover curso">×</button></div></div>';}).join(""); }
 WIRES.cursos=el=>{
+ { const m=el.querySelector(".trmap"), n=m&&m.querySelector(".trn.now"); if(m&&n) m.scrollLeft=Math.max(0,n.offsetLeft-m.offsetLeft-8); }
+ el.querySelectorAll("[data-trgo]").forEach(b=>b.onclick=()=>{const d=el.querySelector('details[data-k="'+b.dataset.trgo+'"]'); if(d){d.open=true; d.scrollIntoView({behavior:"smooth",block:"start"});}});
  el.querySelectorAll(".chip[data-t]").forEach(b=>b.onclick=()=>{catTag=b.dataset.t;rerenderKeep();});
  $("#cuAdd").onclick=()=>{const n=$("#cuN").value.trim(),tot=parseInt($("#cuT").value,10),u=$("#cuU").value.trim(); if(!n||!(tot>0)){toast("Informe o nome e o número de aulas.");return;} ST.custom.push({n,tot,done:0,u:/^https?:\/\//.test(u)?u:""}); changed(); rerenderKeep(); toast("Curso adicionado.");};
  el.querySelectorAll("[data-cu]").forEach(b=>b.onclick=()=>{const c=ST.custom[+b.dataset.cu]; if(!c) return; if(b.dataset.op==="x"){ if(b.dataset.arm){ST.custom.splice(+b.dataset.cu,1);changed();rerenderKeep();} else {b.dataset.arm="1";b.textContent="Remover?";setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent="×";}},3000);} return;} c.done=Math.max(0,Math.min(c.tot,c.done+(+b.dataset.op))); changed(); rerenderKeep();});
@@ -1120,7 +1156,7 @@ WIRES.port=el=>{el.querySelectorAll("[data-copy=readme]").forEach(b=>b.onclick=(
 let pfSeg="li";
 const TXT={
  headline:"Analista de Dados e BI em formação | Power BI · SQL · Excel | 8 anos em gestão administrativa e controles na Força Aérea Brasileira",
- about:`Passei 8 anos na Força Aérea Brasileira cuidando de documentos, prazos e controles administrativos. Foi aí que percebi que boa parte do trabalho era juntar dados à mão para alguém decidir.
+ about:`Passei 8 anos na Força Aérea Brasileira cuidando de documentos, prazos, compras e controles administrativos. Foi aí que percebi que boa parte do trabalho era juntar dados à mão para alguém decidir.
 
 Hoje transformo esse tipo de controle em painéis de Power BI e consultas SQL. Sou tecnólogo em Análise e Desenvolvimento de Sistemas (Estácio, 2026) e tenho formação complementar em LGPD e Acesso à Informação pela ENAP.
 
@@ -1141,13 +1177,16 @@ Auxiliar administrativo · Coordenação de Segurança e Atividades Operacionais
 
 Auxiliar administrativo · Batalhão de Segurança e Defesa do Rio de Janeiro · 2021 – fev/2024
 • Montei escalas de serviço, permutas e controle de faltas de um esquadrão de 70 militares.
-• Atuei nas seções de pessoal, de processos disciplinares e de patrimônio, com controle de documentos e prazos.
+• Atuei nas seções de pessoal e de processos disciplinares, com controle de documentos e prazos.
+• Na seção de patrimônio, apoiei a montagem de processos de compra de material (equipamentos para a equipe de segurança de autoridades e material esportivo): pesquisa de preços, contato com fornecedores sobre os produtos e acompanhamento de pregões eletrônicos no portal de compras do governo federal.
+• Consultei empenhos e acompanhei pagamentos no SIAFI e no SILOMS, e acompanhei prazos e entregas junto aos fornecedores.
+• Dei apoio de informática à seção.
 • Treinei a tropa do Esquadrão de Honras Militares e atuei na recepção de autoridades.
 
 Promovido a Cabo por merecimento em 2025 (nota 8,75 no curso de formação).`,
- resA:`Analista de Dados e BI em formação, com 8 anos de experiência em controles administrativos e indicadores na Força Aérea Brasileira. Tecnólogo em ADS, com projetos em Power BI, SQL e Excel publicados no GitHub e foco em qualidade e governança de dados. Disponível a partir de março de 2027.`,
+ resA:`Analista de Dados e BI em formação, com 8 anos de experiência em controles administrativos, indicadores e compras públicas na Força Aérea Brasileira, incluindo o acompanhamento de empenhos e pagamentos no SIAFI. Tecnólogo em ADS, com projetos em Power BI, SQL e Excel publicados no GitHub e foco em qualidade e governança de dados. Disponível a partir de março de 2027.`,
  ho:`Estrutura para home office: notebook Intel Core i7 (11ª geração), 16 GB de RAM, SSD e placa de vídeo dedicada, com Windows 11 Pro e monitor secundário. Internet de alta velocidade e estável e ambiente isolado para reuniões.`,
- resB:`Profissional administrativo com 8 anos na Força Aérea Brasileira: documentos oficiais, escalas, controle de acesso, logística de eventos e apresentações para a chefia. Domínio do pacote Office, com Excel aplicado a controles e relatórios. Tecnólogo em ADS. Disponível a partir de março de 2027.`,
+ resB:`Profissional administrativo com 8 anos na Força Aérea Brasileira: documentos oficiais, processos de compra, contato com fornecedores, acompanhamento de empenhos, pagamentos e entregas (SIAFI e SILOMS), escalas, controle de acesso, logística de eventos e apresentações para a chefia. Domínio do pacote Office, com Excel aplicado a controles e relatórios. Tecnólogo em ADS. Disponível a partir de março de 2027.`,
  gh:`### Olá! Sou o Pedro Henrique
 
 Analista de Dados e BI em formação, vindo de 8 anos de gestão administrativa na Força Aérea Brasileira.
@@ -1167,7 +1206,7 @@ Gosto de transformar controles manuais em painéis que ajudam a decidir.
 function brandList(g){ return '<div class="tasks">'+BRAND.filter(b=>b.g===g).map(b=>taskHTML(IDX["b:"+b.id],true)).join("")+'</div>'; }
 function copyBlock(key,title){ return '<div class="stack"><div class="dayhead"><h3>'+title+'</h3><button class="btn ghost sm" data-copy="'+key+'" type="button">Copiar</button></div><pre class="copybox">'+esc(TXT[key])+'</pre></div>'; }
 function vPerfil(){
- const segs=[["li","LinkedIn"],["gh","GitHub"],["red","Redes sociais"],["car","Currículo"],["vagas","Candidaturas"]];
+ const segs=[["li","LinkedIn"],["gh","GitHub"],["red","Redes sociais"],["car","Currículo"],["vagas","Candidaturas"],["vaga","Analisar vaga"],["ent","Entrevista"],["cert","Certificados"],["net","Contatos"],["fin","Transição"]];
  let h='<section class="panel"><h4>Perfil profissional</h4><h2>LinkedIn, GitHub, redes e currículo</h2><p>As tarefas abaixo também aparecem na agenda, às sextas e domingos até a baixa. Os textos são pontos de partida: ajuste com suas palavras e troque os colchetes por números reais.</p><div class="seg" role="tablist">'+segs.map(([k,n])=>'<button role="tab" type="button" data-s="'+k+'" aria-selected="'+(pfSeg===k)+'">'+n+'</button>').join("")+'</div></section>';
  if(pfSeg==="li"){
   h+='<section class="panel">'+brandList("li")+'</section>';
@@ -1182,6 +1221,11 @@ function vPerfil(){
   h+='<section class="panel"><h3>Redes sociais com cara profissional</h3><ul class="plain"><li><strong>Instagram e Facebook:</strong> privados, ou públicos só com o que você mostraria numa entrevista.</li><li><strong>Mesma identidade:</strong> foto, nome e usuário iguais no LinkedIn, GitHub e e-mail.</li><li><strong>Onde postar sobre dados:</strong> LinkedIn em primeiro lugar. Instagram ou TikTok sobre dados só se você gostar de produzir vídeo; não é necessário.</li><li><strong>WhatsApp:</strong> foto profissional e recado neutro; recrutadores chamam por lá.</li><li><strong>Até a baixa:</strong> sem farda em fotos de perfil e sem rotina interna da FAB em qualquer rede.</li></ul></section>';
  } else if(pfSeg==="vagas"){
   h+=vApps();
+ } else if(pfSeg==="vaga"){ h+=vVaga();
+ } else if(pfSeg==="ent"){ h+=vEnt();
+ } else if(pfSeg==="cert"){ h+=vCert();
+ } else if(pfSeg==="net"){ h+=vNet();
+ } else if(pfSeg==="fin"){ h+=vFin();
  } else {
   h+='<section class="panel">'+brandList("car")+'</section>';
   h+='<section class="panel"><h3>Três frentes de vaga</h3><ul class="plain"><li><strong>A. Dados (alvo):</strong> Analista de BI, Dados ou Relatórios Júnior. Use o currículo A.</li><li><strong>B. Administrativo com dados (garantia):</strong> Assistente ou Analista Administrativo, Planejamento, Controladoria, Compras, Facilities. Use o currículo B.</li><li><strong>C. Segurança e controle de acesso (rede):</strong> só se chegar abril sem proposta das outras duas.</li></ul><p class="muted small">Candidaturas a partir de 15/02, início só depois da baixa. A primeira proposta boa que pagar as contas você aceita e segue estudando.</p></section>';
@@ -1190,13 +1234,306 @@ function vPerfil(){
  }
  return h;
 }
-WIRES.perfil=el=>{ el.querySelectorAll(".seg button[data-s]").forEach(b=>b.onclick=()=>{pfSeg=b.dataset.s;rerenderKeep();}); el.querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>copyText(TXT[b.dataset.copy],b)); if(pfSeg==="vagas") wireApps(el); };
+WIRES.perfil=el=>{ el.querySelectorAll(".seg button[data-s]").forEach(b=>b.onclick=()=>{pfSeg=b.dataset.s;rerenderKeep();}); el.querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>copyText(TXT[b.dataset.copy],b)); if(pfSeg==="vagas") wireApps(el); if(pfSeg==="vaga") wireVaga(el); if(pfSeg==="ent") wireEnt(el); else ivStopClock(); if(pfSeg==="cert") wireCert(el); if(pfSeg==="net") wireNet(el); if(pfSeg==="fin") wireFin(el); };
+
+/* ================= v17: 9 melhorias (vaga, entrevista, certificados, transição, contatos, medalhas, SQL, mapa, relatório) ================= */
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const brl=n=>"R$ "+Math.round(n||0).toLocaleString("pt-BR");
+const num=v=>{const x=parseFloat(String(v||"").replace(/\./g,"").replace(",","."));return isFinite(x)?x:0;};
+
+/* ---------- 1. Analisador de vaga (inspirado em Jobscan e Teal) ---------- */
+const KW=[
+ ["Power BI",/power\s?bi/i,["pbi","pl300"]],["DAX",/\bdax\b/i,["dax"]],["Power Query",/power\s?query|\betl\b|tratamento de dados/i,["excel","pbi"]],
+ ["SQL",/\bsql\b|consultas? em banco|banco de dados/i,["sql","sqladv"]],["Excel avançado",/excel( avan[çc]ado)?|procv|procx|tabela[s]? din[âa]mica/i,["excel"]],
+ ["Python",/python|pandas/i,["py"]],["Estatística",/estat[íi]stica/i,["stats"]],["Modelagem de dados",/modelagem|modelo estrela|data warehouse|\bdw\b/i,["model"]],
+ ["Dashboards e indicadores",/dashboard|painel|painéis|indicadores|\bkpis?\b/i,["pbi"]],["Relatórios gerenciais",/relat[óo]rios?/i,[]],
+ ["VBA / macros",/\bvba\b|macros?/i,[]],["Tableau / Looker / Qlik",/tableau|looker|qlik/i,[]],["Azure / Fabric / nuvem",/azure|fabric|databricks|nuvem|cloud/i,["fabric"]],
+ ["Git / GitHub",/\bgit(hub)?\b/i,["git"]],["Inglês",/ingl[êe]s|english/i,[]],["LGPD",/lgpd|prote[çc][ãa]o de dados/i,["gov"]],
+ ["Governança de dados",/governan[çc]a de dados|data governance|metadados|dicion[áa]rio de dados/i,["gov"]],["Qualidade de dados",/qualidade de dados|data quality|consist[êe]ncia/i,["gov"]],
+ ["Metodologias ágeis",/scrum|[áa]gil|kanban/i,[]],["SAP / ERP",/\bsap\b|\berp\b|totvs|protheus/i,[]],
+ ["Compras e licitações",/compras?|licita[çc][ãa]o|preg[ãa]o|cota[çc][ãa]o|suprimentos/i,[]],["Contratos e fornecedores",/contratos?|fornecedor/i,[]],
+ ["Orçamento e controladoria",/or[çc]amento|controladoria|custos|financeir/i,[]],["SIAFI / setor público",/siafi|siads|siloms|setor p[úu]blico|administra[çc][ãa]o p[úu]blica/i,[]],
+ ["Logística e estoque",/log[íi]stica|estoque|almoxarifado|patrim[ôo]nio/i,[]],["Planejamento",/planejamento/i,[]],["Gestão de documentos",/document|arquiv|protocolo/i,[]],
+ ["Inteligência artificial",/intelig[êe]ncia artificial|\bia\b|copilot|chatgpt|machine learning/i,["ia1","ia2","copilot"]],
+ ["Certificação Microsoft",/pl-?300|certifica[çc][ãa]o microsoft/i,["pl300"]],["Superior em TI",/sistemas de informa[çc][ãa]o|ci[êe]ncia da computa[çc][ãa]o|an[áa]lise e desenvolvimento|\bads\b|tecnologia da informa[çc][ãa]o/i,[]],
+ ["Comunicação e apresentação",/comunica[çc][ãa]o|apresenta[çc]|storytelling/i,[]],["Organização e prazos",/organiza|prazos?|proatividade/i,[]]
+];
+let VG={txt:"",cv:"A"};
+function cvText(which){ const c=Object.values(ST.certs||{}).map(x=>x.n+" "+x.org).join(" "); return (which==="B"?TXT.resB:TXT.resA)+" "+TXT.exp+" "+TXT.about+" "+TXT.headline+" "+c; }
+function courseStarted(id){ const c=COURSES.find(k=>k.id===id); return !!c&&courseIds(c).some(isDone); }
+function vgAnalyze(){
+ const t=VG.txt; if(t.trim().length<40) return null; const cv=cvText(VG.cv); const out=[];
+ KW.forEach(([n,re,cs])=>{ if(!re.test(t)) return; const inCv=re.test(cv); const st=!inCv&&cs.some(courseStarted); out.push({n,inCv,st,cs}); });
+ return out;
+}
+function vVaga(){
+ let h='<section class="panel stack"><h3>Analisar uma vaga</h3><p class="small">Cole a descrição da vaga. O app procura as competências que ela pede e mostra o que já está no seu currículo, o que você está estudando e o que falta. Tudo fica no aparelho.</p><textarea id="vgTxt" rows="8" placeholder="Cole aqui a descrição da vaga (requisitos, atividades, diferenciais)">'+esc(VG.txt)+'</textarea><div class="row"><div class="seg" role="radiogroup" id="vgCv"><button type="button" role="radio" data-v="A" aria-selected="'+(VG.cv==="A")+'">Currículo A (dados)</button><button type="button" role="radio" data-v="B" aria-selected="'+(VG.cv==="B")+'">Currículo B (administrativo)</button></div><button class="btn" type="button" id="vgGo">Analisar</button></div></section>';
+ const r=vgAnalyze();
+ if(r){ if(!r.length) h+='<section class="panel"><p class="small">Não encontrei competências conhecidas nesse texto. Confira se colou a descrição completa.</p></section>';
+  else { const ok=r.filter(x=>x.inCv), st=r.filter(x=>x.st), miss=r.filter(x=>!x.inCv&&!x.st); const pct=Math.round(ok.length/r.length*100);
+   const li=(l,cls)=>l.map(x=>'<span class="pill '+cls+'">'+esc(x.n)+'</span>').join(" ");
+   h+='<section class="panel stack"><div class="dayhead"><h3>Combinação com o currículo '+VG.cv+'</h3><span class="pill '+(pct>=60?"free":pct>=40?"pri":"bad")+' num">'+pct+'%</span></div><div class="track"><span class="fill'+(pct>=60?" ok":"")+'" style="display:block;width:'+pct+'%"></span></div>'
+    +'<p class="small"><strong>Já no currículo ('+ok.length+'):</strong></p><div class="row" style="gap:6px">'+(li(ok,"free")||'<span class="muted small">nenhuma</span>')+'</div>'
+    +(st.length?'<p class="small"><strong>Você está estudando ('+st.length+'):</strong> coloque no currículo como "em formação" ou no resumo.</p><div class="row" style="gap:6px">'+li(st,"pri")+'</div>':"")
+    +(miss.length?'<p class="small"><strong>Faltam ('+miss.length+'):</strong></p><div class="row" style="gap:6px">'+li(miss,"bad")+'</div>':"")
+    +'<p class="small muted">'+(pct>=60?"Boa combinação: candidate-se e use as palavras da vaga no resumo.":pct>=40?"Vale se candidatar: requisito de vaga é lista de desejos. Ajuste o resumo com as palavras que faltam e que você sabe fazer.":"Combinação baixa. Se a vaga é da Frente B, teste o currículo B; se for de dados, anote o que falta e siga o plano.")+'</p>'
+    +'<p class="small muted">Se você sabe fazer algo da lista "Faltam", inclua no resumo do currículo com as mesmas palavras da vaga. Os sistemas de triagem (ATS) procuram palavras exatas.</p></section>'; } }
+ return h;
+}
+function wireVaga(el){ const t=el.querySelector("#vgTxt"); if(t) t.oninput=()=>{VG.txt=t.value;}; el.querySelectorAll("#vgCv button").forEach(b=>b.onclick=()=>{VG.cv=b.dataset.v;rerenderKeep();}); const g=el.querySelector("#vgGo"); if(g) g.onclick=()=>{VG.txt=t.value;rerenderKeep();}; }
+
+/* ---------- 2. Treino de entrevista (inspirado em Big Interview e Pramp) ---------- */
+const IVQ=[
+ ["c","Fale um pouco sobre você.","Em 1 minuto: FAB (8 anos, administração e compras), ADS, por que dados agora e o que você já construiu (projetos). Termine com o que busca."],
+ ["c","Por que você quer sair da Força Aérea?","Fale do futuro, nunca de problemas: o tempo de serviço termina em 2027 e você escolheu dados porque já fazia controles e relatórios."],
+ ["c","Por que dados e BI?","Ligue a rotina (prazos, empenhos, entregas, escalas) à vontade de automatizar e decidir com números. Cite um projeto."],
+ ["c","Conte uma situação em que você lidou com um prazo apertado.","Use STAR: situação (processo de compra urgente ou evento), tarefa, o que você fez, resultado com número ou prazo."],
+ ["c","Conte um erro que você cometeu e o que aprendeu.","Escolha um erro real e pequeno, mostre a correção e o que mudou no seu método (checklist, conferência)."],
+ ["c","Como você lida com informação sigilosa?","Processos disciplinares, dados pessoais e LGPD (curso ENAP): acesso mínimo, nada fora do sistema, conferência."],
+ ["c","Conte uma vez em que precisou convencer alguém.","Ex.: mostrar a um fornecedor ou à chefia um prazo ou uma alternativa, com dados na mão."],
+ ["c","Como você se organiza com muitas demandas ao mesmo tempo?","Lista de prioridades por prazo e impacto, controle em planilha, aviso antecipado quando algo vai atrasar."],
+ ["c","Onde você se vê em 5 anos?","Analista pleno com foco em qualidade e governança de dados, com certificações (PL-300, EXIN, CDMP)."],
+ ["c","Qual é a sua pretensão salarial?","Pesquise a faixa antes (Glassdoor, vagas parecidas). Dê uma faixa, não um número, e diga que está aberto a conversar."],
+ ["t","Explique a diferença entre medida e coluna calculada no Power BI.","Coluna: calculada linha a linha e guardada no modelo. Medida: calculada na hora, conforme os filtros. Prefira medidas."],
+ ["t","O que é um modelo estrela?","Uma tabela fato no centro (eventos, valores) ligada a dimensões (data, setor, produto). Mais simples e mais rápido para DAX."],
+ ["t","Para que serve o CALCULATE?","Muda o contexto de filtro de uma medida. Ex.: vendas só de 2026, ou ignorando o filtro de setor."],
+ ["t","Qual a diferença entre INNER JOIN e LEFT JOIN?","INNER traz só o que existe nas duas tabelas. LEFT traz tudo da esquerda e completa com nulo o que não achou na direita."],
+ ["t","Como você trataria dados com duplicados e valores vazios?","Perfilar no Power Query, entender a causa, remover duplicados pela chave certa, decidir caso a caso o que fazer com vazios e documentar a regra."],
+ ["t","Como você garante que um número do dashboard está certo?","Conferir com a fonte (total do sistema), testar com um caso conhecido, regras de validação e um dicionário de dados."],
+ ["t","Que gráfico você usaria para mostrar evolução mensal?","Linha. Barras para comparar categorias; evite pizza com muitas fatias."],
+ ["t","Fale de um projeto do seu portfólio.","Pergunta de negócio, dados (fonte), modelo, 2 medidas, uma descoberta e o que faria diferente."],
+ ["t","O que é RLS no Power BI?","Segurança em nível de linha: cada usuário vê só as linhas permitidas (ex.: só o seu setor)."],
+ ["a","Como funciona um processo de compra pública?","Planejamento e pesquisa de preços, termo de referência, licitação (pregão eletrônico), empenho, entrega, liquidação e pagamento (Lei 14.133)."],
+ ["a","O que você fazia no SIAFI e no SILOMS?","Consultava empenhos e acompanhava pagamentos; acompanhava prazos e entregas com os fornecedores. Mostre que entende o ciclo da despesa."],
+ ["a","Como você acompanharia entregas atrasadas de fornecedores?","Planilha ou painel com prazo, status e dias de atraso; contato com o fornecedor; aviso à chefia; registro para avaliar o fornecedor depois."],
+ ["a","Você sabe Excel avançado?","Diga o que faz de verdade: PROCX, SOMASES, tabela dinâmica, Power Query. Ofereça mostrar um projeto."],
+ ["a","Como você priorizaria pedidos de várias áreas?","Prazo legal ou de entrega, impacto, ordem de chegada. Combine o critério com a chefia e deixe visível para todos."]
+];
+const IVT={c:"Comportamental",t:"Técnica de BI",a:"Administrativa e compras"};
+let IV={f:"all",i:0,show:false,t0:0,tick:null,rec:null,chunks:[],url:null};
+function ivList(){return IVQ.map((q,i)=>Object.assign({i},{k:q[0],q:q[1],d:q[2]})).filter(x=>IV.f==="all"||x.k===IV.f);}
+function vEnt(){
+ const L=ivList(); if(IV.i>=L.length) IV.i=0; const q=L[IV.i]; const done=Object.keys(ST.iv||{}).length;
+ let h='<section class="panel stack"><div class="dayhead"><h3>Treino de entrevista</h3><span class="pill pri num">'+done+'/'+IVQ.length+' treinadas</span></div><p class="small">Responda em voz alta, como na entrevista, em até 2 minutos. Use o método STAR nas comportamentais: <strong>S</strong>ituação, <strong>T</strong>arefa, <strong>A</strong>ção e <strong>R</strong>esultado. Se quiser, grave e ouça depois.</p><div class="seg" id="ivF">'+[["all","Todas"],["c","Comportamentais"],["t","Técnicas de BI"],["a","Administrativas"]].map(([k,n])=>'<button type="button" data-v="'+k+'" aria-selected="'+(IV.f===k)+'">'+n+'</button>').join("")+'</div></section>';
+ h+='<section class="panel stack"><div class="row" style="justify-content:space-between"><span class="pill">'+IVT[q.k]+' · '+(IV.i+1)+' de '+L.length+'</span>'+(ST.iv&&ST.iv[q.i]?'<span class="pill free">treinada '+ST.iv[q.i]+'x</span>':"")+'</div><p class="auq">'+esc(q.q)+'</p>'
+  +(IV.show?'<div class="note small"><strong>Como responder:</strong> '+esc(q.d)+'</div>':'<button class="btn ghost sm" type="button" id="ivShow">Ver como responder</button>')
+  +'<div class="row" style="align-items:center"><span class="big num" id="ivClock">2:00</span><button class="btn" type="button" id="ivGo">'+(IV.t0?"Parar":"Começar 2 min")+'</button>'+(navigator.mediaDevices&&window.MediaRecorder?'<button class="btn ghost" type="button" id="ivRec">'+(IV.rec?"■ Parar gravação":"● Gravar resposta")+'</button>':"")+'</div>'
+  +(IV.url?'<audio controls src="'+IV.url+'" style="width:100%"></audio><p class="muted small">A gravação fica só nesta tela e some quando você sair. Ouça e repare: começou direto? Deu um número? Terminou com o resultado?</p>':"")
+  +'<div class="row"><button class="btn ghost" type="button" id="ivPrev">⏮ Anterior</button><button class="btn ghost" type="button" id="ivOk">Marcar como treinada</button><button class="btn ghost" type="button" id="ivNext">Próxima ⏭</button></div></section>';
+ return h;
+}
+function ivStopClock(){clearInterval(IV.tick);IV.tick=null;IV.t0=0;}
+function wireEnt(el){
+ const L=ivList(), q=L[IV.i];
+ el.querySelectorAll("#ivF button").forEach(b=>b.onclick=()=>{IV.f=b.dataset.v;IV.i=0;IV.show=false;ivStopClock();rerenderKeep();});
+ const on=(id,f)=>{const b=el.querySelector("#"+id);if(b)b.onclick=f;};
+ on("ivShow",()=>{IV.show=true;rerenderKeep();});
+ const mv=d=>{IV.i=(IV.i+d+L.length)%L.length;IV.show=false;IV.url=null;ivStopClock();rerenderKeep();};
+ on("ivPrev",()=>mv(-1)); on("ivNext",()=>mv(1));
+ on("ivOk",()=>{ST.iv=ST.iv||{};ST.iv[q.i]=(ST.iv[q.i]||0)+1;changed();toast("Pergunta treinada.");mv(1);});
+ on("ivGo",()=>{ if(IV.t0){ivStopClock();rerenderKeep();return;} IV.t0=Date.now(); const draw=()=>{const c=$("#ivClock"); const left=Math.max(0,120-Math.floor((Date.now()-IV.t0)/1000)); if(c){c.textContent=Math.floor(left/60)+":"+pad(left%60); c.style.color=left<=15?"var(--bad)":"";} if(!left){ivStopClock();toast("Tempo! Em entrevista, respostas de até 2 minutos funcionam melhor.");const b=$("#ivGo");if(b)b.textContent="Começar 2 min";}}; IV.tick=setInterval(draw,250); draw(); const b=$("#ivGo"); if(b) b.textContent="Parar"; });
+ on("ivRec",async()=>{ if(IV.rec){IV.rec.stop();return;} try{const s=await navigator.mediaDevices.getUserMedia({audio:true}); const r=new MediaRecorder(s); IV.chunks=[]; r.ondataavailable=e=>IV.chunks.push(e.data); r.onstop=()=>{s.getTracks().forEach(t=>t.stop()); if(IV.url) URL.revokeObjectURL(IV.url); IV.url=URL.createObjectURL(new Blob(IV.chunks,{type:r.mimeType||"audio/webm"})); IV.rec=null; rerenderKeep();}; r.start(); IV.rec=r; rerenderKeep();}catch(e){toast("Não deu para usar o microfone. Libere o acesso nas permissões do navegador.");} });
+ if(IV.t0){ const b=el.querySelector("#ivGo"); if(b){ IV.tick&&clearInterval(IV.tick); IV.tick=setInterval(()=>{const c=$("#ivClock"); const left=Math.max(0,120-Math.floor((Date.now()-IV.t0)/1000)); if(c) c.textContent=Math.floor(left/60)+":"+pad(left%60); if(!left) ivStopClock();},250);} }
+}
+
+/* ---------- 3. Cofre de certificados (inspirado em LinkedIn e Credly) ---------- */
+const CERT_SEED=[
+ {n:"Tecnólogo em Análise e Desenvolvimento de Sistemas",org:"Estácio",d:"2026-07-24",h:"",tp:"form"},
+ {n:"Introdução à Lei Brasileira de Proteção de Dados Pessoais (LGPD)",org:"ENAP",d:"2026-01-01",h:"10",tp:"cert"},
+ {n:"Acesso à Informação",org:"ENAP",d:"2026-01-01",h:"25",tp:"cert"},
+ {n:"Ética e Serviço Público",org:"ENAP",d:"2026-01-01",h:"20",tp:"cert"},
+ {n:"Gestão e Apuração da Ética Pública",org:"ENAP",d:"2026-01-01",h:"24",tp:"cert"},
+ {n:"Prevenção e Enfrentamento do Assédio",org:"ENAP",d:"2026-01-01",h:"6",tp:"cert"}
+];
+let ctEdit=null;
+function certList(){return Object.entries(ST.certs||{}).filter(([,c])=>!c.x).map(([id,c])=>Object.assign({id},c)).sort((a,b)=>(b.d||"").localeCompare(a.d||""));}
+function certBlock(){ const L=certList(); const f=L.filter(c=>c.tp==="form"), c=L.filter(x=>x.tp!=="form"); const y=d=>d?d.slice(0,4):"";
+ return (f.length?"FORMAÇÃO\n"+f.map(x=>"• "+x.n+" — "+x.org+(x.d?" ("+y(x.d)+")":"")).join("\n")+"\n\n":"")+(c.length?"CERTIFICAÇÕES E CURSOS\n"+c.map(x=>"• "+x.n+" — "+x.org+(x.d?", "+y(x.d):"")+(x.h?", "+x.h+" h":"")+(x.cod?" · código "+x.cod:"")).join("\n"):""); }
+function vCert(){
+ const L=certList(), e=ctEdit&&ctEdit!=="new"?(ST.certs||{})[ctEdit]:null, totH=L.reduce((a,c)=>a+(+c.h||0),0);
+ let h='<section class="panel stack"><div class="dayhead"><h3>Cofre de certificados</h3><span class="pill pri num">'+L.length+' · '+totH+' h</span></div><p class="small">Guarde cada certificado com a data, a carga horária e o código de validação. O bloco pronto para o currículo e o LinkedIn sai lá embaixo.</p>'+(!L.length?'<button class="btn" type="button" id="ctSeed">Adicionar os que você já tem (ADS e 5 cursos da ENAP)</button><p class="muted small">Depois confira as datas e coloque os códigos de validação.</p>':"")+'</section>';
+ h+='<section class="panel"><details class="acc" style="border:0;padding:0"'+(ctEdit?" open":"")+' id="ctForm"><summary><h3>'+(e?"Editar certificado":"+ Novo certificado")+'</h3><span class="chev">›</span></summary><div class="stack"><div class="g2f"><label class="fl">Nome do curso<input type="text" id="ctN" value="'+esc(e?e.n:"")+'"></label><label class="fl">Instituição<input type="text" id="ctO" value="'+esc(e?e.org:"")+'" placeholder="ENAP, Udemy, Microsoft…"></label><label class="fl">Data de conclusão<input type="date" id="ctD" value="'+esc(e?e.d:"")+'"></label><label class="fl">Carga horária (h)<input type="number" id="ctH" min="0" value="'+esc(e?e.h:"")+'"></label><label class="fl">Código de validação<input type="text" id="ctC" value="'+esc(e?e.cod:"")+'"></label><label class="fl">Link do certificado<input type="url" id="ctU" value="'+esc(e?e.u2:"")+'"></label><label class="fl">Tipo<select id="ctT"><option value="cert"'+(e&&e.tp==="form"?"":" selected")+'>Certificado ou curso</option><option value="form"'+(e&&e.tp==="form"?" selected":"")+'>Formação (graduação, pós)</option></select></label></div><div class="row"><button class="btn" type="button" id="ctSave">Salvar</button>'+(e?'<button class="btn ghost" type="button" id="ctDel">Remover</button>':"")+'</div></div></details></section>';
+ if(L.length){ h+='<section class="panel">'+L.map(c=>'<div class="apr"><div class="stack" style="gap:2px;min-width:0"><strong>'+esc(c.n)+'</strong><span class="muted small">'+esc(c.org)+(c.d?" · "+fmtShort(c.d)+"/"+c.d.slice(0,4):"")+(c.h?" · "+esc(c.h)+" h":"")+(c.cod?" · código "+esc(c.cod):' · <span style="color:var(--bad)">sem código</span>')+'</span>'+(c.u2?'<a class="small" href="'+esc(c.u2)+'" target="_blank" rel="noopener">Abrir</a>':"")+'</div><button class="btn ghost sm" type="button" data-cted="'+c.id+'">Editar</button></div>').join("")+'</section>';
+  h+='<section class="panel stack"><div class="dayhead"><h3>Bloco para o currículo</h3><button class="btn ghost sm" type="button" id="ctCopy">Copiar</button></div><pre class="copybox">'+esc(certBlock())+'</pre></section>'; }
+ return h;
+}
+function wireCert(el){
+ const on=(id,f)=>{const b=el.querySelector("#"+id);if(b)b.onclick=f;};
+ on("ctSeed",()=>{ST.certs=ST.certs||{};CERT_SEED.forEach(c=>{ST.certs["ct"+uid()]=Object.assign({},c,{cod:"",u2:"",u:Date.now()});});changed();rerenderKeep();toast("Certificados adicionados. Confira as datas.");});
+ on("ctSave",()=>{const n=$("#ctN").value.trim(); if(!n){toast("Informe o nome do curso.");return;} const id=ctEdit&&ctEdit!=="new"?ctEdit:"ct"+uid(); ST.certs=ST.certs||{}; ST.certs[id]={n,org:$("#ctO").value.trim(),d:$("#ctD").value,h:$("#ctH").value,cod:$("#ctC").value.trim(),u2:/^https?:\/\//.test($("#ctU").value.trim())?$("#ctU").value.trim():"",tp:$("#ctT").value,u:Date.now()}; ctEdit=null; changed(); rerenderKeep(); toast("Certificado salvo.");});
+ on("ctDel",e=>{const b=e.currentTarget; if(!b.dataset.arm){b.dataset.arm="1";b.textContent="Toque de novo para remover";return;} ST.certs[ctEdit]={x:1,u:Date.now()}; ctEdit=null; changed(); rerenderKeep();});
+ el.querySelectorAll("[data-cted]").forEach(b=>b.onclick=()=>{ctEdit=b.dataset.cted;rerenderKeep();const f=$("#ctForm");if(f)f.scrollIntoView({behavior:"smooth"});});
+ on("ctCopy",e=>copyText(certBlock(),e.currentTarget));
+ const f=el.querySelector("#ctForm"); if(f) f.addEventListener("toggle",()=>{if(!f.open) ctEdit=null; else if(!ctEdit) ctEdit="new";});
+}
+
+/* ---------- 4. Planejador da transição (inspirado em Mobills e YNAB; fica só no aparelho) ---------- */
+const FINK=KEY+"-fin";
+let FIN=null; function finGet(){ if(!FIN){try{FIN=JSON.parse(localStorage.getItem(FINK)||"null");}catch(e){} FIN=Object.assign({res:"",gasto:"",renda:"",extra:"",margem:"2",sa:"",sb:""},FIN||{});} return FIN; }
+function finSave(){try{localStorage.setItem(FINK,JSON.stringify(FIN));}catch(e){}}
+function finCalc(){ const f=finGet(), res=num(f.res)+num(f.extra), falta=num(f.gasto)-num(f.renda); if(!num(f.gasto)) return null;
+ const meses=falta>0?res/falta:Infinity; const civ=CIVIL; const ate=isFinite(meses)?addD(civ,Math.floor(meses*30.4)):null; const lim=ate?addD(ate,-Math.round(num(f.margem)*30.4)):null;
+ return {res,falta,meses,ate,lim,minSal:Math.max(0,falta)}; }
+function vFin(){
+ const f=finGet(), r=finCalc(); const inp=(id,lbl,ph)=>'<label class="fl">'+lbl+'<input type="text" inputmode="decimal" id="'+id+'" value="'+esc(f[id])+'" placeholder="'+ph+'"></label>';
+ let h='<section class="panel stack"><h3>Planejador da transição</h3><p class="small">Quanto tempo a sua reserva segura depois da baixa e até quando faz sentido esperar uma vaga de dados antes de aceitar uma da Frente B. <strong>Estes valores ficam só neste aparelho</strong>: não vão para a nuvem nem para os outros aparelhos.</p><div class="g2f">'+inp("res","Reserva guardada (R$)","ex.: 15000")+inp("extra","Dinheiro que entra na saída (R$)","férias, compensação…")+inp("gasto","Gasto mensal da casa (R$)","ex.: 4500")+inp("renda","Outras rendas por mês (R$)","ex.: renda da esposa")+inp("margem","Margem de segurança (meses)","2")+inp("sa","Salário que espera na Frente A (R$)","BI Júnior")+inp("sb","Salário que espera na Frente B (R$)","administrativo")+'</div><button class="btn" type="button" id="finGo">Calcular</button></section>';
+ if(r){ const cls=r.meses>=6?"free":r.meses>=3?"pri":"bad";
+  h+='<section class="panel stack"><div class="grid g4"><div class="fact"><span class="k">A reserva cobre</span><span class="big">'+(isFinite(r.meses)?String(Math.floor(r.meses*10)/10).replace(".",",")+" meses":"sem prazo")+'</span><span class="muted small">faltam '+brl(r.falta)+' por mês</span></div><div class="fact"><span class="k">Dinheiro acaba em</span><span class="big">'+(r.ate?fmtShort(r.ate)+"/"+r.ate.slice(2,4):"—")+'</span><span class="muted small">contando da baixa ('+fmtShort(BAIXA)+')</span></div><div class="fact"><span class="k">Aceite a Frente B até</span><span class="big">'+(r.lim?fmtShort(r.lim)+"/"+r.lim.slice(2,4):"—")+'</span><span class="muted small">com '+esc(f.margem||0)+' meses de margem</span></div><div class="fact"><span class="k">Salário mínimo aceitável</span><span class="big">'+brl(r.minSal)+'</span><span class="muted small">cobre o gasto mensal</span></div></div>'
+   +'<p class="small"><span class="pill '+cls+'">'+(r.meses>=6?"Folga boa":r.meses>=3?"Folga média":"Folga curta")+'</span> '+(r.meses>=6?"Dá para focar em vagas de dados por alguns meses, mantendo a Frente B como plano de garantia.":r.meses>=3?"Mande candidaturas das Frentes A e B ao mesmo tempo desde fevereiro.":"Priorize a Frente B desde fevereiro e continue estudando dados à noite.")+'</p>'
+   +(num(f.sa)||num(f.sb)?'<p class="small">'+(num(f.sa)?'Frente A: '+brl(num(f.sa))+(num(f.sa)>=r.minSal?" cobre":" não cobre")+' o gasto. ':"")+(num(f.sb)?'Frente B: '+brl(num(f.sb))+(num(f.sb)>=r.minSal?" cobre":" não cobre")+' o gasto.':"")+' Lembre que o salário líquido é menor que o bruto (INSS e IR).</p>':"")
+   +'<p class="muted small">Conta simples, para conversar em casa. Não inclui imprevistos nem o custo das provas de certificação.</p></section>'; }
+ return h;
+}
+function wireFin(el){ const f=finGet(); ["res","extra","gasto","renda","margem","sa","sb"].forEach(k=>{const i=el.querySelector("#"+k); if(i) i.oninput=()=>{f[k]=i.value;finSave();};}); const g=el.querySelector("#finGo"); if(g) g.onclick=()=>rerenderKeep(); }
+
+/* ---------- 5. Contatos de networking (inspirado em Dex e Clay) ---------- */
+let ntEdit=null;
+function netList(){ const t=todayS(); return Object.entries(ST.net||{}).filter(([,c])=>!c.x).map(([id,c])=>Object.assign({id},c,{due:c.ult?diff(c.ult,t)>=30:true})).sort((a,b)=>(b.due-a.due)||((a.ult||"")<(b.ult||"")?-1:1)); }
+function vNet(){
+ const L=netList(), due=L.filter(c=>c.due).length, e=ntEdit&&ntEdit!=="new"?(ST.net||{})[ntEdit]:null;
+ let h='<section class="panel stack"><div class="dayhead"><h3>Contatos de networking</h3><span class="pill '+(due?"bad":"free")+' num">'+due+' para retomar</span></div><p class="small">Pessoas da área com quem você conversou. A cada 30 dias sem contato, o app lembra de retomar: um comentário num post, uma dúvida, uma novidade sua. Meta: 2 conversas novas por semana a partir de janeiro.</p></section>';
+ h+='<section class="panel"><details class="acc" style="border:0;padding:0"'+(ntEdit?" open":"")+' id="ntForm"><summary><h3>'+(e?"Editar contato":"+ Novo contato")+'</h3><span class="chev">›</span></summary><div class="stack"><div class="g2f"><label class="fl">Nome<input type="text" id="ntN" value="'+esc(e?e.n:"")+'"></label><label class="fl">Cargo e empresa<input type="text" id="ntC" value="'+esc(e?e.c:"")+'" placeholder="Analista de BI · Empresa"></label><label class="fl">Onde conversam<select id="ntW">'+["LinkedIn","WhatsApp","E-mail","Evento","Indicação","Outro"].map(o=>'<option'+(e&&e.w===o?" selected":"")+'>'+o+'</option>').join("")+'</select></label><label class="fl">Último contato<input type="date" id="ntU" value="'+esc(e?e.ult:todayS())+'"></label></div><label class="fl">Anotações<textarea id="ntO" rows="3" placeholder="Do que falaram, o que combinaram">'+esc(e?e.o:"")+'</textarea></label><div class="row"><button class="btn" type="button" id="ntSave">Salvar</button>'+(e?'<button class="btn ghost" type="button" id="ntDel">Remover</button>':"")+'</div></div></details></section>';
+ if(L.length) h+='<section class="panel">'+L.map(c=>'<div class="apr"><div class="stack" style="gap:2px;min-width:0"><strong>'+esc(c.n)+(c.due?' <span class="pill bad">retomar</span>':"")+'</strong><span class="muted small">'+esc(c.c||"")+' · '+esc(c.w||"")+' · último contato '+(c.ult?fmtShort(c.ult):"—")+'</span>'+(c.o?'<span class="small">'+esc(c.o)+'</span>':"")+'</div><div class="row" style="gap:6px"><button class="btn ghost sm" type="button" data-nthj="'+c.id+'">Falei hoje</button><button class="btn ghost sm" type="button" data-nted="'+c.id+'">Editar</button></div></div>').join("")+'</section>';
+ else h+='<section class="panel"><p class="muted small">Nenhum contato ainda. Comece pelos 15 profissionais de BI que você vai seguir no LinkedIn (tarefa do Perfil).</p></section>';
+ return h;
+}
+function wireNet(el){
+ const on=(id,f)=>{const b=el.querySelector("#"+id);if(b)b.onclick=f;};
+ on("ntSave",()=>{const n=$("#ntN").value.trim(); if(!n){toast("Informe o nome.");return;} const id=ntEdit&&ntEdit!=="new"?ntEdit:"nt"+uid(); ST.net=ST.net||{}; ST.net[id]={n,c:$("#ntC").value.trim(),w:$("#ntW").value,ult:$("#ntU").value,o:$("#ntO").value.trim(),u:Date.now()}; ntEdit=null; changed(); rerenderKeep(); toast("Contato salvo.");});
+ on("ntDel",e=>{const b=e.currentTarget; if(!b.dataset.arm){b.dataset.arm="1";b.textContent="Toque de novo para remover";return;} ST.net[ntEdit]={x:1,u:Date.now()}; ntEdit=null; changed(); rerenderKeep();});
+ el.querySelectorAll("[data-nthj]").forEach(b=>b.onclick=()=>{const c=ST.net[b.dataset.nthj]; ST.net[b.dataset.nthj]=Object.assign({},c,{ult:todayS(),u:Date.now()}); changed(); rerenderKeep(); toast("Contato atualizado.");});
+ el.querySelectorAll("[data-nted]").forEach(b=>b.onclick=()=>{ntEdit=b.dataset.nted;rerenderKeep();const f=$("#ntForm");if(f)f.scrollIntoView({behavior:"smooth"});});
+ const f=el.querySelector("#ntForm"); if(f) f.addEventListener("toggle",()=>{if(!f.open) ntEdit=null; else if(!ntEdit) ntEdit="new";});
+}
+
+/* ---------- 6. Medalhas, níveis e meta semanal (inspirado em Duolingo e Habitica) ---------- */
+function xpOf(){ const st=stats(); const c=certList().length, a=apList().length, q=Object.keys(ST.sqlc||{}).length, iv=Object.values(ST.iv||{}).reduce((s,x)=>s+x,0), cards=Object.keys(ST.srs||{}).length, n=netList().length;
+ return {st,c,a,q,iv,cards,n,xp:st.doneN*10+c*40+a*5+q*15+iv*5+cards*2+n*10}; }
+const LVN=["Recruta","Aprendiz","Praticante","Analista em formação","Analista","Analista confiante","Especialista","Referência","Mestre dos dados"];
+function lvOf(xp){ let l=0; while(100*(l+1)*(l+1)<=xp&&l<LVN.length-1) l++; const a=100*l*l, b=100*(l+1)*(l+1); return {l,n:LVN[l],a,b,p:Math.min(1,(xp-a)/(b-a))}; }
+function courseDone(id){const c=COURSES.find(k=>k.id===id);return !!c&&courseIds(c).every(isDone);}
+function projDone(){return PROJECTS.filter(p=>p.s.every((_,i)=>isDone("p:"+p.id+":"+i))).length;}
+function medals(){ const X=xpOf(), s=X.st;
+ return [
+  ["Primeiro passo","Concluir a primeira tarefa",s.doneN>=1],["Semana firme","7 dias seguidos estudando",s.streak>=7],["Mês de ferro","30 dias seguidos estudando",s.streak>=30],
+  ["Excel em dia","Concluir o curso de Excel",courseDone("excel")],["Consulta certa","Concluir o curso de SQL",courseDone("sql")],["Painel no ar","Concluir o curso de Power BI",courseDone("pbi")],
+  ["Contexto dominado","Concluir o curso de DAX",courseDone("dax")],["PL-300","Marcar a prova da PL-300 como feita",isDone("c:pl300:exam")],["Portfólio aberto","Publicar o primeiro projeto",projDone()>=1],
+  ["Portfólio completo","Publicar 4 projetos",projDone()>=4],["Guardião dos dados","Concluir o curso de governança",courseDone("gov")],["Mão na massa","Resolver 10 desafios de SQL",X.q>=10],
+  ["Memória boa","Estudar 100 flashcards",X.cards>=100],["Pronto para a banca","Treinar 15 perguntas de entrevista",Object.keys(ST.iv||{}).length>=15],
+  ["Na pista","Enviar 10 candidaturas",X.a>=10],["Rede ativa","Cadastrar 10 contatos",X.n>=10],["Colecionador","Guardar 8 certificados",X.c>=8],["Foco total","20 horas no cronômetro",Object.values(ST.log||{}).reduce((a,x)=>a+x,0)>=1200]
+ ]; }
+function vMedals(){
+ const X=xpOf(), lv=lvOf(X.xp), M=medals(), got=M.filter(m=>m[2]).length, goal=+cfg().wgoal||15, t=todayS(), w=weekStats(mondayOf(t)), wh=(w.mins+w.tm)/60, wp=Math.min(1,wh/goal);
+ let h='<section class="panel stack"><div class="dayhead"><div><h4>Nível '+(lv.l+1)+'</h4><h3>'+esc(lv.n)+'</h3></div><span class="pill pri num">'+X.xp+' XP</span></div><div class="track"><span class="fill" style="display:block;width:'+Math.round(lv.p*100)+'%"></span></div><p class="muted small">'+(lv.l<LVN.length-1?(lv.b-X.xp)+' XP para o próximo nível. ':"")+'XP vem de tarefas (10), certificados (40), desafios de SQL (15), contatos (10), candidaturas e perguntas de entrevista (5) e flashcards (2).</p></section>';
+ h+='<section class="panel stack"><div class="dayhead"><h3>Meta da semana</h3><span class="pill '+(wp>=1?"free":"pri")+' num">'+String(Math.round(wh*10)/10).replace(".",",")+' de '+goal+' h</span></div><div class="track"><span class="fill'+(wp>=1?" ok":"")+'" style="display:block;width:'+Math.round(wp*100)+'%"></span></div><div class="cfgrow"><label for="wgoal">Minha meta semanal</label><select id="wgoal">'+[8,10,12,15,20,25].map(v=>'<option value="'+v+'"'+(v===goal?" selected":"")+'>'+v+' horas</option>').join("")+'</select></div><p class="muted small">Conta as tarefas concluídas nesta semana e o tempo do cronômetro.</p></section>';
+ h+='<section class="panel"><div class="dayhead"><h3>Medalhas</h3><span class="pill num">'+got+'/'+M.length+'</span></div><div class="medals">'+M.map(m=>'<div class="medal'+(m[2]?" on":"")+'" title="'+esc(m[1])+'"><span class="mi" aria-hidden="true">'+(m[2]?"★":"☆")+'</span><strong>'+esc(m[0])+'</strong><span class="muted small">'+esc(m[1])+'</span></div>').join("")+'</div></section>';
+ return h;
+}
+
+/* ---------- 7. Desafio de SQL no próprio app (inspirado em SQLBolt e StrataScratch) ---------- */
+const SQL_DB=`CREATE TABLE setores(id INTEGER PRIMARY KEY, nome TEXT);
+INSERT INTO setores VALUES (1,'Compras'),(2,'Pessoal'),(3,'Finanças'),(4,'Logística'),(5,'Protocolo');
+CREATE TABLE fornecedores(id INTEGER PRIMARY KEY, nome TEXT, uf TEXT);
+INSERT INTO fornecedores VALUES (1,'Alfa Esportes','RJ'),(2,'Beta Motos','SP'),(3,'Gama Informática','RJ'),(4,'Delta Papelaria','MG'),(5,'Ômega Uniformes','RJ');
+CREATE TABLE compras(id INTEGER PRIMARY KEY, item TEXT, fornecedor_id INTEGER, setor_id INTEGER, modalidade TEXT, valor REAL, empenho TEXT, prazo TEXT, entrega TEXT);
+INSERT INTO compras VALUES
+(1,'Bolas e redes',1,1,'Pregão',4200,'2026-02-03','2026-03-05','2026-03-01'),
+(2,'Capacetes para batedores',2,4,'Pregão',18500,'2026-02-10','2026-04-10','2026-04-22'),
+(3,'Notebooks',3,3,'Pregão',32000,'2026-03-01','2026-04-15','2026-04-12'),
+(4,'Papel A4',4,5,'Dispensa',1900,'2026-03-08','2026-03-20','2026-03-19'),
+(5,'Uniformes de treino',5,2,'Pregão',7600,'2026-03-15','2026-05-15',NULL),
+(6,'Cones e coletes',1,1,'Dispensa',850,'2026-04-02','2026-04-20','2026-04-25'),
+(7,'Luvas para motociclistas',2,4,'Pregão',5400,'2026-04-05','2026-05-30','2026-05-28'),
+(8,'Impressora',3,5,'Dispensa',2300,'2026-04-18','2026-05-10',NULL),
+(9,'Toner',4,5,'Pregão',3100,'2026-05-02','2026-05-30','2026-06-04'),
+(10,'Tênis de corrida',5,2,'Pregão',9800,'2026-05-20','2026-07-01','2026-06-28'),
+(11,'Monitores',3,3,'Pregão',12600,'2026-06-01','2026-07-15','2026-07-30'),
+(12,'Jaquetas para batedores',2,4,'Pregão',14300,'2026-06-10','2026-08-10',NULL);
+CREATE TABLE documentos(id INTEGER PRIMARY KEY, setor_id INTEGER, tipo TEXT, recebido TEXT, prazo_dias INTEGER, concluido TEXT);
+INSERT INTO documentos VALUES
+(1,1,'Ofício','2026-05-02',10,'2026-05-09'),(2,1,'Memorando','2026-05-03',5,'2026-05-12'),(3,2,'Ofício','2026-05-04',10,'2026-05-10'),
+(4,2,'Requerimento','2026-05-05',15,NULL),(5,3,'Ofício','2026-05-06',10,'2026-05-20'),(6,3,'Nota técnica','2026-05-07',20,'2026-05-22'),
+(7,4,'Memorando','2026-05-08',5,'2026-05-11'),(8,4,'Ofício','2026-05-09',10,NULL),(9,5,'Requerimento','2026-05-10',15,'2026-05-18'),
+(10,5,'Ofício','2026-05-11',10,'2026-05-30'),(11,1,'Nota técnica','2026-05-12',20,'2026-05-25'),(12,2,'Memorando','2026-05-13',5,'2026-05-15');`;
+const SQLC=[
+ ["Todas as compras","Liste item e valor de todas as compras.","SELECT item, valor FROM compras;",0],
+ ["Compras caras","Liste item e valor das compras acima de R$ 10.000.","SELECT item, valor FROM compras WHERE valor > 10000;",0],
+ ["Ordenar por valor","Liste item e valor do maior para o menor valor.","SELECT item, valor FROM compras ORDER BY valor DESC;",1],
+ ["Só pregões","Quantas compras foram por pregão?","SELECT COUNT(*) FROM compras WHERE modalidade = 'Pregão';",0],
+ ["Total por modalidade","Mostre a modalidade e o valor total de cada uma.","SELECT modalidade, SUM(valor) FROM compras GROUP BY modalidade;",0],
+ ["Ainda não entregues","Liste o item das compras sem data de entrega.","SELECT item FROM compras WHERE entrega IS NULL;",0],
+ ["Entregas atrasadas","Liste o item das compras entregues depois do prazo.","SELECT item FROM compras WHERE entrega > prazo;",0],
+ ["Compra e fornecedor","Liste o item e o nome do fornecedor de cada compra (JOIN).","SELECT c.item, f.nome FROM compras c JOIN fornecedores f ON f.id = c.fornecedor_id;",0],
+ ["Gasto por fornecedor","Mostre o nome do fornecedor e o total comprado dele.","SELECT f.nome, SUM(c.valor) FROM compras c JOIN fornecedores f ON f.id = c.fornecedor_id GROUP BY f.nome;",0],
+ ["Fornecedores do RJ","Quanto foi comprado de fornecedores do RJ?","SELECT SUM(c.valor) FROM compras c JOIN fornecedores f ON f.id = c.fornecedor_id WHERE f.uf = 'RJ';",0],
+ ["Setor que mais compra","Mostre o setor e o total, só dos setores com mais de R$ 20.000 (HAVING).","SELECT s.nome, SUM(c.valor) FROM compras c JOIN setores s ON s.id = c.setor_id GROUP BY s.nome HAVING SUM(c.valor) > 20000;",0],
+ ["Documentos pendentes","Quantos documentos ainda não foram concluídos?","SELECT COUNT(*) FROM documentos WHERE concluido IS NULL;",0],
+ ["Dias para concluir","Liste o id e os dias entre recebido e concluído dos documentos concluídos (use julianday).","SELECT id, julianday(concluido) - julianday(recebido) FROM documentos WHERE concluido IS NOT NULL;",0],
+ ["Fora do prazo","Liste o id dos documentos concluídos depois do prazo em dias.","SELECT id FROM documentos WHERE concluido IS NOT NULL AND julianday(concluido) - julianday(recebido) > prazo_dias;",0],
+ ["SLA por setor","Mostre o setor e o % de documentos concluídos no prazo (pendentes contam como fora).","SELECT s.nome, ROUND(100.0 * SUM(CASE WHEN d.concluido IS NOT NULL AND julianday(d.concluido) - julianday(d.recebido) <= d.prazo_dias THEN 1 ELSE 0 END) / COUNT(*), 1) FROM documentos d JOIN setores s ON s.id = d.setor_id GROUP BY s.nome;",0],
+ ["Ranking com janela","Mostre item, valor e a posição de cada compra no ranking de valor (RANK).","SELECT item, valor, RANK() OVER (ORDER BY valor DESC) FROM compras;",0]
+];
+const SQL_V="1.10.3", SQL_CDN="https://cdnjs.cloudflare.com/ajax/libs/sql.js/"+SQL_V+"/";
+let SQ={db:null,st:"off",i:null,txt:{},res:null,err:"",ans:false};
+function sqLoad(){ if(SQ.st==="ok"||SQ.st==="load") return; SQ.st="load";
+ const go=()=>window.initSqlJs({locateFile:f=>SQL_CDN+f}).then(S=>{SQ.db=new S.Database();SQ.db.run(SQL_DB);SQ.st="ok";rerenderSql();}).catch(()=>{SQ.st="err";rerenderSql();});
+ if(window.initSqlJs) return go(); const s=document.createElement("script"); s.src=SQL_CDN+"sql-wasm.js"; s.onload=go; s.onerror=()=>{SQ.st="err";rerenderSql();}; document.head.appendChild(s); }
+function rerenderSql(){ if(current==="rev"&&revSeg==="sql") rerenderKeep(); }
+function sqDay(){ return (diff("2026-01-01",todayS())%SQLC.length+SQLC.length)%SQLC.length; }
+function sqRun(q){ const r=SQ.db.exec(q); return r.length?r[r.length-1]:{columns:[],values:[]}; }
+const sqNorm=(r,ord)=>{ const rows=r.values.map(v=>JSON.stringify(v.map(x=>typeof x==="number"?Math.round(x*100)/100:x))); return JSON.stringify(ord?rows:rows.sort()); };
+function sqTable(r){ if(!r.columns.length) return '<p class="muted small">Sem resultado.</p>'; return '<div class="sqout"><table><thead><tr>'+r.columns.map(c=>'<th>'+esc(c)+'</th>').join("")+'</tr></thead><tbody>'+r.values.slice(0,50).map(v=>'<tr>'+v.map(x=>'<td>'+esc(x===null?"NULL":x)+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>'+(r.values.length>50?'<p class="muted small">Mostrando 50 de '+r.values.length+' linhas.</p>':""); }
+function vSql(){
+ if(SQ.i===null) SQ.i=sqDay(); const c=SQLC[SQ.i], solved=ST.sqlc||{}, n=Object.keys(solved).length;
+ let h='<section class="panel stack"><div class="dayhead"><h3>Desafio de SQL</h3><span class="pill pri num">'+n+'/'+SQLC.length+' resolvidos</span></div><p class="small">SQL de verdade, rodando no navegador, com uma base fictícia de compras e documentos parecida com a sua rotina. Um desafio por dia, ou escolha qualquer um.</p><div class="row" style="gap:6px;flex-wrap:wrap">'+SQLC.map((x,i)=>'<button type="button" class="chip'+(i===SQ.i?" on":"")+'" data-sq="'+i+'" title="'+esc(x[0])+'">'+(solved[i]?"✓ ":"")+(i+1)+'</button>').join("")+'</div></section>';
+ if(SQ.st!=="ok"){ h+='<section class="panel"><p class="small">'+(SQ.st==="err"?'Não deu para carregar o SQL. Ele precisa de internet na primeira vez. <button class="btn ghost sm" type="button" id="sqRetry">Tentar de novo</button>':"Carregando o SQL…")+'</p></section>'; return h; }
+ const txt=SQ.txt[SQ.i]!=null?SQ.txt[SQ.i]:"SELECT * FROM compras;";
+ h+='<section class="panel stack"><div class="row" style="justify-content:space-between"><strong>'+(SQ.i+1)+'. '+esc(c[0])+(SQ.i===sqDay()?' <span class="pill pri">de hoje</span>':"")+'</strong>'+(solved[SQ.i]?'<span class="pill free">resolvido</span>':"")+'</div><p>'+esc(c[1])+'</p><textarea id="sqTxt" class="mono" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off">'+esc(txt)+'</textarea><div class="row"><button class="btn" type="button" id="sqGo">▶ Executar</button><button class="btn ghost sm" type="button" id="sqAns">'+(SQ.ans?"Esconder resposta":"Ver uma resposta")+'</button>'+(SAMPLE?'<button class="btn ghost sm" type="button" id="sqTut">Pedir ajuda ao tutor</button>':"")+'</div>'+(SQ.ans?'<pre class="copybox">'+esc(c[2])+'</pre>':"")+(SQ.err?'<div class="note small" style="color:var(--bad)">'+esc(SQ.err)+'</div>':"")+(SQ.res?SQ.res.ok?'<div class="note small" style="color:var(--ok)"><strong>Certo!</strong> O resultado bate com o esperado.</div>':'<div class="note small">O resultado ainda não bate com o esperado. Confira as colunas, os filtros e '+(c[3]?"a ordem.":"os agrupamentos.")+'</div>':"")+(SQ.res?sqTable(SQ.res.r):"")+'</section>';
+ h+='<section class="panel"><details class="acc" style="border:0;padding:0"><summary><h3>Tabelas da base</h3><span class="chev">›</span></summary><ul class="plain small"><li><strong>setores</strong>(id, nome)</li><li><strong>fornecedores</strong>(id, nome, uf)</li><li><strong>compras</strong>(id, item, fornecedor_id, setor_id, modalidade, valor, empenho, prazo, entrega)</li><li><strong>documentos</strong>(id, setor_id, tipo, recebido, prazo_dias, concluido)</li></ul><p class="muted small">Datas no formato AAAA-MM-DD. Para diferença de dias, use julianday(data1) - julianday(data2). É SQLite: muito parecido com o MySQL do curso.</p></details></section>';
+ return h;
+}
+function wireSql(el){
+ if(SQ.st!=="ok") sqLoad();
+ el.querySelectorAll("[data-sq]").forEach(b=>b.onclick=()=>{SQ.i=+b.dataset.sq;SQ.res=null;SQ.err="";SQ.ans=false;rerenderKeep();});
+ const on=(id,f)=>{const b=el.querySelector("#"+id);if(b)b.onclick=f;};
+ on("sqRetry",()=>{SQ.st="off";sqLoad();rerenderKeep();});
+ const ta=el.querySelector("#sqTxt"); if(ta){ ta.oninput=()=>{SQ.txt[SQ.i]=ta.value;}; ta.onkeydown=e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){e.preventDefault();$("#sqGo").click();}}; }
+ on("sqGo",()=>{ const q=ta.value; SQ.txt[SQ.i]=q; SQ.err=""; SQ.res=null; try{ const r=sqRun(q), c=SQLC[SQ.i], exp=sqRun(c[2]); const ok=sqNorm(r,c[3])===sqNorm(exp,c[3]); SQ.res={r,ok}; if(ok&&!(ST.sqlc||{})[SQ.i]){ST.sqlc=ST.sqlc||{};ST.sqlc[SQ.i]=todayS();changed();toast("Desafio resolvido! +15 XP");} }catch(e){ SQ.err="Erro: "+e.message; } rerenderKeep(); });
+ on("sqAns",()=>{SQ.ans=!SQ.ans;rerenderKeep();});
+ on("sqTut",()=>tutorAsk("erro","Estou fazendo este desafio de SQL (SQLite):\n"+SQLC[SQ.i][1]+"\nTabelas: setores(id,nome), fornecedores(id,nome,uf), compras(id,item,fornecedor_id,setor_id,modalidade,valor,empenho,prazo,entrega), documentos(id,setor_id,tipo,recebido,prazo_dias,concluido).\nMinha consulta:\n"+(ta?ta.value:"")+"\n"+(SQ.err?SQ.err:"O resultado não bate.")+"\nMe dê uma dica sem entregar a resposta."));
+}
+
+/* ---------- 8. Mapa visual da trilha (inspirado em roadmap.sh) ---------- */
+function trMapHTML(){ const cur=trCur();
+ return '<div class="trmap" role="list">'+TRILHA.map((f,i)=>{ const p=Math.round(trPct(f)*100), nm=f.n.split(" · "); return '<button type="button" role="listitem" class="trn'+(p===100?" ok":f===cur?" now":"")+'" data-trgo="'+f.id+'" style="--p:'+p+'"><span class="trr"><span class="num">'+p+'%</span></span><span class="trl"><span class="muted small">'+esc(nm[0])+'</span><strong>'+esc(nm[1]||"")+'</strong></span></button>'+(i<TRILHA.length-1?'<span class="tra" aria-hidden="true">›</span>':""); }).join("")+'</div>'; }
+
+/* ---------- 9. Relatório mensal em PDF (inspirado em Toggl e Duolingo) ---------- */
+let RP=null;
+function rpData(ym){ const a=ym+"-01", d=parse(a); d.setMonth(d.getMonth()+1); d.setDate(0); const b=iso(d); let tasks=0,mins=0,tm=0,cards=0; const byK={}, days=new Set();
+ for(const id in ST.done){const x=ST.done[id]; if(x<a||x>b) continue; const t=IDX[id]; if(!t) continue; tasks++; mins+=t.m; byK[t.k]=(byK[t.k]||0)+1; days.add(x);}
+ for(let s=a;s<=b;s=addD(s,1)){tm+=(ST.log&&ST.log[s])||0; cards+=(ST.rv&&ST.rv[s])||0;}
+ const cursos=COURSES.map(c=>{const ids=courseIds(c); const dm=ids.filter(id=>ST.done[id]&&ST.done[id]>=a&&ST.done[id]<=b).length; return {n:c.n,dm,tot:ids.length,all:ids.filter(isDone).length};}).filter(c=>c.dm);
+ const certs=certList().filter(c=>c.d>=a&&c.d<=b), apps=apList().filter(p=>p.data>=a&&p.data<=b), sql=Object.values(ST.sqlc||{}).filter(x=>x>=a&&x<=b).length;
+ return {a,b,tasks,mins,tm,cards,byK,days:days.size,cursos,certs,apps,sql}; }
+function rpText(r){ const M=MES[parse(r.a).getMonth()]+"/"+r.a.slice(0,4);
+ return "Relatório de estudos · "+M+"\n\n"+"Tarefas concluídas: "+r.tasks+" em "+r.days+" dias\nHoras de estudo planejado: "+hrs(r.mins)+" h · cronômetro: "+hrs(r.tm)+" h\nFlashcards revisados: "+r.cards+" · desafios de SQL: "+r.sql+"\n\nCursos com avanço:\n"+(r.cursos.map(c=>"• "+c.n+": +"+c.dm+" sessões ("+c.all+"/"+c.tot+")").join("\n")||"• nenhum")+"\n\nCertificados: "+(r.certs.map(c=>c.n).join("; ")||"nenhum")+"\nCandidaturas: "+r.apps.length; }
+function rpOpen(ym){ RP=ym; const r=rpData(ym), M=MES[parse(r.a).getMonth()]+" de "+r.a.slice(0,4), lv=lvOf(xpOf().xp);
+ let el=$("#report"); if(!el){el=document.createElement("div");el.id="report";document.body.appendChild(el);}
+ el.innerHTML='<div class="rpbar noprint"><button class="btn" type="button" id="rpPrint">Salvar em PDF / imprimir</button><button class="btn ghost" type="button" id="rpCopy">Copiar texto</button><button class="btn ghost" type="button" id="rpX">Fechar</button></div><article class="rpdoc"><h1>Relatório de estudos</h1><p class="muted">'+M+' · Carreira em Dados · nível '+(lv.l+1)+' ('+esc(lv.n)+')</p><div class="rpgrid"><div><span class="k">Tarefas concluídas</span><b>'+r.tasks+'</b></div><div><span class="k">Dias com estudo</span><b>'+r.days+'</b></div><div><span class="k">Horas de estudo</span><b>'+hrs(r.mins)+' h</b></div><div><span class="k">Cronômetro</span><b>'+hrs(r.tm)+' h</b></div><div><span class="k">Flashcards</span><b>'+r.cards+'</b></div><div><span class="k">Desafios de SQL</span><b>'+r.sql+'</b></div></div><h2>Cursos com avanço</h2>'+(r.cursos.length?'<table><thead><tr><th>Curso</th><th>No mês</th><th>Total</th></tr></thead><tbody>'+r.cursos.map(c=>'<tr><td>'+esc(c.n)+'</td><td>+'+c.dm+' sessões</td><td>'+c.all+'/'+c.tot+'</td></tr>').join("")+'</tbody></table>':'<p>Nenhum curso avançou neste mês.</p>')+'<h2>Por área</h2><p>'+(Object.entries(r.byK).map(([k,n])=>esc(KINDS[k]||k)+": "+n).join(" · ")||"—")+'</p><h2>Certificados e candidaturas</h2><p>Certificados: '+(r.certs.map(c=>esc(c.n)).join("; ")||"nenhum")+'</p><p>Candidaturas enviadas: '+r.apps.length+'</p><p class="muted small">Gerado em '+fmtShort(todayS())+'/'+todayS().slice(0,4)+'.</p></article>';
+ document.body.classList.add("printing");
+ $("#rpPrint").onclick=()=>{try{window.print();}catch(e){toast("Não deu para imprimir aqui. Use Copiar texto.");}};
+ $("#rpCopy").onclick=e=>copyText(rpText(r),e.currentTarget);
+ $("#rpX").onclick=rpClose; }
+function rpClose(){ RP=null; const el=$("#report"); if(el) el.remove(); document.body.classList.remove("printing"); }
+function rpPanel(){ const t=todayS(), cur=t.slice(0,7), d=parse(cur+"-01"); d.setMonth(d.getMonth()-1); const prev=iso(d).slice(0,7);
+ return '<section class="panel stack"><h3>Relatório mensal</h3><p class="small">Resumo do mês em PDF: horas, tarefas, cursos, certificados e candidaturas. Bom para acompanhar sua evolução e para mostrar constância numa entrevista.</p><div class="row"><button class="btn" type="button" data-rp="'+cur+'">Mês atual</button><button class="btn ghost" type="button" data-rp="'+prev+'">Mês passado</button></div></section>'; }
 
 /* Progresso */
 function vProg(){
  const st=stats(), t=todayS();
  let h='';
  if(t>=START){ const w0=mondayOf(t); h+=weekCard(weekStats(w0),weekStats(addD(w0,-7)),"Esta semana"); }
+ h+=vMedals();
  h+='<section class="grid"><div class="panel fact"><span class="k">Tarefas feitas</span><span class="big">'+st.doneN+'</span><span class="muted small">de '+TOTAL_TASKS+' no plano</span></div><div class="panel fact"><span class="k">Horas estudadas</span><span class="big">'+hrs(st.mins)+' h</span></div><div class="panel fact"><span class="k">Sequência</span><span class="big">'+st.streak+' dia'+(st.streak===1?"":"s")+'</span></div><div class="panel fact"><span class="k">Em dia com o plano</span><span class="big">'+(st.planned?Math.round(st.plannedDone/st.planned*100):100)+'%</span><span class="muted small">'+st.plannedDone+'/'+st.planned+' até hoje</span></div></section>';
  h+='<section class="panel"><h3>Fases</h3>'+pipeHTML()+PHASES.map(p=>'<p class="small"><strong>'+esc(p.n)+'</strong> · '+fmtShort(p.a)+' a '+fmtShort(p.b)+' · '+esc(p.goal)+'</p>').join("")+'</section>';
  h+='<section class="panel"><h3>Por área</h3>'+Object.keys(KINDS).filter(k=>st.byK[k]).map(k=>{const x=st.byK[k];const p=Math.round(x.d/x.n*100);return '<div class="bar"><span class="kchip" style="--kc:var(--k-'+k+')">'+KINDS[k]+'</span><span class="track"><span class="fill" style="display:block;width:'+p+'%;background:var(--k-'+k+')"></span></span><span class="num small">'+x.d+'/'+x.n+'</span></div>';}).join("")+'</section>';
@@ -1205,9 +1542,11 @@ function vProg(){
  h+='<section class="panel"><h3>Semanas: planejado x feito</h3>'+weeksChart(8)+'</section>';
  const tmTot=Object.values(ST.log||{}).reduce((a,x)=>a+x,0), pr=projection(), L=apList(), sk=SKILLS.reduce((a,d)=>a+skPct(d)*d.w,0)/SKILLS.reduce((a,d)=>a+d.w,0), cardsSeen=Object.keys(ST.srs||{}).length;
  h+='<section class="panel"><h3>Mais números</h3><div class="grid g4"><div class="fact"><span class="k">Foco no cronômetro</span><span class="big">'+hrs(tmTot)+' h</span></div><div class="fact"><span class="k">PL-300</span><span class="big">'+Math.round(sk*100)+'%</span><span class="muted small">prontidão</span></div><div class="fact"><span class="k">Flashcards</span><span class="big">'+cardsSeen+'</span><span class="muted small">de '+CARDS.length+' vistos</span></div><div class="fact"><span class="k">Candidaturas</span><span class="big">'+L.length+'</span><span class="muted small">'+L.filter(p=>["ent","fin","prop"].includes(p.etapa)).length+' com entrevista</span></div></div>'+(pr?'<p class="small">No ritmo das últimas 4 semanas ('+(Math.round(pr.rate*10)/10)+' sessões de curso por semana), a trilha de cursos termina por volta de <strong>'+fmt(pr.end)+'</strong>'+(pr.plan?(pr.end>pr.plan?', depois do planejado ('+fmtShort(pr.plan)+'). Se a diferença passar de 2 semanas, use "Reorganizar o plano" em Hoje.':', dentro do planejado ('+fmtShort(pr.plan)+').'):'.')+'</p>':'<p class="muted small">A previsão de término aparece depois das primeiras semanas de curso.</p>')+'</section>';
+ h+=rpPanel();
  h+='<section class="panel"><details class="acc" style="border:0;padding:0"><summary><h3>Todas as dicas de preparo ('+TIPS.length+')</h3><span class="chev">›</span></summary><div class="stack">'+TIPS.map(x=>'<p class="small"><strong>'+esc(x[0])+'.</strong> '+esc(x[1])+'</p>').join("")+'</div></details></section>';
  return h;
 }
+WIRES.prog=el=>{ const g=el.querySelector("#wgoal"); if(g) g.onchange=()=>{ST.cfg=Object.assign({},ST.cfg||{},{wgoal:+g.value});changed();rerenderKeep();}; el.querySelectorAll("[data-rp]").forEach(b=>b.onclick=()=>rpOpen(b.dataset.rp)); };
 WIRES.config=el=>{
  wireCfg(el); wireSync(el);
  el.querySelectorAll("#thSeg button").forEach(b=>b.onclick=()=>{theme=b.dataset.v;try{localStorage.setItem(KEY+"-theme",theme);}catch(e){}applyTheme();rerenderKeep();});
@@ -1675,9 +2014,9 @@ function pocketDraw(){const el=$("#pocket");if(!el||!pocket)return;const it=AU&&
 /* ================= v4: ABA REVISAR ================= */
 let revSeg="cards", fcDeck="all", fcCur=null, fcShow=false, skOpen="prep";
 function vRev(){
- const segs=[["cards","Flashcards"],["pl","Habilidades PL-300"],["au","Áudio e sons"],["tut","Tutor IA"]];
- let h='<section class="panel"><h4>Revisar</h4><h2>Fixar o que você estudou</h2><p>Flashcards com revisão espaçada, o checklist oficial da PL-300, revisão em áudio e um tutor com IA para dúvidas e erros.</p><div class="seg" role="tablist">'+segs.map(([k,n])=>'<button role="tab" type="button" data-r="'+k+'" aria-selected="'+(revSeg===k)+'">'+n+'</button>').join("")+'</div></section>';
- if(revSeg==="cards") h+=vCards(); else if(revSeg==="pl") h+=vSkills(); else if(revSeg==="au") h+=vAudio(); else h+=vTutor();
+ const segs=[["cards","Flashcards"],["pl","Habilidades PL-300"],["sql","Desafio SQL"],["au","Áudio e sons"],["tut","Tutor IA"]];
+ let h='<section class="panel"><h4>Revisar</h4><h2>Fixar o que você estudou</h2><p>Flashcards com revisão espaçada, o checklist oficial da PL-300, desafios de SQL, revisão em áudio e um tutor com IA para dúvidas e erros.</p><div class="seg" role="tablist">'+segs.map(([k,n])=>'<button role="tab" type="button" data-r="'+k+'" aria-selected="'+(revSeg===k)+'">'+n+'</button>').join("")+'</div></section>';
+ if(revSeg==="cards") h+=vCards(); else if(revSeg==="pl") h+=vSkills(); else if(revSeg==="au") h+=vAudio(); else if(revSeg==="sql") h+=vSql(); else h+=vTutor();
  return h;
 }
 function vCards(){
@@ -1735,6 +2074,7 @@ function vTutor(){
 }
 WIRES.rev=el=>{
  el.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{revSeg=b.dataset.r;rerenderKeep();});
+ if(revSeg==="sql") wireSql(el);
  el.querySelectorAll("[data-dk]").forEach(b=>b.onclick=()=>{fcDeck=b.dataset.dk;fcCur=null;rerenderKeep();});
  const sh=$("#fcShow"); if(sh) sh.onclick=()=>{fcShow=true;rerenderKeep();};
  el.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{srsGrade(fcCur,+b.dataset.g);fcCur=null;fcShow=false;rerenderKeep();});
