@@ -788,9 +788,9 @@ async function clNew(){CL.code=newCode();CL.base=0;ST.cloud=CL.code;clStore();ch
 function clOff(btn){if(!btn.dataset.arm){btn.dataset.arm="1";btn.textContent="Toque de novo para desconectar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.arm;btn.textContent="Desconectar este aparelho";}},4000);return;}
  CL.code=null;CL.base=0;CL.st="off";clStore();clSnap(null);delete ST.cloud;saveLocal();rerenderKeep();toast("Este aparelho parou de sincronizar.");}
 /* cada aparelho grava no progresso a versão do app, onde abriu e quando (lista em Configurações) */
-const APP_V=12;
+const APP_V=13;
 /* o que mudou em cada versão (aparece uma vez depois que o app atualiza e fica em Configurações) */
-const NEWS={6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações.",8:"Inglês 3 vezes por semana (terça, quinta e sábado) nas férias e no meio expediente; texto de home office no Currículo.",9:"Preparação antes de 07/12 (contas e programas) e diagnóstico de Excel no primeiro dia.",10:"A seção Sobre agora mostra a versão real do app.",11:"Checklist dos cursos da Udemy na aba Cursos.",12:"Plano usa os cursos que você já tem na Udemy; SQL agora em MySQL."};
+const NEWS={6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações.",8:"Inglês 3 vezes por semana (terça, quinta e sábado) nas férias e no meio expediente; texto de home office no Currículo.",9:"Preparação antes de 07/12 (contas e programas) e diagnóstico de Excel no primeiro dia.",10:"A seção Sobre agora mostra a versão real do app.",11:"Checklist dos cursos da Udemy na aba Cursos.",12:"Plano usa os cursos que você já tem na Udemy; SQL agora em MySQL.",13:"Novo checklist de cursos complementares gratuitos na aba Cursos."};
 const SEENK=KEY+"-seenV";
 /* versão nova baixada pelo service worker (app instalado): avisa e atualiza com um toque, como no app da Transpetro */
 function swUpdated(){
@@ -876,7 +876,7 @@ function wireChecks(root){
 function stats(){
  const t=todayS(); let planned=0,plannedDone=0,mins=0,doneN=0; const byK={};
  for(const id in IDX){const x=IDX[id]; if(x.k==="folga")continue; byK[x.k]=byK[x.k]||{n:0,d:0}; byK[x.k].n++; if(x.date<=t){planned++; if(isDone(id)) plannedDone++;} if(isDone(id)){doneN++;mins+=x.m;byK[x.k].d++;}}
- const days=new Set(Object.entries(ST.done).filter(([k])=>!k.startsWith("u:")).map(([,v])=>v)); let streak=0; let s=t; if(!days.has(s)) s=addD(s,-1); while(days.has(s)){streak++; s=addD(s,-1);}
+ const days=new Set(Object.entries(ST.done).filter(([k])=>!k.startsWith("u:")&&!k.startsWith("x:")).map(([,v])=>v)); let streak=0; let s=t; if(!days.has(s)) s=addD(s,-1); while(days.has(s)){streak++; s=addD(s,-1);}
  return {planned,plannedDone,mins,doneN,byK,streak,days};
 }
 function overdue(){ const t=todayS(), from=addD(t,-21), out=[]; for(let s=from;s<t;s=addD(s,1)){ (SCHED[s]||[]).forEach(x=>{ if(x.k!=="folga"&&!isDone(x.id)) out.push(x); }); } return out; }
@@ -991,17 +991,35 @@ const UDEMY=[
  {id:"u:edmilson",g:3,n:"Excel do Básico ao Avançado + SQL + Dashboards com Power BI",by:"Edmilson Alves dos Santos · reforço",when:"Use os módulos de SQL Server se uma vaga pedir SQL Server",u:"https://www.udemy.com/course/excel-sql-powerbi/"},
  {id:"u:mpbi",g:3,n:"Master Power BI – De A à Z",by:"Felipe Mafra · reforço",when:"Repete o curso do André Rosa; use só para rever um tema",u:"https://www.udemy.com/course/curso-completo-master-power-bi/"},
  {id:"u:clev",g:3,n:"Excel do Básico ao Avançado, Macro e VBA + Power BI",by:"Clevison Santos · reforço",when:"269 h: não faça inteiro; só Macro e VBA se uma vaga administrativa pedir",u:"https://www.udemy.com/course/excel-basico-ao-avancado-aprenda-a-automatizar-12-planilhas/"},
- {id:"u:pl300",g:2,n:"Simulados da PL-300 (practice tests)",by:"escolha o mais bem avaliado e atualizado",q:"PL-300 practice tests",when:"Em janeiro, antes de agendar a prova",u:"https://www.udemy.com/courses/search/?q=PL-300%20practice%20tests"},
- {id:"u:lgpd",g:2,n:"LGPD / EXIN Privacy and Data Protection Foundation",by:"curso em português bem avaliado",q:"LGPD EXIN PDPF",when:"Depois da PL-300 (passo da governança)",u:"https://www.udemy.com/courses/search/?q=LGPD%20EXIN%20PDPF"}
+ {id:"u:pl300",g:2,n:"Simulados da PL-300 (practice tests)",by:"escolha o mais bem avaliado e atualizado",q:"PL-300 practice tests",when:"Só se o simulado oficial grátis da Microsoft não bastar (janeiro)",u:"https://www.udemy.com/courses/search/?q=PL-300%20practice%20tests"},
+ {id:"u:lgpd",g:2,n:"LGPD / EXIN Privacy and Data Protection Foundation",by:"curso em português bem avaliado",q:"LGPD EXIN PDPF",when:"Só quando for se preparar para a prova EXIN PDPF; a base de LGPD você já tem pela ENAP",u:"https://www.udemy.com/courses/search/?q=LGPD%20EXIN%20PDPF"}
 ];
+const COMP=[
+ {id:"x:mslearn",g:1,n:"Trilha oficial da PL-300 no Microsoft Learn",by:"Microsoft · grátis, em português",when:"Junto com o curso de Power BI: é o conteúdo exato da prova",u:"https://learn.microsoft.com/pt-br/credentials/certifications/data-analyst-associate/"},
+ {id:"x:mspa",g:1,n:"Simulado oficial da PL-300 (Practice Assessment)",by:"Microsoft · grátis",when:"Faça uma vez no início de janeiro e repita antes de agendar; mire 80% ou mais",u:"https://learn.microsoft.com/pt-br/credentials/certifications/resources/study-guides/pl-300"},
+ {id:"x:sqlbi",g:1,n:"Introducing DAX",by:"SQLBI · grátis, em inglês com legenda",when:"Junto com o Master DAX, para entender contexto de filtro",u:"https://www.sqlbi.com/p/introducing-dax-video-course/"},
+ {id:"x:sqlbolt",g:1,n:"SQLBolt e Kaggle Learn: Intro to SQL",by:"grátis · exercícios no navegador",when:"Durante a fase de SQL, para treinar o que viu no curso",u:"https://sqlbolt.com/"},
+ {id:"x:gov270",g:2,n:"Governança de Dados",by:"ENAP · grátis, com certificado",when:"Fevereiro ou março: o primeiro passo da sua área de maior afinidade",u:"https://www.escolavirtual.gov.br/curso/270"},
+ {id:"x:gov536",g:2,n:"Governança de Dados na Transformação Digital",by:"ENAP · grátis, com certificado",when:"Depois do curso anterior",u:"https://www.escolavirtual.gov.br/curso/536"},
+ {id:"x:lgpd603",g:2,n:"Fundamentos da LGPD",by:"ENAP · grátis, com certificado",when:"Aprofunda a introdução à LGPD que você já fez",u:"https://www.escolavirtual.gov.br/curso/603"},
+ {id:"x:khan",g:3,n:"Estatística e probabilidade",by:"Khan Academy · grátis, em português",when:"A partir de março: média, mediana, desvio padrão e correlação bastam para começar",u:"https://pt.khanacademy.org/math/statistics-probability"},
+ {id:"x:story",g:3,n:"Storytelling com Dados (livro)",by:"Cole Nussbaumer Knaflic · leitura",when:"Antes de montar os relatórios do portfólio: ensina a escolher o gráfico certo",u:"https://www.google.com/search?q=Storytelling+com+Dados+Cole+Nussbaumer+Knaflic"},
+ {id:"x:dmbok",g:3,n:"DAMA-DMBOK (guia de gestão de dados)",by:"DAMA International · leitura de referência",when:"Depois de empregado: é a base da certificação CDMP",u:"https://www.dama.org/cpages/body-of-knowledge"}
+];
+function compHTML(){
+ const dn=COMP.filter(x=>isDone(x.id)).length;
+ const it=x=>'<label class="task'+(isDone(x.id)?" done":"")+'"><input type="checkbox" data-id="'+x.id+'"'+(isDone(x.id)?" checked":"")+'><span class="stack" style="gap:2px;min-width:0"><strong>'+esc(x.n)+'</strong><span class="muted small">'+esc(x.by)+' · '+esc(x.when)+'</span><span class="small"><a href="'+esc(x.u)+'" target="_blank" rel="noopener">Abrir</a></span></span></label>';
+ const grp=(g,t)=>'<h4>'+t+'</h4><div class="tasks">'+COMP.filter(x=>x.g===g).map(it).join("")+'</div>';
+ return '<section class="panel" id="comp"><div class="dayhead"><h3>Complementares: grátis e que somam</h3><span class="pill num">'+dn+'/'+COMP.length+'</span></div><p class="muted small">Não precisa comprar nada aqui. Marque quando concluir.</p>'+grp(1,"Para passar na PL-300")+grp(2,"Governança, sua área de maior afinidade (certificado ENAP)")+grp(3,"Fundamentos que acrescentam")+'</section>';
+}
 function udemyHTML(){
  const dn=UDEMY.filter(x=>isDone(x.id)).length;
  const it=x=>'<label class="task'+(isDone(x.id)?" done":"")+'"><input type="checkbox" data-id="'+x.id+'"'+(isDone(x.id)?" checked":"")+'><span class="stack" style="gap:2px;min-width:0"><strong>'+esc(x.n)+'</strong><span class="muted small">'+esc(x.by)+' · '+esc(x.when)+'</span><span class="small">'+(x.q?'Pesquise: <code>'+esc(x.q)+'</code> · ':'')+'<a href="'+esc(x.u)+'" target="_blank" rel="noopener">Abrir na Udemy</a></span></span></label>';
  return '<section class="panel" id="udemy"><div class="dayhead"><h3>Udemy: seus cursos no plano</h3><span class="pill num">'+dn+'/'+UDEMY.length+'</span></div><p class="muted small">Você já tem o necessário para Excel, SQL, Power BI e DAX, tudo em português: não precisa comprar nada para começar. Marque quando abrir o curso e começar.</p><h4>No cronograma (já tenho)</h4><div class="tasks">'+UDEMY.filter(x=>x.g===1).map(it).join("")+'</div><h4>Depois ou como reforço (já tenho)</h4><div class="tasks">'+UDEMY.filter(x=>x.g===3).map(it).join("")+'</div><h4>Comprar só quando chegar a hora (espere promoção)</h4><div class="tasks">'+UDEMY.filter(x=>x.g===2).map(it).join("")+'</div></section>';
 }
 function vCursos(){
- let h='<section class="panel"><h4>Planejamento de cursos</h4><h2>Trilha na ordem do cronograma</h2><p>Cada sessão é uma tarefa na agenda, com cerca de 75 minutos. Marque aqui ou na agenda: é o mesmo registro. Antes de começar um curso da Udemy, confira se ele está na sua assinatura; se não estiver, use a alternativa gratuita indicada.</p></section>';
- h+=udemyHTML();
+ let h='<section class="panel"><h4>Planejamento de cursos</h4><h2>Trilha na ordem do cronograma</h2><p>Cada sessão é uma tarefa na agenda, com cerca de 75 minutos. Marque aqui ou na agenda: é o mesmo registro. Os cursos principais são os que você já tem na Udemy.</p></section>';
+ h+=udemyHTML()+compHTML();
  h+='<section class="panel">';
  COURSES.forEach(c=>{ const ids=c.s.map((_,i)=>"c:"+c.id+":"+i).concat(c.exam?["c:"+c.id+":exam"]:[]); const dn=ids.filter(isDone).length; const a=IDX[ids[0]]&&IDX[ids[0]].date, b=IDX[ids[ids.length-1]]&&IDX[ids[ids.length-1]].date; const pct=Math.round(dn/ids.length*100);
   h+='<details class="acc"><summary><span class="stack" style="gap:4px;min-width:0;flex:1"><span class="row" style="gap:8px"><strong>'+esc(c.n)+'</strong><span class="pill '+(c.free?"free":"paid")+'">'+esc(c.plat)+'</span>'+(pct===100?'<span class="pill free">concluído</span>':"")+'</span><span class="muted small">'+(a?fmtShort(a)+" a "+fmtShort(b)+" · ":"")+dn+"/"+ids.length+' sessões</span><span class="track"><span class="fill'+(pct===100?" ok":"")+'" style="display:block;width:'+pct+'%"></span></span></span><span class="chev">›</span></summary><p class="small"><strong>Curso:</strong> '+esc(c.src)+' · <a href="'+esc(c.u)+'" target="_blank" rel="noopener">Abrir</a></p>'+(c.alt?'<p class="small muted">'+esc(c.alt)+'</p>':"")+'<div class="tasks">'+ids.map(id=>taskHTML(IDX[id],true)).join("")+'</div></details>'; });
