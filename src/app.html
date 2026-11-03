@@ -788,9 +788,9 @@ async function clNew(){CL.code=newCode();CL.base=0;ST.cloud=CL.code;clStore();ch
 function clOff(btn){if(!btn.dataset.arm){btn.dataset.arm="1";btn.textContent="Toque de novo para desconectar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.arm;btn.textContent="Desconectar este aparelho";}},4000);return;}
  CL.code=null;CL.base=0;CL.st="off";clStore();clSnap(null);delete ST.cloud;saveLocal();rerenderKeep();toast("Este aparelho parou de sincronizar.");}
 /* cada aparelho grava no progresso a versão do app, onde abriu e quando (lista em Configurações) */
-const APP_V=13;
+const APP_V=14;
 /* o que mudou em cada versão (aparece uma vez depois que o app atualiza e fica em Configurações) */
-const NEWS={6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações.",8:"Inglês 3 vezes por semana (terça, quinta e sábado) nas férias e no meio expediente; texto de home office no Currículo.",9:"Preparação antes de 07/12 (contas e programas) e diagnóstico de Excel no primeiro dia.",10:"A seção Sobre agora mostra a versão real do app.",11:"Checklist dos cursos da Udemy na aba Cursos.",12:"Plano usa os cursos que você já tem na Udemy; SQL agora em MySQL.",13:"Novo checklist de cursos complementares gratuitos na aba Cursos."};
+const NEWS={6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações.",8:"Inglês 3 vezes por semana (terça, quinta e sábado) nas férias e no meio expediente; texto de home office no Currículo.",9:"Preparação antes de 07/12 (contas e programas) e diagnóstico de Excel no primeiro dia.",10:"A seção Sobre agora mostra a versão real do app.",11:"Checklist dos cursos da Udemy na aba Cursos.",12:"Plano usa os cursos que você já tem na Udemy; SQL agora em MySQL.",13:"Novo checklist de cursos complementares gratuitos na aba Cursos.",14:"Checklist do que fazer depois da PL-300, com o link de cada curso e certificação."};
 const SEENK=KEY+"-seenV";
 /* versão nova baixada pelo service worker (app instalado): avisa e atualiza com um toque, como no app da Transpetro */
 function swUpdated(){
@@ -876,7 +876,7 @@ function wireChecks(root){
 function stats(){
  const t=todayS(); let planned=0,plannedDone=0,mins=0,doneN=0; const byK={};
  for(const id in IDX){const x=IDX[id]; if(x.k==="folga")continue; byK[x.k]=byK[x.k]||{n:0,d:0}; byK[x.k].n++; if(x.date<=t){planned++; if(isDone(id)) plannedDone++;} if(isDone(id)){doneN++;mins+=x.m;byK[x.k].d++;}}
- const days=new Set(Object.entries(ST.done).filter(([k])=>!k.startsWith("u:")&&!k.startsWith("x:")).map(([,v])=>v)); let streak=0; let s=t; if(!days.has(s)) s=addD(s,-1); while(days.has(s)){streak++; s=addD(s,-1);}
+ const days=new Set(Object.entries(ST.done).filter(([k])=>!k.startsWith("u:")&&!k.startsWith("x:")&&!k.startsWith("y:")).map(([,v])=>v)); let streak=0; let s=t; if(!days.has(s)) s=addD(s,-1); while(days.has(s)){streak++; s=addD(s,-1);}
  return {planned,plannedDone,mins,doneN,byK,streak,days};
 }
 function overdue(){ const t=todayS(), from=addD(t,-21), out=[]; for(let s=from;s<t;s=addD(s,1)){ (SCHED[s]||[]).forEach(x=>{ if(x.k!=="folga"&&!isDone(x.id)) out.push(x); }); } return out; }
@@ -1006,6 +1006,23 @@ const COMP=[
  {id:"x:story",g:3,n:"Storytelling com Dados (livro)",by:"Cole Nussbaumer Knaflic · leitura",when:"Antes de montar os relatórios do portfólio: ensina a escolher o gráfico certo",u:"https://www.google.com/search?q=Storytelling+com+Dados+Cole+Nussbaumer+Knaflic"},
  {id:"x:dmbok",g:3,n:"DAMA-DMBOK (guia de gestão de dados)",by:"DAMA International · leitura de referência",when:"Depois de empregado: é a base da certificação CDMP",u:"https://www.dama.org/cpages/body-of-knowledge"}
 ];
+const LATER=[
+ {id:"u:pandas",g:1,n:"Análise de Dados com Pandas: do Zero ao Dashboard",by:"Udemy · você já tem",when:"Abril a junho de 2027: Python para análise, que as vagas de Pleno pedem",u:"https://www.udemy.com/course/analise-de-dados-com-python-e-pandas/"},
+ {id:"u:iso",g:1,n:"ISO 27001 & 27002 na Prática",by:"Udemy · você já tem",when:"Abril a junho de 2027, antes da EXIN PDPF",u:"https://www.udemy.com/course/iso-27002-guia-completo-93-controles-pratica/"},
+ {id:"y:exin",g:1,n:"Certificação EXIN Privacy and Data Protection Foundation (PDPF)",by:"EXIN · prova paga, online",when:"Segundo semestre de 2027: sua primeira certificação de governança",u:"https://www.exin.com/"},
+ {id:"u:scrum",g:1,n:"Gestão Ágil com Scrum COMPLETO",by:"Udemy · você já tem",when:"Quando der, em 2027",u:"https://www.udemy.com/courses/search/?q=Gest%C3%A3o%20%C3%81gil%20com%20Scrum%20Gustavo%20Farias"},
+ {id:"y:scrumopen",g:1,n:"Scrum Open (simulado grátis)",by:"Scrum.org · grátis",when:"Depois do curso de Scrum; a certificação PSM I só se a vaga pedir",u:"https://www.scrum.org/open-assessments/scrum-open"},
+ {id:"y:efset",g:1,n:"Teste de nível de inglês EF SET",by:"EF · grátis, com certificado de nível",when:"Em março de 2027 e de novo a cada 6 meses, para medir a evolução",u:"https://www.efset.org/pt/"},
+ {id:"y:dp600",g:2,n:"Certificação Microsoft Fabric Analytics Engineer (DP-600)",by:"Microsoft Learn · trilha grátis, prova paga",when:"2028, já empregado: o passo natural depois da PL-300",u:"https://learn.microsoft.com/pt-br/credentials/certifications/fabric-analytics-engineer-associate/"},
+ {id:"y:cdmp",g:2,n:"Certificação CDMP (Certified Data Management Professional)",by:"DAMA International · prova paga, em inglês",when:"2028 a 2029, depois de ler o DAMA-DMBOK: a certificação de governança mais reconhecida",u:"https://cdmp.info/"},
+ {id:"y:pos",g:2,n:"Pós-graduação em Governança de Dados ou Gestão de Dados",by:"escolha uma instituição credenciada no MEC",when:"2028 em diante, de preferência com a empresa ajudando a pagar; confira o credenciamento no e-MEC",u:"https://emec.mec.gov.br/"}
+];
+function laterHTML(){
+ const dn=LATER.filter(x=>isDone(x.id)).length;
+ const it=x=>'<label class="task'+(isDone(x.id)?" done":"")+'"><input type="checkbox" data-id="'+x.id+'"'+(isDone(x.id)?" checked":"")+'><span class="stack" style="gap:2px;min-width:0"><strong>'+esc(x.n)+'</strong><span class="muted small">'+esc(x.by)+' · '+esc(x.when)+'</span><span class="small"><a href="'+esc(x.u)+'" target="_blank" rel="noopener">Abrir o site</a></span></span></label>';
+ const grp=(g,t)=>'<h4>'+t+'</h4><div class="tasks">'+LATER.filter(x=>x.g===g).map(it).join("")+'</div>';
+ return '<section class="panel" id="later"><div class="dayhead"><h3>Depois: próximos cursos e certificações</h3><span class="pill num">'+dn+'/'+LATER.length+'</span></div><p class="muted small">Só depois da PL-300. Os itens da Udemy são os mesmos da lista de cima: marcar aqui marca lá.</p>'+grp(1,"Depois da PL-300 (abril a dezembro de 2027)")+grp(2,"Depois de empregado (2028 em diante)")+'</section>';
+}
 function compHTML(){
  const dn=COMP.filter(x=>isDone(x.id)).length;
  const it=x=>'<label class="task'+(isDone(x.id)?" done":"")+'"><input type="checkbox" data-id="'+x.id+'"'+(isDone(x.id)?" checked":"")+'><span class="stack" style="gap:2px;min-width:0"><strong>'+esc(x.n)+'</strong><span class="muted small">'+esc(x.by)+' · '+esc(x.when)+'</span><span class="small"><a href="'+esc(x.u)+'" target="_blank" rel="noopener">Abrir</a></span></span></label>';
@@ -1019,7 +1036,7 @@ function udemyHTML(){
 }
 function vCursos(){
  let h='<section class="panel"><h4>Planejamento de cursos</h4><h2>Trilha na ordem do cronograma</h2><p>Cada sessão é uma tarefa na agenda, com cerca de 75 minutos. Marque aqui ou na agenda: é o mesmo registro. Os cursos principais são os que você já tem na Udemy.</p></section>';
- h+=udemyHTML()+compHTML();
+ h+=udemyHTML()+compHTML()+laterHTML();
  h+='<section class="panel">';
  COURSES.forEach(c=>{ const ids=c.s.map((_,i)=>"c:"+c.id+":"+i).concat(c.exam?["c:"+c.id+":exam"]:[]); const dn=ids.filter(isDone).length; const a=IDX[ids[0]]&&IDX[ids[0]].date, b=IDX[ids[ids.length-1]]&&IDX[ids[ids.length-1]].date; const pct=Math.round(dn/ids.length*100);
   h+='<details class="acc"><summary><span class="stack" style="gap:4px;min-width:0;flex:1"><span class="row" style="gap:8px"><strong>'+esc(c.n)+'</strong><span class="pill '+(c.free?"free":"paid")+'">'+esc(c.plat)+'</span>'+(pct===100?'<span class="pill free">concluído</span>':"")+'</span><span class="muted small">'+(a?fmtShort(a)+" a "+fmtShort(b)+" · ":"")+dn+"/"+ids.length+' sessões</span><span class="track"><span class="fill'+(pct===100?" ok":"")+'" style="display:block;width:'+pct+'%"></span></span></span><span class="chev">›</span></summary><p class="small"><strong>Curso:</strong> '+esc(c.src)+' · <a href="'+esc(c.u)+'" target="_blank" rel="noopener">Abrir</a></p>'+(c.alt?'<p class="small muted">'+esc(c.alt)+'</p>':"")+'<div class="tasks">'+ids.map(id=>taskHTML(IDX[id],true)).join("")+'</div></details>'; });
