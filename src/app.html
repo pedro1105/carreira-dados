@@ -750,7 +750,7 @@ async function copyText(txt,btn){try{await navigator.clipboard.writeText(txt);to
    conhecia (p_base); senão o app baixa, junta e envia de novo. No GitHub a chamada é direta; no claude.ai,
    se a página não puder acessar a internet, usa o conector Supabase da conta do Claude. */
 const SB_URL="https://xpfcmehgdfruhnveslmj.supabase.co", SB_KEY="sb_publishable_Bgf_LtyuT9ABzExDTuAyQg_krQ9yy9R", SB_REF="xpfcmehgdfruhnveslmj";
-const GH_URL="https://carreira-em-dados-2027.netlify.app/";
+const GH_URL="https://pedro1105.github.io/carreira-dados/";
 const CK=KEY+"-cloud", CSNAP=KEY+"-cloudsnap";
 const IN_CLAUDE=!!(window.claude&&window.claude.use);
 const IS_PWA=location.protocol==="https:"&&/(github\.io|netlify\.app)$/.test(location.hostname);
@@ -925,7 +925,7 @@ function devMark(){
 }
 setTimeout(function devWait(n){ const ready=IN_CLAUDE?(SYNC.ready||SYNC.st==="err"||n>20):(!CL.code||CL.st==="ok"||n>20); if(ready&&(!CL.code||CL.base||!IN_CLAUDE||n>20)) devMark(); else setTimeout(()=>devWait(n+1),3000); },2500,0);
 /* a cópia antiga no GitHub Pages leva para o endereço do Netlify, já com o código deste aparelho, para os dois não ficarem com progressos separados */
-if(location.hostname==="pedro1105.github.io"&&location.pathname.startsWith("/carreira-dados")){location.replace(GH_URL+(CL.code?"#sync="+CL.code:""));}
+/* desde 11/11/2026 o GitHub Pages serve o app direto (o Netlify ficou sem créditos de deploy) */
 /* link #sync=código abre o app já conectado */
 (function(){const m=/[#&]sync=(cd-[a-z0-9-]+)/.exec(location.hash||"");if(!m) return;try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}if(m[1]!==CL.code) setTimeout(()=>clLink(m[1],true),400);})();
 setTimeout(clPull,1200);
