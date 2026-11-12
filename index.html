@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#2F5C9E"><link rel="manifest" href="carreira.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Carreira"><style>#nl-badge-frame,iframe[title="Powered by Netlify"]{display:none!important}</style><title>Carreira em Dados 2027</title>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#2F5C9E"><link rel="manifest" href="carreira.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Carreira"><title>Carreira em Dados 2027</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
 /* Layout: app de rotina — barra inferior no celular, abas no tablet, menu lateral no PC; conteúdo em coluna de leitura */
@@ -32,7 +32,7 @@ a{color:var(--pri);text-underline-offset:3px;overflow-wrap:anywhere}
 .small{font-size:14px}
 .num{font-variant-numeric:tabular-nums}
 .wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 32px;display:flex;flex-direction:column;gap:20px}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px clamp(14px,4vw,18px);display:flex;flex-direction:column;gap:12px;min-width:0}
 .stack{display:flex;flex-direction:column;gap:12px}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
@@ -118,7 +118,7 @@ nav.tabs button:focus-visible{outline:2px solid var(--pri);outline-offset:-2px}
 .task details summary::-webkit-details-marker{display:none}
 .task details p{font-size:15px;margin-top:4px}
 .task.folga{grid-template-columns:1fr}
-.kchip{display:inline-flex;align-items:center;gap:6px;font:600 12px var(--f);color:var(--kc,var(--muted))}
+.kchip{display:inline-flex;align-items:center;gap:6px;font:500 12px var(--f);color:var(--muted)}
 .kchip::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--kc,var(--muted))}
 .pill{display:inline-block;font:600 12px var(--f);padding:2px 9px;border-radius:99px;background:var(--line);color:var(--muted);white-space:nowrap}
 .pill.free{background:var(--ok-soft);color:var(--ok)}
@@ -197,6 +197,11 @@ details.acc>summary::-webkit-details-marker{display:none}
 details.acc>summary .chev{transition:transform .15s;color:var(--muted)}
 details.acc[open]>summary .chev{transform:rotate(90deg)}
 .copybox{font:14px/1.55 ui-monospace,Consolas,monospace;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px 12px}
+.pgrid .mid{font:700 22px var(--f);line-height:1.2}
+.mchips{display:flex;flex-wrap:wrap;gap:6px}
+.mchip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;border:1px solid var(--line);font:600 13px var(--f);color:var(--muted)}
+.mchip.on{border-color:var(--pri);background:var(--pri-soft);color:var(--pri)}
 .medals{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px;margin-top:10px}
 .medal{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;opacity:.55}
 .medal.on{opacity:1;border-color:var(--pri);background:var(--pri-soft)}
@@ -323,21 +328,13 @@ input[type=range]{accent-color:var(--pri);width:min(240px,100%)}
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script>
-/* ================= DATAS-CHAVE ================= */
-const START="2026-12-07", END="2027-09-30"; let BAIXA="2027-02-28", CIVIL="2027-03-01";
-/* férias de 03/12 a 03/01 e meio expediente (08h–12h) de 04/01 até a Quarta de Cinzas */
-const FERIAS_END="2027-01-03", MEIO_END="2027-02-10";
-const DEF_CFG={baixa:"2027-02-28",h1:"19:00",h2:"09:00",hw:"09:00",hf:"09:00",hm:"14:00",eng:true,sql:true,post:true,home:"hoje"};
-const OFF=new Set(["2026-12-24","2026-12-25","2026-12-31","2027-01-01","2027-02-08","2027-02-09","2027-03-26","2027-04-21","2027-05-27","2027-09-07"]);
+/* Dados do app Carreira em Dados: listas e textos fixos (sem lógica). Gerado a partir do app em 12/11/2026; edite aqui. */
 const PHASES=[
  {id:"f0",n:"Fase 0 · Base (férias)",a:"2026-12-07",b:"2027-01-03",h:"cerca de 20 h/semana (férias)",goal:"Excel intermediário com certificado, Git, SQL básico, primeiro painel no Power BI, currículos A e B, LinkedIn e GitHub com cara profissional."},
  {id:"f1",n:"Fase 1 · Fundamentos",a:"2027-01-04",b:"2027-02-28",h:"cerca de 15 h/semana até o Carnaval (tardes livres), depois 10 h (noites)",goal:"SQL e Power BI do curso completo, modelagem e DAX, PL-300 aprovada (02/02), projetos 1 e 2 publicados, Python, currículo pronto e candidaturas para início em março."},
  {id:"f2",n:"Fase 2 · Certificação",a:"2027-03-01",b:"2027-05-31",h:"cerca de 20 h/semana de estudo + busca de vaga (civil)",goal:"Projeto 3 publicado (até 17/03), estatística, governança e LGPD, AI-901, Fabric e liderança (cursos até 20/04) e 15 candidaturas por semana."},
  {id:"f3",n:"Fase 3 · Primeira vaga",a:"2027-06-01",b:"2027-09-30",h:"cerca de 20 h/semana de estudo + busca de vaga",goal:"Candidaturas e networking toda semana, melhorias nos 3 projetos e revisão trimestral. Meta: vaga até 30/06 (otimista) ou 30/09 (realista)."}
 ];
-const KINDS={curso:"Curso",projeto:"Portfólio",marca:"Perfil profissional",ingles:"Inglês",pratica:"Prática",cand:"Candidaturas",rev:"Revisão",marco:"Marco"};
-
-/* ================= CURSOS (fila principal, na ordem) ================= */
 const COURSES=[
  {id:"claude",n:"Claude como tutor de estudos",plat:"Udemy (assinatura)",free:true,src:"Domine o Claude AI, Claude Cowork e Engenharia de Prompts (Paulo Andrade, nota 4,7, 5 h, iniciante). Cobre Projetos, Skills, Conectores, Cowork e Artefatos. Aprenda a usar o Claude para explicar erros, revisar SQL e DAX e montar resumos, sempre conferindo o resultado.",u:"https://www.udemy.com/course/claude-e-engenharia-de-prompts/",alt:"Na lista Trilha BI 2026-2027 da Udemy. Para ir mais fundo depois: Claude – Domine Cowork, Claude Code, Skills e Plugins e Claude Code do Zero (Kleber Bernardo), opcionais no Módulo 4.",s:["Primeiro quarto do curso: conversas e engenharia de prompts","Projetos, Skills e Conectores","Cowork e Artefatos","Montar seu prompt de tutor para SQL, DAX e Excel e testar com um erro real"]},
  {id:"excel",n:"Excel e Power Query",plat:"Udemy (já tenho)",free:true,src:"Tratativas de Dados no Excel via Power Query + Excel do Básico ao Avançado + SQL + Dashboards com Power BI (Edmilson Alves dos Santos). Do Edmilson, faça os módulos de Excel avançado; os de SQL e Power BI servem de primeiro contato. Pule o básico se passou no diagnóstico.",u:"https://www.udemy.com/course/excel-sql-powerbi/",alt:"Power Query: curso Tratativas de Dados no Excel via Power Query (Pedro Henrique Franco), na lista Trilha BI 2026-2027 da Udemy. Reserva: 7 Cursos em 1 (Jilson Santana).",s:["Fórmulas essenciais: SOMASES, CONT.SES e SE aninhado","PROCX/PROCV e ÍNDICE + CORRESP","Tabelas dinâmicas e gráficos dinâmicos","Power Query: importar, limpar e transformar","Power Query: mesclar e acrescentar consultas","Desafio: painel de controle administrativo no Excel"]},
@@ -362,15 +359,11 @@ const COURSES=[
  {id:"lider",n:"Liderança e gestão de equipes",plat:"Grátis",free:true,src:"Escola Virtual.Gov (ENAP), grátis e com certificado: Liderança e Gestão de Equipes (30 h) e Desenvolvendo Times de Alta Performance (30 h). Inscrição a qualquer momento.",u:"https://www.escolavirtual.gov.br/curso/373",alt:"Segundo curso: escolavirtual.gov.br/curso/356. Guarde os certificados na aba Carreira → Certificados.",s:["Liderança e Gestão de Equipes: essência da liderança","Liderança e Gestão de Equipes: técnicas de trabalho em equipe","Liderança e Gestão de Equipes: clima organizacional e certificado","Times de Alta Performance: competências gerenciais","Times de Alta Performance: coaching e feedback","Times de Alta Performance: ferramentas e certificado"]},
  {id:"pl900",n:"Power Platform (PL-900, opcional)",plat:"Grátis",free:true,src:"Microsoft Learn: trilha da PL-900, na sua coleção \"Certificações Microsoft – Roteiro 2027-2028\". Power Automate e Power Apps para automatizar controles: pesa nas vagas administrativas, de planejamento e de controladoria. Opcional: se estiver sem tempo, pule.",u:"https://learn.microsoft.com/pt-br/credentials/certifications/power-platform-fundamentals/",alt:"",s:["Visão geral da Power Platform e do Dataverse","Power Automate: automatizar um controle administrativo","Power Apps: um app simples de cadastro","Revisão e avaliação prática gratuita da PL-900"]},
 ];
-
-/* ================= PROJETOS ================= */
 const PROJECTS=[
  {id:"p1",sn:"LAI",n:"Prazos da Lei de Acesso à Informação no governo federal (SLA) com governança",repo:"lai-prazos-sla",why:"Projeto 1 de 3. SLA de verdade: cada pedido da LAI tem prazo legal de 20 dias (+10). Com dados reais da CGU, mostra o ciclo completo de BI (Power Query, SQL, modelagem, DAX, painel) e o seu diferencial: governança, qualidade, LGPD em texto real, segurança por linha e IA conferida. Liga com o seu curso de Acesso à Informação da ENAP.",src:"CGU: pedidos e recursos da LAI (dados abertos)",u:"https://buscalai.cgu.gov.br/",skills:"Power Query, MySQL, SQL (JOIN, CTE, janela), modelagem estrela, DAX, Power BI, RLS, qualidade de dados, LGPD, IA, Copilot",s:["Entender o negócio: a LAI e seus prazos (20 dias + 10), 6 perguntas, os indicadores (% no prazo, tempo médio, taxa de negativa, recursos) e quem usaria o painel","Baixar 2 anos de pedidos e recursos na CGU e ler o dicionário oficial dos arquivos","Power Query: juntar os arquivos, acertar tipos e datas e padronizar, anotando cada passo","Perfil dos dados reais: nulos, duplicados, datas impossíveis e órgãos com nomes diferentes (relatório de qualidade, parte 1)","MySQL: modelo estrela (fato_pedido, fato_recurso, dim_orgao, dim_assunto, dim_data)","SQL: 8 consultas de negócio com JOIN, GROUP BY, CTE e função de janela (ranking de órgãos por atraso)","Qualidade de dados: regras de validação em SQL e relatório de qualidade (parte 2)","Dicionário de dados e catálogo: cada coluna com descrição, tipo, regra e dono","Power BI: modelo estrela, relacionamentos e tabela calendário","DAX: % no prazo, tempo médio, backlog, taxa de negativa, acumulado do ano e comparação com o ano anterior","Página 1: visão executiva (indicadores e tendência)","Página 2: órgãos e gargalos, com drill-through (inclua o Comando da Aeronáutica)","Página 3: qualidade dos dados, ligada ao relatório de qualidade","Segurança e LGPD: RLS por órgão; os textos dos pedidos podem ter dados pessoais, então mascare antes de qualquer uso e nunca publique o texto","IA com critério: classificar o assunto de 300 pedidos (texto mascarado) com IA e medir a concordância com a sua revisão","IA no Power BI: peça uma medida ou página ao Copilot (se tiver acesso) ou ao Claude, confira cada número contra o SQL e registre o que a IA errou","Publicar: Power BI na web (ou PDF) e vídeo de 2 min explicando o painel","README completo (perguntas, modelo, qualidade, LGPD, decisões), GitHub e post no LinkedIn","README em inglês: versão curta (problem, data, model, findings) para vagas de empresas maiores"],ok:["As 6 perguntas e os 4 indicadores estão no README, com quem usaria o painel.", "Os arquivos de 2 anos estão em data/raw e você sabe o que é cada coluna do dicionário oficial.", "Uma consulta única no Power Query junta tudo, sem erro, com tipos certos e passos renomeados.", "O relatório de qualidade (parte 1) tem a contagem de nulos, duplicados e datas impossíveis.", "As 5 tabelas estão carregadas no MySQL, com chaves, e o script está em sql/01_criar_tabelas.sql.", "As 8 consultas rodam, estão comentadas no repositório e cada uma responde a uma pergunta.", "Cada regra de validação tem uma consulta e o relatório mostra quantos registros falharam.", "Toda coluna das tabelas finais está no dicionário, com descrição, tipo, regra e dono.", "O modelo está em estrela, com relações 1:N e a calendário marcada como tabela de datas.", "As medidas batem com o SQL para o mesmo filtro (anote 2 conferências no diário).", "A página mostra os 4 indicadores e a tendência, e alguém de fora entende em 10 segundos.", "O drill-through abre o detalhe de um órgão e o Comando da Aeronáutica aparece no filtro.", "A página mostra os números do relatório de qualidade e diz o quanto confiar nos dados.", "A RLS foi testada com Exibir como e nenhum texto de pedido aparece no painel ou no repositório.", "A concordância entre a IA e a sua revisão está calculada e registrada no README.", "Cada número da IA foi conferido no SQL e os erros dela estão listados no README.", "O link do painel (ou o PDF) abre e o vídeo de 2 min está publicado (gravado 2 vezes, ficou o melhor).", "O README tem todas as seções, o repositório está público e o post está no ar.", "O README em inglês tem as 4 seções e foi revisado sem erro grave."]},
  {id:"p2",sn:"Defesa",n:"Dinheiro público da Defesa: orçamento, compras e viagens",repo:"defesa-gastos-publicos",why:"Projeto 2 de 3. Junta o que você viu na prática (empenho, pregão, contratos, diárias) com dados reais e grandes. Mostra ETL com várias fontes, modelo com mais de um fato, reconciliação de totais, Python e storytelling: o projeto para vagas administrativas, de controladoria e do setor público.",src:"Portal da Transparência (despesas e viagens) · PNCP (contratações públicas)",u:"https://portaldatransparencia.gov.br/download-de-dados",skills:"Power Query, Python (pandas), MySQL, SQL, modelo com vários fatos, inteligência de tempo em DAX, curva ABC, storytelling",s:["Definir as perguntas: quanto se empenha, liquida e paga; de quem se compra; quanto se gasta em viagens","Baixar as despesas de Aeronáutica, Exército e Marinha (2020–2026) no Portal da Transparência","Power Query: juntar e limpar os arquivos de despesas","Baixar os contratos do Ministério da Defesa no PNCP (2024–2026)","Power Query: limpar contratos e fornecedores (CNPJ, modalidade, datas)","MySQL: modelo com fatos de despesa e contrato e dimensões compartilhadas (órgão, data, natureza)","SQL: execução orçamentária, top 10 fornecedores, curva ABC e tempo de processo","Validação: conferir os totais com o Portal (reconciliação) e registrar no relatório de qualidade","Power BI: modelo com vários fatos e inteligência de tempo","DAX: empenhado, liquidado, pago, % de execução, variação anual e curva ABC","Estatística: a execução mudou de verdade entre os anos e entre as Forças? Média, mediana e correlação no Excel, com conclusão em linguagem de gestor (o curso de estatística vem em março: depois dele, acrescente um teste simples)","Página 1: execução orçamentária comparando as três Forças","Página 2: compras e contratos (fornecedores, modalidades, tempo de processo)","Python (pandas): baixar e limpar diárias e passagens (se ainda não fez o curso de Python, faça em Power Query e refaça depois)","Página 3: viagens (gasto por destino e antecedência da compra)","Página de resumo: 3 achados com recomendação, como numa reunião com a chefia","Automação da atualização (Power Query agora; script Python depois do curso), README, GitHub e post no LinkedIn","README em inglês: versão curta (problem, data, model, findings)"],ok:["As perguntas estão no README, cada uma com o indicador que a responde.", "Os arquivos de 2020 a 2026 das três Forças estão em data/raw, com a data do download anotada.", "Uma consulta única junta todos os anos, sem erros e com valores em número.", "Os contratos de 2024 a 2026 estão baixados e você sabe o que cada coluna significa.", "CNPJ, modalidade e datas estão padronizados e não há fornecedor repetido com grafia diferente.", "O modelo está no MySQL com os dois fatos ligados às mesmas dimensões, e o script está no repositório.", "As consultas rodam e o top 10 de fornecedores bate com o Portal da Transparência.", "A diferença entre o seu total e o do Portal é menor que 1% em cada ano, ou a causa está explicada.", "Os dois fatos filtram juntos por calendário e órgão, sem números repetidos.", "As medidas batem com o SQL e a curva ABC classifica todos os fornecedores.", "Média, mediana e correlação estão calculadas e a conclusão cabe em 3 frases para a chefia.", "A página compara as três Forças no mesmo eixo e destaca a maior diferença no título.", "A página mostra fornecedores, modalidades e tempo de processo, com filtro por ano.", "Diárias e passagens estão limpas, com o código (ou os passos do Power Query) no repositório.", "A página mostra gasto por destino e antecedência, com um achado escrito no título.", "Os 3 achados têm número, causa provável e recomendação, como numa reunião.", "A atualização roda com um clique (ou um script), o README está completo e o post está no ar.", "O README em inglês tem as 4 seções e foi revisado sem erro grave."]},
  {id:"p3",sn:"Combustíveis",n:"Combustíveis no Brasil: preços, vendas e previsão",repo:"combustiveis-anp",why:"Projeto 3 de 3. Assunto de entrevista na Transpetro e em energia e logística. Mostra Python, séries temporais, previsão, detecção de valores fora do normal, Microsoft Fabric e IA para resumir números, com governança (linhagem e qualidade).",src:"ANP: dados abertos (preços na bomba e vendas de derivados)",u:"https://www.gov.br/anp/pt-br/centrais-de-conteudo/dados-abertos",skills:"Python (pandas), séries temporais, previsão, Fabric (lakehouse), DAX, mapas, IA, linhagem de dados",s:["Perguntas de negócio (preço por região, sazonalidade, logística) e contexto do transporte de combustíveis","Baixar a série de preços na bomba e as vendas de derivados por UF na ANP","Power Query: tratar a série histórica (datas, unidades, UF)","Modelo semântico: fato preços, fato vendas, dimensão UF e região, calendário","DAX: variação anual, média móvel, ranking por UF e participação","Página de mapa por UF e preços por região","Página de vendas e sazonalidade","Python: análise exploratória (tendência, sazonalidade e valores fora do normal), com gráficos","Python: alertas das semanas com variação fora do normal (anomalias) e página no painel","Previsão simples de preço ou venda e um parágrafo explicando o limite dela","Estatística: correlação entre preço e vendas e um teste simples da diferença de preço entre regiões, explicando o que o resultado prova e o que não prova","Fabric (avaliação gratuita): levar os arquivos para um lakehouse e refazer a carga num notebook (se preferir, deixe para depois do curso de Fabric, em abril)","IA: resumo automático dos números do mês, conferido por você e com aviso de limite","Governança: dicionário, linhagem (de onde vem cada número) e checagens de qualidade","README com contexto de logística, publicar e postar no LinkedIn","README em inglês: versão curta (problem, data, model, findings), útil também para a Transpetro"],ok:["As perguntas e o contexto de logística estão no README, com a fonte de cada dado.", "As séries de preço e de vendas por UF estão em data/raw, com o período anotado.", "A série tem datas, unidades e UF padronizadas, sem semanas duplicadas.", "O modelo tem os dois fatos ligados à UF e ao calendário e filtra sem erro.", "As medidas batem com uma conta feita à mão para uma UF e um mês.", "O mapa mostra o preço por UF e a página deixa clara a diferença entre as regiões.", "A página mostra a sazonalidade, com o mês mais forte e o mais fraco no título.", "O notebook roda do começo ao fim, com gráficos de tendência, sazonalidade e valores fora do normal.", "As semanas fora do normal aparecem no painel, com a regra usada explicada.", "A previsão tem o erro medido (ex.: erro médio em reais) e o parágrafo do limite está escrito.", "Correlação e teste estão calculados e o texto diz o que prova e o que não prova.", "Os arquivos estão no lakehouse e o notebook refaz a carga, ou a etapa ficou marcada para depois do curso de abril.", "O resumo da IA foi conferido número por número e tem o aviso de limite.", "Dicionário, desenho da linhagem e checagens de qualidade estão no repositório.", "O README está completo, o painel publicado e o post no ar.", "O README em inglês tem as 4 seções e foi revisado sem erro grave."]}
 ];
-
-/* ================= PERFIL PROFISSIONAL (fila) ================= */
 const BRAND=[
  {id:"pes",g:"car",t:"Seção de Pessoal: data do licenciamento, férias, compensação pecuniária e correção do SIGPES",d:"Confirme a data do licenciamento, as férias a gozar e a compensação pecuniária. Peça também a correção das funções no SIGPES (constam Pessoal e Processos Disciplinares, e o SD nas funções) e confirme o registro do CFC e do CESD. Pergunte quais documentos pedir na saída (certidão de tempo de serviço, alterações)."},
  {id:"drv",g:"red",t:"Drive pessoal: apagar arquivos da FAB com dados de terceiros",d:"Fichas, telefones, identidades, placas e documentos internos não podem ficar no seu Drive (LGPD e segurança orgânica). Guarde só modelos sem dados reais. Nada disso entra no portfólio."},
@@ -403,9 +396,7 @@ const BRAND=[
  {id:"li12",g:"li",t:"Pedir 2 recomendações no LinkedIn",d:"A primeira, do chefe da SAT, que assinou a carta: peça pelo próprio LinkedIn, lembrando 2 pontos da carta. A segunda, de um colega da seção ou da faculdade. Ofereça escrever uma para a pessoa também."},
  {id:"car3",g:"car",t:"Currículo em inglês (versão simples)",d:"Mesmo conteúdo, revisado com ajuda de IA e conferido por você. Serve para multinacionais."}
 ];
-
 const POSTS=["Primeiro mês estudando dados: o que aprendi de Excel, SQL e Power BI e o que vem agora","O que 8 anos controlando documentos e prazos me ensinaram sobre indicadores","Projeto 1: prazos da Lei de Acesso à Informação. A pergunta, o modelo e o que descobri","Um erro de DAX que cometi e como corrigi","SQL em 3 consultas: como respondi uma pergunta de negócio","Orçamento público explicado com um dashboard: empenho, liquidação e pagamento","O que aprendi estudando para a PL-300","Antes e depois: refazendo um visual para ficar mais claro","Dados abertos que pouca gente usa (e o que dá para analisar com eles)","Como uso IA para revisar SQL sem confiar cegamente","Um mês de candidaturas: números da minha própria planilha","LGPD na prática para quem trabalha com dados","Qualidade de dados: as checagens que faço antes de qualquer dashboard","Dicionário de dados: o documento que ninguém faz e todo mundo precisa"];
-
 const TIPS=[
  ["Termine antes de colecionar","Um curso terminado vale mais que cinco começados. Não abra o próximo antes de fechar o atual."],
  ["Estude no mesmo horário","Horário fixo vira hábito. Escolha 2 horas que você consegue proteger quase todo dia."],
@@ -438,7 +429,6 @@ const TIPS=[
  ["Uma vaga real por semana","Leia uma vaga com atenção e anote o que falta. Isso ajusta seus estudos ao mercado."],
  ["Cuide do dinheiro da transição","Saiba quantos meses suas reservas cobrem e defina a data-limite para aceitar uma vaga híbrida."]
 ];
-
 const CATALOG=[
  {n:"Elements of AI",p:"Universidade de Helsinque · português de Portugal ou inglês",tags:["ia"],free:true,u:"https://www.elementsofai.com/",note:"Base conceitual de IA, com certificado. Ótimo primeiro passo."},
  {n:"Introduction to Generative AI",p:"Google Cloud Skills Boost",tags:["ia"],free:true,u:"https://www.cloudskillsboost.google/",note:"Curso curto com selo digital para o LinkedIn."},
@@ -466,23 +456,6 @@ const CATALOG=[
  ,{n:"MBA em Data Science, IA e Analytics",p:"USP/Esalq · EAD, 18 meses",tags:["pos","dados","ia"],free:false,u:"https://mbauspesalq.com/cursos/mba-em-data-science-e-analytics",note:"Nome forte no currículo. Cerca de 22 x R$ 627 (nov/2026). Melhor com a empresa ajudando a pagar."}
  ,{n:"MBA em Business Intelligence & Analytics",p:"ECA-USP · EAD",tags:["pos","dados"],free:false,u:"https://www.google.com/search?q=MBA+Business+Intelligence+Analytics+ECA-USP+EAD",note:"Alternativa da USP mais focada em BI. Compare grade e preço com o da Esalq."}
 ];
-const CTAGS={ia:"IA",dados:"Dados",gd:"Governança",cert:"Certificação",gestao:"Gestão",gov:"Governo",pos:"Pós e MBA"};
-
-/* ================= MOTOR DO CRONOGRAMA ================= */
-const pad=n=>String(n).padStart(2,"0");
-const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
-const parse=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c);};
-const addD=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return iso(d);};
-const todayS=()=>iso(new Date());
-const WD=["dom","seg","ter","qua","qui","sex","sáb"];
-const MES=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
-const fmt=s=>{const d=parse(s);return WD[d.getDay()]+", "+d.getDate()+" "+MES[d.getMonth()];};
-const fmtShort=s=>{const d=parse(s);return pad(d.getDate())+"/"+pad(d.getMonth()+1);};
-const hrs=m=>String(Math.round(m/6)/10).replace(".",",");
-const diff=(a,b)=>Math.round((parse(b)-parse(a))/864e5);
-
-/* ================= v4: FLASHCARDS (revisão espaçada) ================= */
-/* d = baralho; liberado quando começa o curso ligado a ele (DECKS[d].c) ou quando você libera todos */
 const DECKS={
  excel:{n:"Excel",c:["excel"]},
  pq:{n:"Power Query",c:["excel","pbi"]},
@@ -595,9 +568,6 @@ const CARDS=[
  ["en","Tell me about yourself","Fale sobre você. Responda em 1 min: passado (FAB), presente (estudos e projetos), futuro (a vaga)."],
  ["en","What was the biggest challenge?","Qual foi o maior desafio? Responda no formato STAR: situação, tarefa, ação e resultado."]
 ];
-CARDS.forEach((c,i)=>{c.id="k"+i;});
-
-/* ================= v4: HABILIDADES DA PL-300 (guia oficial de 20/04/2026) ================= */
 const SKILLS=[
  {id:"prep",n:"Preparar os dados",w:27.5,g:[
   ["Obter ou conectar aos dados",["Conectar a fontes de dados ou a um modelo semântico compartilhado","Alterar configurações da fonte: credenciais e níveis de privacidade","Escolher entre Direct Lake, DirectQuery e Import","Criar e modificar parâmetros"]],
@@ -615,19 +585,7 @@ const SKILLS=[
   ["Workspaces e itens",["Criar e configurar workspace","Configurar e atualizar um app","Publicar, importar e atualizar itens","Criar dashboards","Escolher a forma de distribuição","Assinaturas e alertas de dados","Promover ou certificar conteúdo","Saber quando precisa de gateway","Agendar atualização do modelo semântico"]],
   ["Segurança e governança",["Atribuir funções do workspace","Acesso por item","Acesso a modelos semânticos","Criar funções de RLS","Associar grupos às funções de RLS","Aplicar rótulos de confidencialidade"]]]}
 ];
-SKILLS.forEach(d=>d.g.forEach((g,gi)=>{g.items=g[1].map((t,i)=>({id:d.id+gi+"_"+i,t}));}));
-const SK_ALL=SKILLS.flatMap(d=>d.g.flatMap(g=>g.items));
-const SK_LV=["Não vi","Estudei","Domino"];
-
-/* ================= v4: CANDIDATURAS ================= */
-const ETAPAS=[["env","Enviada"],["tri","Triagem / RH"],["tec","Teste técnico"],["ent","Entrevista"],["fin","Entrevista final"],["prop","Proposta"],["nao","Não seguiu"],["sem","Sem retorno"]];
-const ETAPA_N=Object.fromEntries(ETAPAS);
-const FONTES=["LinkedIn","Gupy","Indicação","Site da empresa","Indeed","Vagas.com","InfoJobs","Emprega Brasil","Catho","Outra"];
-
-const MAINQ=[];COURSES.forEach(c=>{c.s.forEach((t,i)=>MAINQ.push({id:"c:"+c.id+":"+i,k:"curso",t:c.n+" · "+t,m:75,c:c.id,d:c.src,u:c.u}));if(c.exam)MAINQ.push({id:"c:"+c.id+":exam",k:"marco",t:c.exam,m:150,c:c.id,d:"Agende com 2 semanas de antecedência, de preferência num horário em que você rende bem. Faça em casa (online) ou num centro de provas.",u:c.u});});
 const KB_TIP="Antes de começar: crie o repositório e o quadro Kanban do projeto no GitHub Projects (modelo Board, colunas A fazer, Fazendo e Feito). No Portfólio, o botão Copiar etapas traz a lista pronta, com o critério de pronto de cada uma. A cada sessão, mova o cartão: isso é Scrum na prática e vira assunto de entrevista. ";
-const PROJQ=[];PROJECTS.forEach((p,pn)=>p.s.forEach((t,i)=>PROJQ.push({id:"p:"+p.id+":"+i,k:"projeto",t:"Projeto "+(pn+1)+" ("+p.sn+") · "+t,m:90,p:p.id,ok:p.ok&&p.ok[i],d:(i===0?KB_TIP:"")+"Repositório: "+p.repo+". Fonte: "+p.src+".",u:p.u})));
-/* preparação antes de 07/12 (fora do cronograma diário): contas e programas prontos para o primeiro dia */
 const PREP=[
  {id:"prep:gh",k:"marca",t:"Conta do GitHub",m:10,d:"Conta pedro1105, mantida assim de propósito: os links do GitHub Pages (este app e o da Transpetro) dependem dela. Perfil revisado em 11/11/2026.",u:"https://github.com/signup"},
  {id:"prep:li",k:"marca",t:"LinkedIn: conta com foto profissional e título provisório",m:15,d:"Título provisório: \"Analista de Dados em formação | Excel · SQL · Power BI | 8 anos de experiência administrativa\". O texto completo está em Carreira › LinkedIn.",u:"https://www.linkedin.com/"},
@@ -636,7 +594,6 @@ const PREP=[
  {id:"prep:ct",k:"marca",t:"Carta de recomendação em duas vias (com e sem CPF)",m:20,d:"Feito em 11/11/2026, em Word: a via com CPF é a original (uso oficial, fica guardada) e a via sem CPF vai para as empresas. Datada de 04/01/2027, quando o chefe assina as duas."},
  {id:"prep:sw",k:"marca",t:"Instalar no notebook: Power BI Desktop, Git e VS Code, e conferir o Excel",m:15,d:"Confira se o Excel desktop está instalado: a versão web é limitada para Power Query e tabelas dinâmicas. Se não tiver, assine o Microsoft 365 Personal. Power BI Desktop pela Microsoft Store (atualiza sozinho); Git em git-scm.com; VS Code em code.visualstudio.com. Seu Windows 11 Pro com 16 GB roda tudo com folga.",u:"https://apps.microsoft.com/detail/9ntxr16hnw1t"}
 ];
-const BRANDQ=BRAND.map(b=>({id:"b:"+b.id,k:"marca",t:b.t,m:30,d:b.d}));
 const MS={
  "2026-12-07":["Início do plano: diagnóstico rápido de Excel (20 min)","Sem consultar nada, tente fazer numa planilha sua: 1) PROCX ou PROCV, 2) SE aninhado, 3) SOMASES, 4) tabela dinâmica, 5) formatação condicional, 6) gráfico, 7) lista suspensa (validação de dados) e 8) importar um CSV pelo Power Query. Se fizer 6 dos 8, marque como feitas em Estudar › Cursos as sessões de Excel do que você já domina e use o horário livre para adiantar o SQL. Os horários das férias (9h às 13h30) já estão na agenda. No Microsoft Learn, clique em Iniciar no plano \"PL-300 – prova em 02/02/2027\".",20],
  "2027-01-04":["Pedir ao chefe a carta de recomendação assinada","Leve impressas as duas vias já prontas: a com CPF (original, fica guardada) e a sem CPF (para as empresas). Peça assinatura e carimbo nas duas e escaneie em PDF no mesmo dia. Depois monte um PDF só: currículo primeiro e a carta sem CPF em seguida. Detalhes em Carreira → Currículo. No mesmo dia, peça a recomendação dele pelo LinkedIn, lembrando 2 pontos da carta.",20],
@@ -657,15 +614,351 @@ const MS={
  "2027-07-31":["Checkpoint: revisar estratégia de candidatura","Sem entrevistas? O problema é currículo ou portfólio. Peça revisão a alguém da área."],
  "2027-09-30":["Checkpoint final: revisar o plano para a fase Júnior","Abra o plano mestre e ajuste as metas de 2027–2029."]
 };
+const EXTRA_MAIN=["Sessão de curso extra (Estudar › Cursos › Explorar mais cursos)","Desafio de DAX: recrie 3 medidas de um projeto sem consultar","Estudar uma vaga real e listar o que falta aprender","Sessão de curso extra (Estudar › Cursos › Explorar mais cursos)","Refazer um visual de um projeto para ficar mais claro"];
+const EN_PLAN={A1:"15 min de vocabulário de dados (Estudar › Revisar › Flashcards › Inglês de dados) e 15 min de uma lição básica (Duolingo ou BBC Learning English)",A2:"15 min de vocabulário de dados (Estudar › Revisar › Flashcards › Inglês de dados) e 15 min de uma lição (BBC Learning English ou Duolingo)",B1:"15 min de vocabulário de dados e 15 min lendo em voz alta um README seu em inglês ou 1 página da documentação do Power BI",B2:"15 min de vocabulário de dados e 15 min de fala: explique um projeto seu em inglês por 2 min e grave",C1:"15 min de leitura técnica (documentação ou blog de dados) e 15 min de conversa (Cambly ou simulado em inglês com o tutor)",C2:"15 min de leitura técnica e 15 min de simulado de entrevista em inglês com o tutor"};
+const NEWS={32:"App mais limpo: 5 abas (Estudar junta Cursos e Revisar; Carreira é o antigo Perfil), Progresso no ícone de gráfico do topo, tarefas em uma linha (toque para ver detalhes, mentoria e diário), trilha de cursos em Módulos dentro das 4 fases e Pendências do plano no Hoje. Progresso com os números num cartão só e medalhas compactas.",31:"Ferramentas: agendar a PL-300 em 12/01, LinkedIn Premium grátis de 15/02 a 12/03 (com lembrete de cancelar), conferir o Excel desktop antes de 07/12 e um quadro do que pagar e do que não pagar em Perfil › Transição.",30:"Certificações da Microsoft no cronograma: SC-900 (mar/abr), DP-900 e PL-900 (opcional), além da AI-901; DP-600 e Applied Skills na trilha. Plataformas de vaga em 18/01, painel de mercado em Candidaturas e o texto da brigada corrigido (apoio às instruções, referência em jun/2026).",29:"Atualização de 11/11: GitHub, currículo, carta em duas vias (com e sem CPF), Microsoft Learn e Banco de Talentos marcados como feitos. Novas pendências: e-mail e inglês no Portal do Militar, correção do SIGPES e link do Learn no LinkedIn. Instagram, NovyPro e perfis na Gupy, Indeed, Vagas.com e Catho entraram nas tarefas.",6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações.",8:"Inglês 3 vezes por semana (terça, quinta e sábado) nas férias e no meio expediente; texto de home office no Currículo.",9:"Preparação antes de 07/12 (contas e programas) e diagnóstico de Excel no primeiro dia.",10:"A seção Sobre agora mostra a versão real do app.",11:"Checklist dos cursos da Udemy na aba Cursos.",12:"Plano usa os cursos que você já tem na Udemy; SQL agora em MySQL.",13:"Novo checklist de cursos complementares gratuitos na aba Cursos.",14:"Checklist do que fazer depois da PL-300, com o link de cada curso e certificação.",15:"Trilha completa do início ao CDO, em 9 fases, na aba Cursos; curso de governança no cronograma; revisão geral.",16:"Áudio igual ao do app da Transpetro: 4 modos, pausa para pensar, botões do fone, modo bolso e 7 sons que seguem nas outras telas.",17:"Novidades: analisador de vaga, treino de entrevista, cofre de certificados, contatos e planejador da transição (Perfil); desafio de SQL (Revisar); nível, medalhas, meta semanal e relatório em PDF (Progresso); mapa da trilha (Cursos). Currículo com compras, SIAFI e SILOMS.",18:"Revisão geral: AI-900 trocada pela AI-901 (a Microsoft aposentou a antiga), simulado da PL-300 no endereço novo e links quebrados corrigidos.",19:"Cursos trocados pelos melhores da Udemy.",20:"Trilha da Udemy atualizada (lista única Trilha BI, 18 cursos): Claude como tutor na 1ª semana (Paulo Andrade), SQL da Midori Toyota, Master Power BI do Felipe Mafra, PL-300 do Ricardo Pacheco e Copilot para Excel; Cowork e Claude Code (Kleber) opcionais na Fase 4; Python Data V e Python + RPA opcionais na Fase 6; repetidos foram para a Reserva.",21:"Carta de recomendação no plano: lembrete para pedir a assinatura em 04/01/2027 e um guia de como usá-la nas candidaturas e entrevistas (Perfil → Currículo).",28:"Textos do LinkedIn finais: Sobre em blocos, competências por fase e datas dos 5 cargos na FAB conferidas por você.",27:"LinkedIn em dia: título, Sobre, experiência em 5 cargos, certificados, competências, foto, capa e URL marcados como feitos. Nas pendências entrou a primeira publicação (com 30 a 50 conexões) e, em 04/01, o pedido de recomendação junto com a carta.",26:"Novidades para a vaga: quadro Kanban e critério de pronto em cada etapa dos projetos, simulado de entrevista toda semana a partir de 15/02, inglês pelo seu nível do EF SET com cartões de vocabulário, desafio de Power BI, mentor e leitura do DAMA todo mês a partir de abril, rotina de treinos no Hoje e revisão mensal da reserva.",25:"Revisão geral: contagem regressiva lado a lado no celular, metas das fases e medalha do portfólio ajustadas aos 3 projetos, currículo, planilha e alertas de vagas antes das candidaturas (15/02), tarefas repetidas trocadas e vídeos dos projetos 2 e 3 no plano.",24:"Projeto 1 agora com dados reais: prazos da Lei de Acesso à Informação (CGU). Os 3 projetos ganharam README em inglês, e os projetos 2 e 3 uma etapa de estatística; o projeto 1 ganhou IA no Power BI.",23:"Mentoria em cada sessão (desafio sem olhar, explicar em voz alta e pergunta de entrevista), 3 projetos completos no lugar de 6, contagem regressiva no Hoje, orçamento das provas e backup das finanças (Transição), 5 histórias para entrevista, pendências em Configurações e revisão trimestral (Progresso).",22:"Revisão de novembro: curso de liderança da ENAP no cronograma (abril), pós e MBA no catálogo, trilha com opções concretas de pós, MBA e do programa Executivo de Dados e IA, e semanas de fevereiro e dias de busca de vaga sem passar do horário de estudo."};
+const ICONS={
+ hoje:'<path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/>',
+ agenda:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+ cursos:'<path d="M3 6.5 12 3l9 3.5-9 3.5z"/><path d="M7 8.5V14c0 1.7 2.2 3 5 3s5-1.3 5-3V8.5"/>',
+ port:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>',
+ perfil:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+ prog:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+ rev:'<rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/><path d="M7 13h6M7 16h4"/>'
+};
+const README_TPL=`# Prazos da Lei de Acesso à Informação no governo federal
+
+> Dados públicos da CGU. Textos dos pedidos não publicados (LGPD).
+
+## Pergunta de negócio
+Quais órgãos respondem fora do prazo legal (20 dias + 10) e por quê?
+
+## O que eu fiz
+- Baixei 2 anos de pedidos e recursos da LAI (CGU)
+- Tratei no Power Query e fiz o relatório de qualidade dos dados
+- Modelei em estrela no MySQL (2 fatos, 3 dimensões)
+- Escrevi 8 consultas SQL para responder às perguntas
+- Construí o dashboard no Power BI com medidas DAX e RLS por órgão
+
+## Principais resultados
+1. O órgão X concentra 40% dos atrasos
+2. Pedidos sobre o assunto Y levam o dobro do prazo médio
+3. ...
+
+## Prints
+![Visão geral](img/visao-geral.png)
+
+## Ferramentas
+Power Query · MySQL · Power BI · DAX · Python
+
+## Como reproduzir
+1. Baixe os arquivos em buscalai.cgu.gov.br
+2. Rode sql/01_criar_tabelas.sql
+3. Abra powerbi/lai-prazos.pbix
+
+## Contato
+LinkedIn: linkedin.com/in/seu-nome`;
+const TREE=`nome-do-projeto/
+├── README.md        ← vitrine do projeto
+├── dados/           ← CSV pequenos ou link para a fonte
+├── sql/             ← scripts numerados (01_, 02_...)
+├── notebooks/       ← Python, quando houver
+├── powerbi/         ← .pbix (ou só prints, se for grande)
+├── img/             ← prints usados no README
+└── .gitignore`;
+const TXT={
+ headline:"Cabo da FAB – Administração | Em transição para Análise de Dados e BI | Excel · Power BI · SQL | Formado em ADS",
+ about:`Profissional administrativo em transição para Análise de Dados e BI. Formado em Análise e Desenvolvimento de Sistemas, com 8 anos na Força Aérea Brasileira lidando com documentos, prazos, controles, compras públicas e informação sensível.
+
+Na FAB, atuei como auxiliar da chefia e dos encarregados de seção em:
+• Documentos e gestão: confecção de Normas Padrão de Ação, Notas de Serviço e ofícios no SIGADAER, atualização das apresentações semanais das chefias e organização de reuniões.
+• Controle e acompanhamento: situação de um programa em mais de 60 organizações para a chefia, além da emissão e solicitação de passes e crachás.
+• Compras públicas: processos de aquisição, pregões eletrônicos, consulta de empenhos e pagamentos no SIAFI e no SILOMS e acompanhamento de prazos e entregas com fornecedores.
+• Rotinas e operações: escalas, permutas e treinamento de uma tropa de cerca de 64 militares, controle de acesso de um complexo com nove organizações e logística de eventos com até 100 participantes.
+• Apoio técnico: suporte de informática, instalação de softwares como o Bizagi (mapeamento de processos) e projeções em palestras e reuniões.
+
+Reconhecimentos: promovido a Cabo por merecimento (grau 8,75 no curso de formação), comportamento "Ótimo" e referência elogiosa pelo apoio às instruções do Curso de Combate a Incêndio para brigadistas (jun/2026).
+
+Formação: Tecnólogo em Análise e Desenvolvimento de Sistemas (Estácio, 2026) e cursos da ENAP em LGPD, Acesso à Informação e Ética no Serviço Público.
+
+Por que dados: percebi que boa parte do trabalho era reunir informação à mão para alguém decidir. Hoje estudo Excel, Power BI e SQL para transformar controles em indicadores e painéis confiáveis, com atenção à qualidade e à governança dos dados.
+
+Busco: vaga de Analista de Dados ou BI Júnior, ou funções administrativas, de planejamento e de controladoria que usem dados. Disponível a partir de março de 2027, no Rio de Janeiro (presencial, híbrido ou remoto).
+
+Competências: Organização · Cumprimento de prazos · Proteção de dados (LGPD) · Comunicação · Resolução de problemas · Pacote Office`,
+ exp:`Força Aérea Brasileira · mar/2019 – fev/2027 · Rio de Janeiro
+(No LinkedIn, cada função abaixo é um cargo dentro da mesma empresa. Datas conferidas em 10/11/2026.)
+
+Auxiliar administrativo · III COMAR, Subcoordenadoria de Acompanhamento das Atividades Terrestres (SAT) · fev/2025 – fev/2027
+• Auxiliar do chefe da subcoordenadoria e do encarregado da seção na rotina administrativa.
+• Redigi documentos oficiais (ofícios, NPA e NS) no SIGADAER, o sistema de gestão documental do Comando.
+• Atualizei a apresentação semanal de acompanhamento das atividades usada nas reuniões das chefias.
+• Mantive o controle de acompanhamento de um programa em mais de 60 organizações, com a situação de cada uma para a chefia.
+• Apoiei o chefe no sistema de gestão de tarefas, atualizando prazos e andamentos.
+• Organizei a logística de eventos com até 100 participantes (marcha, instrução de tiro, competição esportiva).
+• Apoio de informática: instalação de programas (como o Bizagi, de modelagem de processos) e projeções em reuniões e briefings.
+• Apoio às atividades e instruções práticas e teóricas de formação da brigada de incêndio e primeiros socorros, com referência elogiosa formal (jun/2026).
+
+Recepção e controle de acesso · III COMAR · nov/2023 – fev/2025
+• Controle de acesso de pessoas e veículos de um complexo com 9 organizações: identificação, passes e crachás, contato com os setores e com a guarda do dia.
+
+Auxiliar de patrimônio · Grupamento de Segurança e Defesa do Rio de Janeiro (GSD-RJ) · fev/2023 – nov/2023
+• Apoiei a montagem de processos de compra de material (equipamentos para a segurança de autoridades e material esportivo): pesquisa de preços, contato com fornecedores e acompanhamento de pregões eletrônicos no portal de compras do governo federal.
+• Consultei empenhos e acompanhei pagamentos no SIAFI e no SILOMS, com prazos e entregas junto aos fornecedores.
+• Apoio de informática à seção.
+
+Esquadrão de Honras Militares · GSD-RJ · fev/2022 – fev/2023
+• Montei escalas de serviço, permutas e controle de faltas de uma tropa de cerca de 64 militares.
+• Treinei a tropa para formaturas e atuei na recepção de autoridades.
+
+Segurança e Defesa · Ala 11 e GSD-RJ · mar/2019 – fev/2022
+• Serviço na 1ª, 2ª e 3ª esquadrilhas de segurança e defesa; indicado para o Esquadrão de Honras pelo histórico e por elogios.
+
+Promovido a Cabo por merecimento em 2025 (nota 8,75 no curso de formação).`,
+ resA:`Analista de Dados e BI em formação, com 8 anos de experiência em controles administrativos, indicadores e compras públicas na Força Aérea Brasileira, incluindo o acompanhamento de empenhos e pagamentos no SIAFI. Tecnólogo em ADS, com projetos em Power BI, SQL e Excel publicados no GitHub e foco em qualidade e governança de dados. Disponível a partir de março de 2027.`,
+ ho:`Estrutura para home office: notebook Intel Core i7 (11ª geração), 16 GB de RAM, SSD e placa de vídeo dedicada, com Windows 11 Pro e monitor secundário. Internet de alta velocidade e estável e ambiente isolado para reuniões.`,
+ resB:`Profissional administrativo com 8 anos na Força Aérea Brasileira: documentos oficiais, processos de compra, contato com fornecedores, acompanhamento de empenhos, pagamentos e entregas (SIAFI e SILOMS), escalas, controle de acesso, logística de eventos e apresentações para a chefia. Domínio do pacote Office, com Excel aplicado a controles e relatórios. Tecnólogo em ADS. Disponível a partir de março de 2027.`,
+ gh:`### Olá! Sou o Pedro Henrique
+
+Analista de Dados e BI em formação, vindo de 8 anos de gestão administrativa na Força Aérea Brasileira.
+Gosto de transformar controles manuais em painéis que ajudam a decidir.
+
+**Ferramentas:** Power BI · DAX · SQL (MySQL) · Excel · Power Query · Python (aprendendo)
+
+**Projetos em destaque**
+- [Prazos da LAI no governo federal](link) — SQL + Power BI, governança e LGPD
+- [Dinheiro público da Defesa](link) — orçamento, compras e viagens
+- [Combustíveis no Brasil (ANP)](link) — séries temporais, previsão e Fabric
+
+**Formação:** Tecnólogo em ADS (Estácio, 2026) · LGPD e Acesso à Informação (ENAP)
+
+📫 [LinkedIn](link) · nome.sobrenome@gmail.com`
+};
+const KW=[
+ ["Power BI",/power\s?bi/i,["pbi","pl300"]],["DAX",/\bdax\b/i,["dax"]],["Power Query",/power\s?query|\betl\b|tratamento de dados/i,["excel","pbi"]],
+ ["SQL",/\bsql\b|consultas? em banco|banco de dados/i,["sql","sqladv"]],["Excel avançado",/excel( avan[çc]ado)?|procv|procx|tabela[s]? din[âa]mica/i,["excel"]],
+ ["Python",/python|pandas/i,["py"]],["Estatística",/estat[íi]stica/i,["stats"]],["Modelagem de dados",/modelagem|modelo estrela|data warehouse|\bdw\b/i,["model"]],
+ ["Dashboards e indicadores",/dashboard|painel|painéis|indicadores|\bkpis?\b/i,["pbi"]],["Relatórios gerenciais",/relat[óo]rios?/i,[]],
+ ["VBA / macros",/\bvba\b|macros?/i,[]],["Tableau / Looker / Qlik",/tableau|looker|qlik/i,[]],["Azure / Fabric / nuvem",/azure|fabric|databricks|nuvem|cloud/i,["fabric"]],
+ ["Git / GitHub",/\bgit(hub)?\b/i,["git"]],["Inglês",/ingl[êe]s|english/i,[]],["LGPD",/lgpd|prote[çc][ãa]o de dados/i,["gov"]],
+ ["Governança de dados",/governan[çc]a de dados|data governance|metadados|dicion[áa]rio de dados/i,["gov"]],["Qualidade de dados",/qualidade de dados|data quality|consist[êe]ncia/i,["gov"]],
+ ["Metodologias ágeis",/scrum|[áa]gil|kanban/i,[]],["SAP / ERP",/\bsap\b|\berp\b|totvs|protheus/i,[]],
+ ["Compras e licitações",/compras?|licita[çc][ãa]o|preg[ãa]o|cota[çc][ãa]o|suprimentos/i,[]],["Contratos e fornecedores",/contratos?|fornecedor/i,[]],
+ ["Orçamento e controladoria",/or[çc]amento|controladoria|custos|financeir/i,[]],["SIAFI / setor público",/siafi|siads|siloms|setor p[úu]blico|administra[çc][ãa]o p[úu]blica/i,[]],
+ ["Logística e estoque",/log[íi]stica|estoque|almoxarifado|patrim[ôo]nio/i,[]],["Planejamento",/planejamento/i,[]],["Liderança e equipes",/lideran[çc]a|gest[ãa]o de equipe|coordena[çc][ãa]o de equipe/i,["lider"]],["Gestão de documentos",/document|arquiv|protocolo/i,[]],
+ ["Inteligência artificial",/intelig[êe]ncia artificial|\bia\b|copilot|chatgpt|machine learning/i,["claude","ia1","ia2","copilot"]],
+ ["Certificação Microsoft",/pl-?300|certifica[çc][ãa]o microsoft/i,["pl300"]],["Superior em TI",/sistemas de informa[çc][ãa]o|ci[êe]ncia da computa[çc][ãa]o|an[áa]lise e desenvolvimento|\bads\b|tecnologia da informa[çc][ãa]o/i,[]],
+ ["Comunicação e apresentação",/comunica[çc][ãa]o|apresenta[çc]|storytelling/i,[]],["Organização e prazos",/organiza|prazos?|proatividade/i,[]]
+];
+const IVQ=[
+ ["c","Fale um pouco sobre você.","Em 1 minuto: FAB (8 anos, administração e compras), ADS, por que dados agora e o que você já construiu (projetos). Termine com o que busca."],
+ ["c","Por que você quer sair da Força Aérea?","Fale do futuro, nunca de problemas: o tempo de serviço termina em 2027 e você escolheu dados porque já fazia controles e relatórios."],
+ ["c","Por que dados e BI?","Ligue a rotina (prazos, empenhos, entregas, escalas) à vontade de automatizar e decidir com números. Cite um projeto."],
+ ["c","Conte uma situação em que você lidou com um prazo apertado.","Use STAR: situação (processo de compra urgente ou evento), tarefa, o que você fez, resultado com número ou prazo."],
+ ["c","Conte um erro que você cometeu e o que aprendeu.","Escolha um erro real e pequeno, mostre a correção e o que mudou no seu método (checklist, conferência)."],
+ ["c","Como você lida com informação sigilosa?","Processos disciplinares, dados pessoais e LGPD (curso ENAP): acesso mínimo, nada fora do sistema, conferência."],
+ ["c","Conte uma vez em que precisou convencer alguém.","Ex.: mostrar a um fornecedor ou à chefia um prazo ou uma alternativa, com dados na mão."],
+ ["c","Como você se organiza com muitas demandas ao mesmo tempo?","Lista de prioridades por prazo e impacto, controle em planilha, aviso antecipado quando algo vai atrasar."],
+ ["c","Onde você se vê em 5 anos?","Analista pleno com foco em qualidade e governança de dados, com certificações (PL-300, EXIN, CDMP)."],
+ ["c","Qual é a sua pretensão salarial?","Pesquise a faixa antes (Glassdoor, vagas parecidas). Dê uma faixa, não um número, e diga que está aberto a conversar."],
+ ["t","Explique a diferença entre medida e coluna calculada no Power BI.","Coluna: calculada linha a linha e guardada no modelo. Medida: calculada na hora, conforme os filtros. Prefira medidas."],
+ ["t","O que é um modelo estrela?","Uma tabela fato no centro (eventos, valores) ligada a dimensões (data, setor, produto). Mais simples e mais rápido para DAX."],
+ ["t","Para que serve o CALCULATE?","Muda o contexto de filtro de uma medida. Ex.: vendas só de 2026, ou ignorando o filtro de setor."],
+ ["t","Qual a diferença entre INNER JOIN e LEFT JOIN?","INNER traz só o que existe nas duas tabelas. LEFT traz tudo da esquerda e completa com nulo o que não achou na direita."],
+ ["t","Como você trataria dados com duplicados e valores vazios?","Perfilar no Power Query, entender a causa, remover duplicados pela chave certa, decidir caso a caso o que fazer com vazios e documentar a regra."],
+ ["t","Como você garante que um número do dashboard está certo?","Conferir com a fonte (total do sistema), testar com um caso conhecido, regras de validação e um dicionário de dados."],
+ ["t","Que gráfico você usaria para mostrar evolução mensal?","Linha. Barras para comparar categorias; evite pizza com muitas fatias."],
+ ["t","Fale de um projeto do seu portfólio.","Pergunta de negócio, dados (fonte), modelo, 2 medidas, uma descoberta e o que faria diferente."],
+ ["t","O que é RLS no Power BI?","Segurança em nível de linha: cada usuário vê só as linhas permitidas (ex.: só o seu setor)."],
+ ["a","Como funciona um processo de compra pública?","Planejamento e pesquisa de preços, termo de referência, licitação (pregão eletrônico), empenho, entrega, liquidação e pagamento (Lei 14.133)."],
+ ["a","O que você fazia no SIAFI e no SILOMS?","Consultava empenhos e acompanhava pagamentos; acompanhava prazos e entregas com os fornecedores. Mostre que entende o ciclo da despesa."],
+ ["a","Como você acompanharia entregas atrasadas de fornecedores?","Planilha ou painel com prazo, status e dias de atraso; contato com o fornecedor; aviso à chefia; registro para avaliar o fornecedor depois."],
+ ["a","Você sabe Excel avançado?","Diga o que faz de verdade: PROCX, SOMASES, tabela dinâmica, Power Query. Ofereça mostrar um projeto."],
+ ["a","Como você priorizaria pedidos de várias áreas?","Prazo legal ou de entrega, impacto, ordem de chegada. Combine o critério com a chefia e deixe visível para todos."]
+];
+const STORIES=[
+ {t:"Organizar uma tropa de cerca de 64 militares",q:"Fale de uma vez em que você organizou pessoas ou liderou sem ter o cargo de chefe.",s:"No Esquadrão de Honras Militares, uma tropa de cerca de 64 militares, as formaturas e cerimônias mudavam com frequência.",ta:"Como Soldado de Primeira Classe, auxiliar na organização das escalas, das permutas e do treinamento da tropa.",a:"Mantive a escala atualizada, controlei permutas e faltas e apoiei o treino, avisando a chefia quando alguma cerimônia ficava descoberta.",r:"Cerimônias com o efetivo completo [diga quantas por mês]. Aprendi a coordenar muita gente com regra clara e registro.",d:"Controle de escala é um controle de dados: regra, registro e conferência."},
+ {t:"Documentos oficiais com prazo (NPA e Notas de Serviço)",q:"Conte um momento em que você trabalhou com prazo apertado e muitos envolvidos.",s:"Na SAT do III COMAR, eventos como TACF, tiro anual, 7 de Setembro e Marcha Administrativa dependem de Notas de Serviço e NPA publicadas no prazo.",ta:"Auxiliar na confecção e na conferência desses documentos.",a:"Usei os modelos anteriores, conferi datas, efetivos e responsáveis com os setores e controlei as versões até a publicação.",r:"Documentos publicados no prazo [diga quantos por ano], sem retrabalho na publicação.",d:"É governança na prática: padrão, versão, dono e prazo de cada documento."},
+ {t:"Acompanhar um projeto em mais de 60 organizações",q:"Conte uma vez em que você usou dados ou controles para ajudar uma decisão.",s:"A chefia precisava saber a situação de um projeto institucional em mais de 60 organizações militares.",ta:"Auxiliar no controle do que estava concluído e do que estava pendente.",a:"Montei e mantive a planilha de controle, cobrei os pendentes e atualizei a situação nas apresentações semanais das chefias.",r:"A chefia passou a ver o andamento toda semana [diga o % concluído no fim]. Foi meu primeiro indicador de verdade.",d:"É um painel de BI feito à mão: indicador, atualização semanal e cobrança."},
+ {t:"Apoio às instruções da brigada de incêndio",q:"Conte uma vez em que você ensinou algo ou foi reconhecido pelo seu trabalho.",s:"O III COMAR mantém uma brigada de incêndio, e o GAP-RJ fez um Curso de Combate a Incêndio para brigadistas em maio de 2026.",ta:"Auxiliar o encarregado do setor nas atividades e nas instruções práticas e teóricas do curso.",a:"Ajudei nas instruções práticas e teóricas ministradas pelo encarregado, na preparação do material e na segurança dos alunos.",r:"Recebi referência elogiosa, publicada em junho de 2026. Aprendi a explicar com calma para quem nunca fez.",d:"Explicar um painel para quem não é de dados usa a mesma habilidade."},
+ {t:"Eventos com até 100 participantes",q:"Fale de uma vez em que você planejou algo com várias áreas envolvidas.",s:"A SAT apoia reuniões, palestras e briefings com até 100 participantes.",ta:"Auxiliar na organização: passes e crachás, projeção e apoio no dia.",a:"Levantei a lista de participantes, emiti os passes e crachás, testei a projeção antes e fiquei de apoio durante o evento.",r:"Eventos sem atraso na entrada nem falha de projeção [diga quantos eventos].",d:"Planejar, conferir antes e ter um plano B é o mesmo cuidado de publicar um dashboard."}
+];
+const CERT_SEED=[
+ {n:"Tecnólogo em Análise e Desenvolvimento de Sistemas",org:"Estácio",d:"2026-07-01",h:"",tp:"form"},
+ {n:"Introdução à Lei Brasileira de Proteção de Dados Pessoais (LGPD)",org:"ENAP",d:"",h:"10",tp:"cert"},
+ {n:"Acesso à Informação",org:"ENAP",d:"",h:"25",tp:"cert"},
+ {n:"Ética e Serviço Público",org:"ENAP",d:"",h:"20",tp:"cert"},
+ {n:"Gestão e Apuração da Ética Pública",org:"ENAP",d:"",h:"24",tp:"cert"},
+ {n:"Prevenção e Enfrentamento do Assédio",org:"ENAP",d:"",h:"6",tp:"cert"}
+];
+const CCOST=[
+ {id:"pl300",n:"PL-300 (Power BI)",usd:99,q:"jan/2027, 2 semanas antes da prova"},
+ {id:"pl300r",n:"Refazer a PL-300, se precisar",usd:99,q:"só se não passar de primeira"},
+ {id:"ai901",n:"AI-901 (fundamentos de IA)",usd:59,q:"abr/2027, depois do curso"},
+ {id:"sc900",n:"SC-900 (segurança, conformidade e identidade)",usd:59,q:"mar–abr/2027, depois do curso"},
+ {id:"dp900",n:"DP-900 (fundamentos de dados no Azure)",usd:59,q:"abr–mai/2027, opcional"},
+ {id:"pl900",n:"PL-900 (Power Platform)",usd:59,q:"opcional, só se sobrar reserva"},
+ {id:"dp600",n:"DP-600 (Fabric)",usd:99,q:"depois da primeira vaga (2027–2028)"},
+ {id:"pdpf",n:"EXIN PDPF (LGPD)",usd:295,q:"depois da primeira vaga (2027–2028)"},
+ {id:"cdmp",n:"CDMP Associate (DAMA)",usd:311,q:"fase Pleno (2028–2029)"}];
+const SQL_DB=`CREATE TABLE setores(id INTEGER PRIMARY KEY, nome TEXT);
+INSERT INTO setores VALUES (1,'Compras'),(2,'Pessoal'),(3,'Finanças'),(4,'Logística'),(5,'Protocolo');
+CREATE TABLE fornecedores(id INTEGER PRIMARY KEY, nome TEXT, uf TEXT);
+INSERT INTO fornecedores VALUES (1,'Alfa Esportes','RJ'),(2,'Beta Motos','SP'),(3,'Gama Informática','RJ'),(4,'Delta Papelaria','MG'),(5,'Ômega Uniformes','RJ');
+CREATE TABLE compras(id INTEGER PRIMARY KEY, item TEXT, fornecedor_id INTEGER, setor_id INTEGER, modalidade TEXT, valor REAL, empenho TEXT, prazo TEXT, entrega TEXT);
+INSERT INTO compras VALUES
+(1,'Bolas e redes',1,1,'Pregão',4200,'2026-02-03','2026-03-05','2026-03-01'),
+(2,'Capacetes para batedores',2,4,'Pregão',18500,'2026-02-10','2026-04-10','2026-04-22'),
+(3,'Notebooks',3,3,'Pregão',32000,'2026-03-01','2026-04-15','2026-04-12'),
+(4,'Papel A4',4,5,'Dispensa',1900,'2026-03-08','2026-03-20','2026-03-19'),
+(5,'Uniformes de treino',5,2,'Pregão',7600,'2026-03-15','2026-05-15',NULL),
+(6,'Cones e coletes',1,1,'Dispensa',850,'2026-04-02','2026-04-20','2026-04-25'),
+(7,'Luvas para motociclistas',2,4,'Pregão',5400,'2026-04-05','2026-05-30','2026-05-28'),
+(8,'Impressora',3,5,'Dispensa',2300,'2026-04-18','2026-05-10',NULL),
+(9,'Toner',4,5,'Pregão',3100,'2026-05-02','2026-05-30','2026-06-04'),
+(10,'Tênis de corrida',5,2,'Pregão',9800,'2026-05-20','2026-07-01','2026-06-28'),
+(11,'Monitores',3,3,'Pregão',12600,'2026-06-01','2026-07-15','2026-07-30'),
+(12,'Jaquetas para batedores',2,4,'Pregão',14300,'2026-06-10','2026-08-10',NULL);
+CREATE TABLE documentos(id INTEGER PRIMARY KEY, setor_id INTEGER, tipo TEXT, recebido TEXT, prazo_dias INTEGER, concluido TEXT);
+INSERT INTO documentos VALUES
+(1,1,'Ofício','2026-05-02',10,'2026-05-09'),(2,1,'Memorando','2026-05-03',5,'2026-05-12'),(3,2,'Ofício','2026-05-04',10,'2026-05-10'),
+(4,2,'Requerimento','2026-05-05',15,NULL),(5,3,'Ofício','2026-05-06',10,'2026-05-20'),(6,3,'Nota técnica','2026-05-07',20,'2026-05-22'),
+(7,4,'Memorando','2026-05-08',5,'2026-05-11'),(8,4,'Ofício','2026-05-09',10,NULL),(9,5,'Requerimento','2026-05-10',15,'2026-05-18'),
+(10,5,'Ofício','2026-05-11',10,'2026-05-30'),(11,1,'Nota técnica','2026-05-12',20,'2026-05-25'),(12,2,'Memorando','2026-05-13',5,'2026-05-15');`;
+const SQLC=[
+ ["Todas as compras","Liste item e valor de todas as compras.","SELECT item, valor FROM compras;",0],
+ ["Compras caras","Liste item e valor das compras acima de R$ 10.000.","SELECT item, valor FROM compras WHERE valor > 10000;",0],
+ ["Ordenar por valor","Liste item e valor do maior para o menor valor.","SELECT item, valor FROM compras ORDER BY valor DESC;",1],
+ ["Só pregões","Quantas compras foram por pregão?","SELECT COUNT(*) FROM compras WHERE modalidade = 'Pregão';",0],
+ ["Total por modalidade","Mostre a modalidade e o valor total de cada uma.","SELECT modalidade, SUM(valor) FROM compras GROUP BY modalidade;",0],
+ ["Ainda não entregues","Liste o item das compras sem data de entrega.","SELECT item FROM compras WHERE entrega IS NULL;",0],
+ ["Entregas atrasadas","Liste o item das compras entregues depois do prazo.","SELECT item FROM compras WHERE entrega > prazo;",0],
+ ["Compra e fornecedor","Liste o item e o nome do fornecedor de cada compra (JOIN).","SELECT c.item, f.nome FROM compras c JOIN fornecedores f ON f.id = c.fornecedor_id;",0],
+ ["Gasto por fornecedor","Mostre o nome do fornecedor e o total comprado dele.","SELECT f.nome, SUM(c.valor) FROM compras c JOIN fornecedores f ON f.id = c.fornecedor_id GROUP BY f.nome;",0],
+ ["Fornecedores do RJ","Quanto foi comprado de fornecedores do RJ?","SELECT SUM(c.valor) FROM compras c JOIN fornecedores f ON f.id = c.fornecedor_id WHERE f.uf = 'RJ';",0],
+ ["Setor que mais compra","Mostre o setor e o total, só dos setores com mais de R$ 20.000 (HAVING).","SELECT s.nome, SUM(c.valor) FROM compras c JOIN setores s ON s.id = c.setor_id GROUP BY s.nome HAVING SUM(c.valor) > 20000;",0],
+ ["Documentos pendentes","Quantos documentos ainda não foram concluídos?","SELECT COUNT(*) FROM documentos WHERE concluido IS NULL;",0],
+ ["Dias para concluir","Liste o id e os dias entre recebido e concluído dos documentos concluídos (use julianday).","SELECT id, julianday(concluido) - julianday(recebido) FROM documentos WHERE concluido IS NOT NULL;",0],
+ ["Fora do prazo","Liste o id dos documentos concluídos depois do prazo em dias.","SELECT id FROM documentos WHERE concluido IS NOT NULL AND julianday(concluido) - julianday(recebido) > prazo_dias;",0],
+ ["SLA por setor","Mostre o setor e o % de documentos concluídos no prazo (pendentes contam como fora).","SELECT s.nome, ROUND(100.0 * SUM(CASE WHEN d.concluido IS NOT NULL AND julianday(d.concluido) - julianday(d.recebido) <= d.prazo_dias THEN 1 ELSE 0 END) / COUNT(*), 1) FROM documentos d JOIN setores s ON s.id = d.setor_id GROUP BY s.nome;",0],
+ ["Ranking com janela","Mostre item, valor e a posição de cada compra no ranking de valor (RANK).","SELECT item, valor, RANK() OVER (ORDER BY valor DESC) FROM compras;",0]
+];
+const PEND=[
+ {id:"baixa",t:"Data da baixa",a:"Fim de fevereiro (28/02/2027). Pode ser liberado um pouco antes."},
+ {id:"carta",t:"Quem assina a carta",a:"TC chefe da SAT. Pedir em 04/01/2027."},
+ {id:"local",t:"Cidade e modelo de trabalho",a:"Rio, presencial ou home office. Fora do Rio, SP."},
+ {id:"sal",t:"Pretensão salarial",a:"Faixa de mercado, com o líquido atual da FAB como piso (Carreira → Transição)."},
+ {id:"transp",t:"Resultado da Transpetro",h:"Quando sair, o plano segue o cenário certo. O app lembra de conferir em 11/01 e 01/02."},
+ {id:"ingles",t:"Teste de inglês (EF SET, grátis, 50 min)",h:"Escolha o nível que deu no teste: as sessões de inglês passam a seguir o plano desse nível.",u:"https://www.efset.org/pt/",lv:1},
+ {id:"orc",t:"Reserva para as provas",h:"Carreira → Transição → Orçamento das certificações."},
+ {id:"li",t:"Endereço do LinkedIn",a:"URL personalizada criada em 10/11/2026. Use a mesma no currículo e no GitHub."},
+ {id:"post1",t:"Primeira publicação no LinkedIn (formação em ADS e transição para dados)",h:"Texto pronto. Publique quando tiver de 30 a 50 conexões e depois fixe nos Destaques."},
+ {id:"gh",t:"Endereço do GitHub",a:"github.com/pedro1105, mantido porque os links do GitHub Pages dependem dele. Perfil e README revisados em 11/11/2026."},
+ {id:"bt",t:"Banco de Talentos do Portal do Militar",a:"Cadastrado em 11/11/2026, com área nacional e 6 cursos. LGPD e Acesso à Informação aguardam validação da SPM."},
+ {id:"ptm",t:"Portal do Militar: e-mail novo e inglês",h:"Dados Pessoais → Cadastro → Dados Pessoais. Cadastre o e-mail profissional e o inglês (básico)."},
+ {id:"sig",t:"SIGPES: corrigir funções e confirmar CFC e CESD",h:"Na Seção de Pessoal: no SIGPES constam Pessoal e Processos Disciplinares e o SD nas funções. O app lembra junto da tarefa da Seção de Pessoal."},
+ {id:"mlk",t:"Link do Microsoft Learn e da Transcrição no LinkedIn",h:"Depois do 1º roteiro do plano PL-300: gere o link público da Transcrição no Learn e ponha os dois links no LinkedIn."},
+ {id:"msl",t:"Coleções do Microsoft Learn",a:"Feito em 11/11/2026: plano \"PL-300 – prova em 02/02/2027\" (5 roteiros) e coleção pública \"Certificações Microsoft – Roteiro 2027-2028\" (PL-300, SC-900, DP-900, AI-901, PL-900, DP-600 e o módulo do Purview)."}];
+const SNDS=[
+ ["brown","Ruído marrom","Grave e uniforme. O que melhor abafa barulho de rua, ônibus e conversa."],
+ ["pink","Ruído rosa","Equilibrado, mais suave que o branco. Bom para ler e fazer exercícios."],
+ ["white","Ruído branco","Mais agudo, como um chiado. Abafa vozes por perto."],
+ ["rain","Chuva","Chuva constante com gotas. Relaxa sem distrair."],
+ ["waves","Ondas do mar","Ondas lentas, a cada 8 segundos. Bom para revisar com calma."],
+ ["pad","Ambiente lo-fi","Acordes suaves e lentos, sem letra e sem batida forte."],
+ ["piano","Piano calmo","Notas soltas de piano com eco, bem espaçadas."]
+];
+const TUTOR_MODES={
+ mentor:{n:"Mentoria (sem dar a resposta)",ph:"Diga o que está estudando ou cole o que tentou fazer.",sys:"Você é mentor e tutor de um iniciante brasileiro em BI (8 anos na área administrativa da Força Aérea, formado em Análise e Desenvolvimento de Sistemas) que quer aprender a FAZER, não só assistir, para se sair bem nas entrevistas. Use o método socrático: não entregue a resposta pronta de primeira. 1) Pergunte o que ele já tentou ou peça que tente; 2) dê uma dica de cada vez; 3) quando ele acertar, peça que explique com as palavras dele; 4) corrija conceitos errados com franqueza; 5) no fim, faça uma pergunta de entrevista sobre o tema e avalie a resposta dele (nota de 0 a 10 e o que faltou). Use exemplos administrativos (documentos, prazos, compras). Português do Brasil, frases curtas."},
+ erro:{n:"Explicar um erro",ph:"Cole a consulta SQL, a medida DAX ou o passo do Power Query e a mensagem de erro.",sys:"Você é um tutor paciente de SQL, DAX, Power Query e Excel para um iniciante brasileiro que está migrando para BI. Explique em português simples: 1) o que o erro quer dizer, 2) a causa mais provável no código enviado, 3) o código corrigido num bloco, 4) uma dica para não repetir. Seja breve."},
+ duvida:{n:"Tirar uma dúvida",ph:"Ex.: qual a diferença entre ALL e REMOVEFILTERS? Quando usar DirectQuery?",sys:"Você é um tutor de dados e Power BI para um iniciante brasileiro que vai fazer a certificação PL-300. Responda em português, direto, com um exemplo curto e prático (de preferência com dados administrativos, como documentos, prazos e compras). No fim, diga em uma linha se o tema costuma cair na PL-300."},
+ texto:{n:"Revisar texto (LinkedIn, currículo, post)",ph:"Cole o texto e diga onde vai usar.",sys:"Você revisa textos profissionais em português para alguém em transição de carreira: 8 anos como Cabo de Administração na Força Aérea Brasileira, formado em Análise e Desenvolvimento de Sistemas, buscando vaga de Analista de BI/Dados Júnior. Devolva: 1) a versão revisada, pronta para colar; 2) três ajustes que você fez e por quê. Regras: tom profissional e humano, verbos de ação, números quando houver, sem exagero nem clichês, sem jargão militar sem explicação. Nunca inclua informações internas da FAB. Enquanto ele for militar da ativa, não sugira oferecer serviços pagos."},
+ entrev:{n:"Simular entrevista",ph:"Escreva \"começar\" ou cole a descrição da vaga.",sys:"Você é um recrutador brasileiro entrevistando um candidato para Analista de BI/Dados Júnior. Faça UMA pergunta por vez (alternando comportamental e técnica de SQL, Power BI, DAX e Excel). Depois de cada resposta, dê uma nota de 0 a 10, um ponto forte, um ponto a melhorar e uma versão melhor da resposta em até 5 linhas (método STAR quando couber), e então faça a próxima pergunta. O candidato tem 8 anos de experiência administrativa na Força Aérea e está saindo em 2027. Responda sempre em português."}
+};
+const MENTOR={
+ claude:{d:"Escreva um prompt pedindo ao Claude para corrigir uma consulta SQL sem dar a resposta pronta, só dicas, e teste.",q:["Como você usa IA no trabalho sem confiar cegamente?","Dê um exemplo de tarefa que a IA acelerou para você e de como conferiu o resultado."]},
+ excel:{d:"Numa planilha nova, sem consultar: PROCX entre duas tabelas, SE com duas condições e uma tabela dinâmica por mês.",q:["Qual a diferença entre PROCV e PROCX?","Como você limparia uma base com datas em formatos diferentes?","Quando uma tabela dinâmica não basta?"]},
+ git:{d:"Crie um repositório, faça 3 commits com mensagens claras e escreva um README com 4 seções.",q:["Para que serve o Git num projeto de BI?","Como você organiza um repositório de portfólio?"]},
+ sql:{d:"Sem olhar a aula, escreva uma consulta com JOIN, WHERE, GROUP BY e HAVING na base do Desafio SQL (Estudar › Revisar).",q:["Qual a diferença entre WHERE e HAVING?","Explique INNER JOIN e LEFT JOIN com um exemplo de documentos e setores.","Como você acharia registros duplicados numa tabela?"]},
+ pbi:{d:"Importe uma planilha, crie 2 relacionamentos e um visual com filtro, sem seguir o vídeo.",q:["Qual a diferença entre Power Query e DAX?","O que você faz quando um relatório está lento?","Como você escolhe o visual certo para uma pergunta?"]},
+ model:{d:"Desenhe no papel um modelo estrela para documentos e setores: fato, dimensões e chaves.",q:["O que é modelo estrela e por que usar?","Qual a diferença entre tabela fato e dimensão?","O que é granularidade?"]},
+ dax:{d:"Escreva de memória: total, % do total com ALL e acumulado do ano com TOTALYTD; depois teste.",q:["O que é contexto de filtro e contexto de linha?","Para que serve o CALCULATE?","Qual a diferença entre coluna calculada e medida?"]},
+ sqladv:{d:"Resolva com CTE e função de janela: os 3 setores com mais atraso em cada mês.",q:["O que é uma CTE e quando usar?","Para que servem ROW_NUMBER e RANK?","Como você deixaria uma consulta lenta mais rápida?"]},
+ ia1:{d:"Peça a uma IA o resumo de uma tabela sua e encontre pelo menos um erro ou exagero na resposta.",q:["Quais os riscos de usar IA generativa com dados da empresa?","Como você confere se uma resposta da IA está certa?"]},
+ pl300:{d:"Faça 10 questões do simulado sem consultar e explique em voz alta por que cada alternativa errada está errada.",q:["Como você implementaria segurança por linha (RLS)?","Qual a diferença entre importação e DirectQuery?","Como você publica e compartilha um relatório no Power BI Service?"]},
+ copilot:{d:"Use o Copilot para criar uma medida DAX e depois explique cada parte dela sem ajuda.",q:["Onde o Copilot ajuda e onde ele erra no Power BI?","Que cuidado tomar ao usar Copilot com dados sensíveis?"]},
+ py:{d:"Com pandas, leia um CSV, trate os nulos, agrupe por mês e salve o resultado, sem copiar da aula.",q:["Quando você usaria Python em vez de Power Query?","Como você trata valores nulos no pandas?","O que o groupby faz?"]},
+ ia2:{d:"Classifique 20 textos com IA, revise à mão e calcule quantos ela acertou.",q:["Como você avaliaria se um modelo de IA está acertando?","O que é viés num modelo e como perceber?"]},
+ stats:{d:"Calcule média, mediana e desvio padrão de uma coluna e explique qual resume melhor e por quê.",q:["Média ou mediana: quando usar cada uma?","O que é correlação e por que ela não prova causa?","Como você identificaria um valor fora do normal?"]},
+ gov:{d:"Escreva o dicionário de 5 colunas de um projeto seu: nome, descrição, tipo, regra de validação e dono.",q:["O que é governança de dados, em uma frase?","Como a LGPD afeta um dashboard?","O que é qualidade de dados e como você mede?","Para que serve um dicionário de dados?"]},
+ sc900:{d:"Explique, sem ler, como um rótulo de confidencialidade do Purview protege um relatório com dados pessoais.",q:["Qual a diferença entre autenticação e autorização?","Como a LGPD aparece no Microsoft Purview?"]},
+ dp900:{d:"Explique a diferença entre um banco relacional, um não relacional e um data warehouse, com um exemplo de cada.",q:["O que é ETL e o que é ELT?","Quando usar processamento em lote e quando usar tempo real?"]},
+ pl900:{d:"Desenhe um fluxo do Power Automate que avisa por e-mail quando um prazo vence numa planilha.",q:["Que tarefa administrativa você automatizaria primeiro?","Qual a diferença entre Power Apps e Power Automate?"]},
+ ai900:{d:"Explique em 2 minutos, sem ler, a diferença entre visão computacional, linguagem natural e IA generativa.",q:["O que é IA responsável?","Dê um exemplo de uso de IA numa área administrativa."]},
+ fabric:{d:"Desenhe o caminho do dado: arquivo → lakehouse → modelo semântico → relatório, e explique cada etapa.",q:["O que é um lakehouse?","O que é Direct Lake e qual a vantagem?","Quando faz sentido usar Fabric em vez de só Power BI?"]},
+ lider:{d:"Escreva como você daria um feedback difícil a um colega usando situação, comportamento e impacto.",q:["Como você lida com um colega que não entrega?","Conte uma vez em que você organizou pessoas para um objetivo.","Como você dá e recebe feedback?"]},
+ p1:{d:"Antes de abrir qualquer tutorial, escreva o plano desta etapa em 3 passos. Só pesquise o que travar.",q:["Conte sobre um projeto de BI que você fez, do começo ao fim.","Que problemas você achou nos dados reais e como tratou?","Por que você escolheu esse modelo de dados?","Como você protegeu dados pessoais que estavam no texto dos pedidos?"]},
+ p2:{d:"Antes de abrir qualquer tutorial, escreva o plano desta etapa em 3 passos. Só pesquise o que travar.",q:["Como você trabalha com dados públicos grandes e bagunçados?","Como você conferiu se os totais estavam certos?","Qual foi o achado mais interessante e o que você recomendaria?"]},
+ p3:{d:"Antes de abrir qualquer tutorial, escreva o plano desta etapa em 3 passos. Só pesquise o que travar.",q:["Como você faria uma previsão e explicaria o limite dela para um gestor?","Como você detecta um valor fora do normal?","Como você usou IA sem perder o controle do resultado?"]}
+};
+const IV_PROMPT="Simulado semanal de entrevista (20 min) para vaga de Analista de BI/Dados Júnior. Faça 5 perguntas, uma por vez: 3 sobre os meus projetos (prazos da LAI com governança e LGPD; gastos da Defesa com orçamento, compras e viagens; combustíveis da ANP com Python, previsão e Fabric), 1 técnica de SQL ou DAX e 1 comportamental pedindo uma história no formato STAR. Avalie cada resposta e, no fim, diga o que treinar na próxima semana.";
+
+/* ================= DATAS-CHAVE ================= */
+const START="2026-12-07", END="2027-09-30"; let BAIXA="2027-02-28", CIVIL="2027-03-01";
+/* férias de 03/12 a 03/01 e meio expediente (08h–12h) de 04/01 até a Quarta de Cinzas */
+const FERIAS_END="2027-01-03", MEIO_END="2027-02-10";
+const DEF_CFG={baixa:"2027-02-28",h1:"19:00",h2:"09:00",hw:"09:00",hf:"09:00",hm:"14:00",eng:true,sql:true,post:true,home:"hoje"};
+const OFF=new Set(["2026-12-24","2026-12-25","2026-12-31","2027-01-01","2027-02-08","2027-02-09","2027-03-26","2027-04-21","2027-05-27","2027-09-07"]);
+const KINDS={curso:"Curso",projeto:"Portfólio",marca:"Perfil profissional",ingles:"Inglês",pratica:"Prática",cand:"Candidaturas",rev:"Revisão",marco:"Marco"};
+
+/* ================= CURSOS (fila principal, na ordem) ================= */
+
+/* ================= PROJETOS ================= */
+
+/* ================= PERFIL PROFISSIONAL (fila) ================= */
+
+
+
+const CTAGS={ia:"IA",dados:"Dados",gd:"Governança",cert:"Certificação",gestao:"Gestão",gov:"Governo",pos:"Pós e MBA"};
+
+/* ================= MOTOR DO CRONOGRAMA ================= */
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c);};
+const addD=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return iso(d);};
+const todayS=()=>iso(new Date());
+const WD=["dom","seg","ter","qua","qui","sex","sáb"];
+const MES=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+const fmt=s=>{const d=parse(s);return WD[d.getDay()]+", "+d.getDate()+" "+MES[d.getMonth()];};
+const fmtShort=s=>{const d=parse(s);return pad(d.getDate())+"/"+pad(d.getMonth()+1);};
+const hrs=m=>String(Math.round(m/6)/10).replace(".",",");
+const diff=(a,b)=>Math.round((parse(b)-parse(a))/864e5);
+
+/* ================= v4: FLASHCARDS (revisão espaçada) ================= */
+/* d = baralho; liberado quando começa o curso ligado a ele (DECKS[d].c) ou quando você libera todos */
+CARDS.forEach((c,i)=>{c.id="k"+i;});
+
+/* ================= v4: HABILIDADES DA PL-300 (guia oficial de 20/04/2026) ================= */
+SKILLS.forEach(d=>d.g.forEach((g,gi)=>{g.items=g[1].map((t,i)=>({id:d.id+gi+"_"+i,t}));}));
+const SK_ALL=SKILLS.flatMap(d=>d.g.flatMap(g=>g.items));
+const SK_LV=["Não vi","Estudei","Domino"];
+
+/* ================= v4: CANDIDATURAS ================= */
+const ETAPAS=[["env","Enviada"],["tri","Triagem / RH"],["tec","Teste técnico"],["ent","Entrevista"],["fin","Entrevista final"],["prop","Proposta"],["nao","Não seguiu"],["sem","Sem retorno"]];
+const ETAPA_N=Object.fromEntries(ETAPAS);
+const FONTES=["LinkedIn","Gupy","Indicação","Site da empresa","Indeed","Vagas.com","InfoJobs","Emprega Brasil","Catho","Outra"];
+
+const MAINQ=[];COURSES.forEach(c=>{c.s.forEach((t,i)=>MAINQ.push({id:"c:"+c.id+":"+i,k:"curso",t:c.n+" · "+t,m:75,c:c.id,d:c.src,u:c.u}));if(c.exam)MAINQ.push({id:"c:"+c.id+":exam",k:"marco",t:c.exam,m:150,c:c.id,d:"Agende com 2 semanas de antecedência, de preferência num horário em que você rende bem. Faça em casa (online) ou num centro de provas.",u:c.u});});
+const PROJQ=[];PROJECTS.forEach((p,pn)=>p.s.forEach((t,i)=>PROJQ.push({id:"p:"+p.id+":"+i,k:"projeto",t:"Projeto "+(pn+1)+" ("+p.sn+") · "+t,m:90,p:p.id,ok:p.ok&&p.ok[i],d:(i===0?KB_TIP:"")+"Repositório: "+p.repo+". Fonte: "+p.src+".",u:p.u})));
+/* preparação antes de 07/12 (fora do cronograma diário): contas e programas prontos para o primeiro dia */
+const BRANDQ=BRAND.map(b=>({id:"b:"+b.id,k:"marca",t:b.t,m:30,d:b.d}));
 function msBaixa(){const o={};
  o[addD(BAIXA,-2)]=["Pedir documentos de saída: certidão de tempo de serviço e alterações","Leve para casa cópias de certificados de cursos militares e da referência elogiosa."];
  o[BAIXA]=["Último dia de serviço previsto (confirme a data)","A partir de amanhã você pode trabalhar, estagiar e fazer freelas."];
  o[CIVIL]=["Primeiro dia civil: mudar o LinkedIn para disponibilidade imediata","Troque o início do título \"Cabo da FAB – Administração\" por \"Ex-militar da FAB (8 anos em Administração)\", ponha a data de fim no cargo da FAB, ligue o Open to Work e atualize a linha de topo do currículo. Confira também a Transpetro."];
  return o;}
-const EXTRA_MAIN=["Sessão de curso extra (Estudar › Cursos › Explorar mais cursos)","Desafio de DAX: recrie 3 medidas de um projeto sem consultar","Estudar uma vaga real e listar o que falta aprender","Sessão de curso extra (Estudar › Cursos › Explorar mais cursos)","Refazer um visual de um projeto para ficar mais claro"];
 const ENG_C="Inglês 30 min (nível básico a intermediário): uma lição (Duolingo, Cambly ou BBC Learning English) e 1 página da documentação do Power BI em inglês";
 const EN_LV=[["A1","A1 · iniciante"],["A2","A2 · básico"],["B1","B1 · intermediário"],["B2","B2 · intermediário alto"],["C1","C1 · avançado"],["C2","C2 · proficiente"]];
-const EN_PLAN={A1:"15 min de vocabulário de dados (Estudar › Revisar › Flashcards › Inglês de dados) e 15 min de uma lição básica (Duolingo ou BBC Learning English)",A2:"15 min de vocabulário de dados (Estudar › Revisar › Flashcards › Inglês de dados) e 15 min de uma lição (BBC Learning English ou Duolingo)",B1:"15 min de vocabulário de dados e 15 min lendo em voz alta um README seu em inglês ou 1 página da documentação do Power BI",B2:"15 min de vocabulário de dados e 15 min de fala: explique um projeto seu em inglês por 2 min e grave",C1:"15 min de leitura técnica (documentação ou blog de dados) e 15 min de conversa (Cambly ou simulado em inglês com o tutor)",C2:"15 min de leitura técnica e 15 min de simulado de entrevista em inglês com o tutor"};
 function engText(o){ const lv=o&&o.enLv; return lv&&EN_PLAN[lv]?"Inglês 30 min (plano do nível "+lv+"): "+EN_PLAN[lv]:ENG_C+". Faça o teste EF SET (Hoje › Pendências do plano) para o plano seguir o seu nível"; }
 const SQLP_C="Desafio SQL 20 min (sql-practice.com, HackerRank SQL ou LeetCode SQL 50)";
 
@@ -687,10 +980,10 @@ function build(o){
   const proj=()=>{ if(pi<pQ.length&&pbiN<8&&!(rp&&s>=rp&&pQ!==PROJQ&&pQ.length<PROJQ.length)){ main(); return; } if(pi<pQ.length) push(T,pQ[pi++],s); else push(T,{id:"x:"+s+":p",k:"projeto",t:"Melhorar um projeto publicado (visual, README ou nova análise)",m:90,d:"Projetos vivos mostram evolução. Faça um commit por melhoria."},s); };
   const brand=()=>{ if(bi<bQ.length) push(T,bQ[bi++],s); };
   const eng=()=>o.eng&&push(T,{id:"r:"+s+":en",k:"ingles",t:"Inglês 30 min"+(o.enLv&&EN_PLAN[o.enLv]?" (nível "+o.enLv+")":""),d:engT,m:30},s);
-  const sqlp=()=>{ if(sqlOn&&o.sql) push(T,{id:"r:"+s+":sq",k:"pratica",t:SQLP_C,m:20},s); };
+  const sqlp=()=>{ if(sqlOn&&o.sql) push(T,{id:"r:"+s+":sq",k:"pratica",t:"Desafio SQL 20 min",d:"Um exercício em sql-practice.com, HackerRank SQL ou LeetCode SQL 50.",m:20},s); };
   const rev=()=>push(T,{id:"r:"+s+":rv",k:"rev",t:"Revisão da semana e plano da próxima",m:20,d:"Veja o que ficou pendente na aba Agenda, anote 3 coisas que aprendeu e confira os horários da semana."},s);
   const post=()=>{if(!o.post)return;const p=POSTS[(po++)%POSTS.length];push(T,{id:"r:"+s+":po",k:"marca",t:"Post no LinkedIn: "+p,m:40,d:"Curto (até 1.300 caracteres), com um print ou gráfico seu e uma pergunta no fim. Responda os comentários no mesmo dia."},s);};
-  const ivw=()=>push(T,{id:"r:"+s+":iv",k:"pratica",t:"Simulado de entrevista (20 min): 3 perguntas dos seus projetos, 1 técnica e 1 história STAR",m:20,d:"Responda em voz alta, com o cronômetro de 2 min por resposta. No app do Claude o tutor faz as perguntas e avalia; fora dele, use Carreira › Entrevista e as histórias STAR. Anote o que treinar na semana seguinte."},s);
+  const ivw=()=>push(T,{id:"r:"+s+":iv",k:"pratica",t:"Simulado de entrevista (20 min)",m:20,d:"3 perguntas dos seus projetos, 1 técnica e 1 história STAR. Responda em voz alta, com o cronômetro de 2 min por resposta. No app do Claude o tutor faz as perguntas e avalia; fora dele, use Carreira › Entrevista e as histórias STAR. Anote o que treinar na semana seguinte."},s);
   const nSat=Math.ceil(d.getDate()/7);
   const cand=n=>push(T,{id:"r:"+s+":ca",k:"cand",t:n+" candidaturas personalizadas e registro na planilha",m:n>=5?60:45,d:"Ajuste o resumo do currículo às palavras da vaga. Alterne vagas de BI/Dados Júnior e vagas híbridas (administrativo, planejamento, controladoria com Power BI). Filtro: Rio (presencial, híbrido ou home office), remoto de qualquer lugar e, fora do Rio, SP."},s);
   if(MS[s]) push(T,{id:"m:"+s,k:"marco",t:MS[s][0],m:MS[s][2]||15,d:MS[s][1]},s);
@@ -935,7 +1228,6 @@ function clOff(btn){if(!btn.dataset.arm){btn.dataset.arm="1";btn.textContent="To
 /* cada aparelho grava no progresso a versão do app, onde abriu e quando (lista em Configurações) */
 const APP_V=32;
 /* o que mudou em cada versão (aparece uma vez depois que o app atualiza e fica em Configurações) */
-const NEWS={32:"App mais limpo: 5 abas (Estudar junta Cursos e Revisar; Carreira é o antigo Perfil), Progresso no ícone de gráfico do topo, tarefas em uma linha (toque para ver detalhes, mentoria e diário), trilha de cursos em Módulos dentro das 4 fases e Pendências do plano no Hoje.",31:"Ferramentas: agendar a PL-300 em 12/01, LinkedIn Premium grátis de 15/02 a 12/03 (com lembrete de cancelar), conferir o Excel desktop antes de 07/12 e um quadro do que pagar e do que não pagar em Perfil › Transição.",30:"Certificações da Microsoft no cronograma: SC-900 (mar/abr), DP-900 e PL-900 (opcional), além da AI-901; DP-600 e Applied Skills na trilha. Plataformas de vaga em 18/01, painel de mercado em Candidaturas e o texto da brigada corrigido (apoio às instruções, referência em jun/2026).",29:"Atualização de 11/11: GitHub, currículo, carta em duas vias (com e sem CPF), Microsoft Learn e Banco de Talentos marcados como feitos. Novas pendências: e-mail e inglês no Portal do Militar, correção do SIGPES e link do Learn no LinkedIn. Instagram, NovyPro e perfis na Gupy, Indeed, Vagas.com e Catho entraram nas tarefas.",6:"Cronograma das férias e do meio expediente; link antigo do GitHub junta o progresso no Netlify.",7:"Aviso de versão nova com botão Atualizar e a versão de cada aparelho em Configurações.",8:"Inglês 3 vezes por semana (terça, quinta e sábado) nas férias e no meio expediente; texto de home office no Currículo.",9:"Preparação antes de 07/12 (contas e programas) e diagnóstico de Excel no primeiro dia.",10:"A seção Sobre agora mostra a versão real do app.",11:"Checklist dos cursos da Udemy na aba Cursos.",12:"Plano usa os cursos que você já tem na Udemy; SQL agora em MySQL.",13:"Novo checklist de cursos complementares gratuitos na aba Cursos.",14:"Checklist do que fazer depois da PL-300, com o link de cada curso e certificação.",15:"Trilha completa do início ao CDO, em 9 fases, na aba Cursos; curso de governança no cronograma; revisão geral.",16:"Áudio igual ao do app da Transpetro: 4 modos, pausa para pensar, botões do fone, modo bolso e 7 sons que seguem nas outras telas.",17:"Novidades: analisador de vaga, treino de entrevista, cofre de certificados, contatos e planejador da transição (Perfil); desafio de SQL (Revisar); nível, medalhas, meta semanal e relatório em PDF (Progresso); mapa da trilha (Cursos). Currículo com compras, SIAFI e SILOMS.",18:"Revisão geral: AI-900 trocada pela AI-901 (a Microsoft aposentou a antiga), simulado da PL-300 no endereço novo e links quebrados corrigidos.",19:"Cursos trocados pelos melhores da Udemy.",20:"Trilha da Udemy atualizada (lista única Trilha BI, 18 cursos): Claude como tutor na 1ª semana (Paulo Andrade), SQL da Midori Toyota, Master Power BI do Felipe Mafra, PL-300 do Ricardo Pacheco e Copilot para Excel; Cowork e Claude Code (Kleber) opcionais na Fase 4; Python Data V e Python + RPA opcionais na Fase 6; repetidos foram para a Reserva.",21:"Carta de recomendação no plano: lembrete para pedir a assinatura em 04/01/2027 e um guia de como usá-la nas candidaturas e entrevistas (Perfil → Currículo).",28:"Textos do LinkedIn finais: Sobre em blocos, competências por fase e datas dos 5 cargos na FAB conferidas por você.",27:"LinkedIn em dia: título, Sobre, experiência em 5 cargos, certificados, competências, foto, capa e URL marcados como feitos. Nas pendências entrou a primeira publicação (com 30 a 50 conexões) e, em 04/01, o pedido de recomendação junto com a carta.",26:"Novidades para a vaga: quadro Kanban e critério de pronto em cada etapa dos projetos, simulado de entrevista toda semana a partir de 15/02, inglês pelo seu nível do EF SET com cartões de vocabulário, desafio de Power BI, mentor e leitura do DAMA todo mês a partir de abril, rotina de treinos no Hoje e revisão mensal da reserva.",25:"Revisão geral: contagem regressiva lado a lado no celular, metas das fases e medalha do portfólio ajustadas aos 3 projetos, currículo, planilha e alertas de vagas antes das candidaturas (15/02), tarefas repetidas trocadas e vídeos dos projetos 2 e 3 no plano.",24:"Projeto 1 agora com dados reais: prazos da Lei de Acesso à Informação (CGU). Os 3 projetos ganharam README em inglês, e os projetos 2 e 3 uma etapa de estatística; o projeto 1 ganhou IA no Power BI.",23:"Mentoria em cada sessão (desafio sem olhar, explicar em voz alta e pergunta de entrevista), 3 projetos completos no lugar de 6, contagem regressiva no Hoje, orçamento das provas e backup das finanças (Transição), 5 histórias para entrevista, pendências em Configurações e revisão trimestral (Progresso).",22:"Revisão de novembro: curso de liderança da ENAP no cronograma (abril), pós e MBA no catálogo, trilha com opções concretas de pós, MBA e do programa Executivo de Dados e IA, e semanas de fevereiro e dias de busca de vaga sem passar do horário de estudo."};
 const SEENK=KEY+"-seenV";
 /* versão nova baixada pelo service worker (app instalado): avisa e atualiza com um toque, como no app da Transpetro */
 function swUpdated(){
@@ -1042,15 +1334,6 @@ function stats(){
 function overdue(){ const t=todayS(), from=addD(t,-21), out=[]; for(let s=from;s<t;s=addD(s,1)){ (SCHED[s]||[]).forEach(x=>{ if(x.k!=="folga"&&!isDone(x.id)) out.push(x); }); } return out; }
 
 /* ================= VIEWS ================= */
-const ICONS={
- hoje:'<path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/>',
- agenda:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
- cursos:'<path d="M3 6.5 12 3l9 3.5-9 3.5z"/><path d="M7 8.5V14c0 1.7 2.2 3 5 3s5-1.3 5-3V8.5"/>',
- port:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>',
- perfil:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
- prog:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
- rev:'<rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/><path d="M7 13h6M7 16h4"/>'
-};
 const TABS=[["hoje","Hoje"],["agenda","Agenda"],["cursos","Estudar"],["port","Portfólio"],["perfil","Carreira"]];
 const TAB_OF={rev:"cursos"}; const VIEW_OK=["hoje","agenda","cursos","rev","port","perfil","prog","config"];
 let estSeg="cursos";
@@ -1221,46 +1504,6 @@ WIRES.cursos=el=>{
 };
 
 /* Portfólio */
-const README_TPL=`# Prazos da Lei de Acesso à Informação no governo federal
-
-> Dados públicos da CGU. Textos dos pedidos não publicados (LGPD).
-
-## Pergunta de negócio
-Quais órgãos respondem fora do prazo legal (20 dias + 10) e por quê?
-
-## O que eu fiz
-- Baixei 2 anos de pedidos e recursos da LAI (CGU)
-- Tratei no Power Query e fiz o relatório de qualidade dos dados
-- Modelei em estrela no MySQL (2 fatos, 3 dimensões)
-- Escrevi 8 consultas SQL para responder às perguntas
-- Construí o dashboard no Power BI com medidas DAX e RLS por órgão
-
-## Principais resultados
-1. O órgão X concentra 40% dos atrasos
-2. Pedidos sobre o assunto Y levam o dobro do prazo médio
-3. ...
-
-## Prints
-![Visão geral](img/visao-geral.png)
-
-## Ferramentas
-Power Query · MySQL · Power BI · DAX · Python
-
-## Como reproduzir
-1. Baixe os arquivos em buscalai.cgu.gov.br
-2. Rode sql/01_criar_tabelas.sql
-3. Abra powerbi/lai-prazos.pbix
-
-## Contato
-LinkedIn: linkedin.com/in/seu-nome`;
-const TREE=`nome-do-projeto/
-├── README.md        ← vitrine do projeto
-├── dados/           ← CSV pequenos ou link para a fonte
-├── sql/             ← scripts numerados (01_, 02_...)
-├── notebooks/       ← Python, quando houver
-├── powerbi/         ← .pbix (ou só prints, se for grande)
-├── img/             ← prints usados no README
-└── .gitignore`;
 function kanbanHTML(p,ids){ const nd=ids.map((id,i)=>i).filter(i=>!isDone(ids[i])), dn=ids.map((id,i)=>i).filter(i=>isDone(ids[i]));
  const cur=nd.length?[nd[0]]:[], todo=nd.slice(1), li=i=>'<li>'+(i+1)+'. '+esc(p.s[i].length>56?p.s[i].slice(0,54)+"…":p.s[i])+'</li>';
  const col=(n,L,max,cls)=>'<div class="kbcol '+cls+'"><strong class="small">'+n+' <span class="num">'+L.length+'</span></strong><ul>'+L.slice(0,max).map(li).join("")+(L.length>max?'<li class="muted">e mais '+(L.length-max)+'</li>':"")+'</ul></div>';
@@ -1288,74 +1531,6 @@ WIRES.port=el=>{ el.querySelectorAll("[data-ps]").forEach(b=>b.onclick=()=>{port
 
 /* Perfil profissional */
 let pfSeg=todayS()>="2027-02-01"?"vagas":"li";
-const TXT={
- headline:"Cabo da FAB – Administração | Em transição para Análise de Dados e BI | Excel · Power BI · SQL | Formado em ADS",
- about:`Profissional administrativo em transição para Análise de Dados e BI. Formado em Análise e Desenvolvimento de Sistemas, com 8 anos na Força Aérea Brasileira lidando com documentos, prazos, controles, compras públicas e informação sensível.
-
-Na FAB, atuei como auxiliar da chefia e dos encarregados de seção em:
-• Documentos e gestão: confecção de Normas Padrão de Ação, Notas de Serviço e ofícios no SIGADAER, atualização das apresentações semanais das chefias e organização de reuniões.
-• Controle e acompanhamento: situação de um programa em mais de 60 organizações para a chefia, além da emissão e solicitação de passes e crachás.
-• Compras públicas: processos de aquisição, pregões eletrônicos, consulta de empenhos e pagamentos no SIAFI e no SILOMS e acompanhamento de prazos e entregas com fornecedores.
-• Rotinas e operações: escalas, permutas e treinamento de uma tropa de cerca de 64 militares, controle de acesso de um complexo com nove organizações e logística de eventos com até 100 participantes.
-• Apoio técnico: suporte de informática, instalação de softwares como o Bizagi (mapeamento de processos) e projeções em palestras e reuniões.
-
-Reconhecimentos: promovido a Cabo por merecimento (grau 8,75 no curso de formação), comportamento "Ótimo" e referência elogiosa pelo apoio às instruções do Curso de Combate a Incêndio para brigadistas (jun/2026).
-
-Formação: Tecnólogo em Análise e Desenvolvimento de Sistemas (Estácio, 2026) e cursos da ENAP em LGPD, Acesso à Informação e Ética no Serviço Público.
-
-Por que dados: percebi que boa parte do trabalho era reunir informação à mão para alguém decidir. Hoje estudo Excel, Power BI e SQL para transformar controles em indicadores e painéis confiáveis, com atenção à qualidade e à governança dos dados.
-
-Busco: vaga de Analista de Dados ou BI Júnior, ou funções administrativas, de planejamento e de controladoria que usem dados. Disponível a partir de março de 2027, no Rio de Janeiro (presencial, híbrido ou remoto).
-
-Competências: Organização · Cumprimento de prazos · Proteção de dados (LGPD) · Comunicação · Resolução de problemas · Pacote Office`,
- exp:`Força Aérea Brasileira · mar/2019 – fev/2027 · Rio de Janeiro
-(No LinkedIn, cada função abaixo é um cargo dentro da mesma empresa. Datas conferidas em 10/11/2026.)
-
-Auxiliar administrativo · III COMAR, Subcoordenadoria de Acompanhamento das Atividades Terrestres (SAT) · fev/2025 – fev/2027
-• Auxiliar do chefe da subcoordenadoria e do encarregado da seção na rotina administrativa.
-• Redigi documentos oficiais (ofícios, NPA e NS) no SIGADAER, o sistema de gestão documental do Comando.
-• Atualizei a apresentação semanal de acompanhamento das atividades usada nas reuniões das chefias.
-• Mantive o controle de acompanhamento de um programa em mais de 60 organizações, com a situação de cada uma para a chefia.
-• Apoiei o chefe no sistema de gestão de tarefas, atualizando prazos e andamentos.
-• Organizei a logística de eventos com até 100 participantes (marcha, instrução de tiro, competição esportiva).
-• Apoio de informática: instalação de programas (como o Bizagi, de modelagem de processos) e projeções em reuniões e briefings.
-• Apoio às atividades e instruções práticas e teóricas de formação da brigada de incêndio e primeiros socorros, com referência elogiosa formal (jun/2026).
-
-Recepção e controle de acesso · III COMAR · nov/2023 – fev/2025
-• Controle de acesso de pessoas e veículos de um complexo com 9 organizações: identificação, passes e crachás, contato com os setores e com a guarda do dia.
-
-Auxiliar de patrimônio · Grupamento de Segurança e Defesa do Rio de Janeiro (GSD-RJ) · fev/2023 – nov/2023
-• Apoiei a montagem de processos de compra de material (equipamentos para a segurança de autoridades e material esportivo): pesquisa de preços, contato com fornecedores e acompanhamento de pregões eletrônicos no portal de compras do governo federal.
-• Consultei empenhos e acompanhei pagamentos no SIAFI e no SILOMS, com prazos e entregas junto aos fornecedores.
-• Apoio de informática à seção.
-
-Esquadrão de Honras Militares · GSD-RJ · fev/2022 – fev/2023
-• Montei escalas de serviço, permutas e controle de faltas de uma tropa de cerca de 64 militares.
-• Treinei a tropa para formaturas e atuei na recepção de autoridades.
-
-Segurança e Defesa · Ala 11 e GSD-RJ · mar/2019 – fev/2022
-• Serviço na 1ª, 2ª e 3ª esquadrilhas de segurança e defesa; indicado para o Esquadrão de Honras pelo histórico e por elogios.
-
-Promovido a Cabo por merecimento em 2025 (nota 8,75 no curso de formação).`,
- resA:`Analista de Dados e BI em formação, com 8 anos de experiência em controles administrativos, indicadores e compras públicas na Força Aérea Brasileira, incluindo o acompanhamento de empenhos e pagamentos no SIAFI. Tecnólogo em ADS, com projetos em Power BI, SQL e Excel publicados no GitHub e foco em qualidade e governança de dados. Disponível a partir de março de 2027.`,
- ho:`Estrutura para home office: notebook Intel Core i7 (11ª geração), 16 GB de RAM, SSD e placa de vídeo dedicada, com Windows 11 Pro e monitor secundário. Internet de alta velocidade e estável e ambiente isolado para reuniões.`,
- resB:`Profissional administrativo com 8 anos na Força Aérea Brasileira: documentos oficiais, processos de compra, contato com fornecedores, acompanhamento de empenhos, pagamentos e entregas (SIAFI e SILOMS), escalas, controle de acesso, logística de eventos e apresentações para a chefia. Domínio do pacote Office, com Excel aplicado a controles e relatórios. Tecnólogo em ADS. Disponível a partir de março de 2027.`,
- gh:`### Olá! Sou o Pedro Henrique
-
-Analista de Dados e BI em formação, vindo de 8 anos de gestão administrativa na Força Aérea Brasileira.
-Gosto de transformar controles manuais em painéis que ajudam a decidir.
-
-**Ferramentas:** Power BI · DAX · SQL (MySQL) · Excel · Power Query · Python (aprendendo)
-
-**Projetos em destaque**
-- [Prazos da LAI no governo federal](link) — SQL + Power BI, governança e LGPD
-- [Dinheiro público da Defesa](link) — orçamento, compras e viagens
-- [Combustíveis no Brasil (ANP)](link) — séries temporais, previsão e Fabric
-
-**Formação:** Tecnólogo em ADS (Estácio, 2026) · LGPD e Acesso à Informação (ENAP)
-
-📫 [LinkedIn](link) · nome.sobrenome@gmail.com`
-};
 function brandList(g){ return '<div class="tasks">'+BRAND.filter(b=>b.g===g).map(b=>taskHTML(IDX["b:"+b.id],true)).join("")+'</div>'; }
 function copyBlock(key,title){ return '<div class="stack"><div class="dayhead"><h3>'+title+'</h3><button class="btn ghost sm" data-copy="'+key+'" type="button">Copiar</button></div><pre class="copybox">'+esc(TXT[key])+'</pre></div>'; }
 function mktHTML(){
@@ -1410,22 +1585,6 @@ const brl=n=>"R$ "+Math.round(n||0).toLocaleString("pt-BR");
 const num=v=>{const x=parseFloat(String(v||"").replace(/\./g,"").replace(",","."));return isFinite(x)?x:0;};
 
 /* ---------- 1. Analisador de vaga (inspirado em Jobscan e Teal) ---------- */
-const KW=[
- ["Power BI",/power\s?bi/i,["pbi","pl300"]],["DAX",/\bdax\b/i,["dax"]],["Power Query",/power\s?query|\betl\b|tratamento de dados/i,["excel","pbi"]],
- ["SQL",/\bsql\b|consultas? em banco|banco de dados/i,["sql","sqladv"]],["Excel avançado",/excel( avan[çc]ado)?|procv|procx|tabela[s]? din[âa]mica/i,["excel"]],
- ["Python",/python|pandas/i,["py"]],["Estatística",/estat[íi]stica/i,["stats"]],["Modelagem de dados",/modelagem|modelo estrela|data warehouse|\bdw\b/i,["model"]],
- ["Dashboards e indicadores",/dashboard|painel|painéis|indicadores|\bkpis?\b/i,["pbi"]],["Relatórios gerenciais",/relat[óo]rios?/i,[]],
- ["VBA / macros",/\bvba\b|macros?/i,[]],["Tableau / Looker / Qlik",/tableau|looker|qlik/i,[]],["Azure / Fabric / nuvem",/azure|fabric|databricks|nuvem|cloud/i,["fabric"]],
- ["Git / GitHub",/\bgit(hub)?\b/i,["git"]],["Inglês",/ingl[êe]s|english/i,[]],["LGPD",/lgpd|prote[çc][ãa]o de dados/i,["gov"]],
- ["Governança de dados",/governan[çc]a de dados|data governance|metadados|dicion[áa]rio de dados/i,["gov"]],["Qualidade de dados",/qualidade de dados|data quality|consist[êe]ncia/i,["gov"]],
- ["Metodologias ágeis",/scrum|[áa]gil|kanban/i,[]],["SAP / ERP",/\bsap\b|\berp\b|totvs|protheus/i,[]],
- ["Compras e licitações",/compras?|licita[çc][ãa]o|preg[ãa]o|cota[çc][ãa]o|suprimentos/i,[]],["Contratos e fornecedores",/contratos?|fornecedor/i,[]],
- ["Orçamento e controladoria",/or[çc]amento|controladoria|custos|financeir/i,[]],["SIAFI / setor público",/siafi|siads|siloms|setor p[úu]blico|administra[çc][ãa]o p[úu]blica/i,[]],
- ["Logística e estoque",/log[íi]stica|estoque|almoxarifado|patrim[ôo]nio/i,[]],["Planejamento",/planejamento/i,[]],["Liderança e equipes",/lideran[çc]a|gest[ãa]o de equipe|coordena[çc][ãa]o de equipe/i,["lider"]],["Gestão de documentos",/document|arquiv|protocolo/i,[]],
- ["Inteligência artificial",/intelig[êe]ncia artificial|\bia\b|copilot|chatgpt|machine learning/i,["claude","ia1","ia2","copilot"]],
- ["Certificação Microsoft",/pl-?300|certifica[çc][ãa]o microsoft/i,["pl300"]],["Superior em TI",/sistemas de informa[çc][ãa]o|ci[êe]ncia da computa[çc][ãa]o|an[áa]lise e desenvolvimento|\bads\b|tecnologia da informa[çc][ãa]o/i,[]],
- ["Comunicação e apresentação",/comunica[çc][ãa]o|apresenta[çc]|storytelling/i,[]],["Organização e prazos",/organiza|prazos?|proatividade/i,[]]
-];
 let VG={txt:"",cv:"A"};
 function cvText(which){ const c=Object.values(ST.certs||{}).map(x=>x.n+" "+x.org).join(" "); return (which==="B"?TXT.resB:TXT.resA)+" "+TXT.exp+" "+TXT.about+" "+TXT.headline+" "+c; }
 function courseStarted(id){ const c=COURSES.find(k=>k.id===id); return !!c&&courseIds(c).some(isDone); }
@@ -1451,32 +1610,6 @@ function vVaga(){
 function wireVaga(el){ const t=el.querySelector("#vgTxt"); if(t) t.oninput=()=>{VG.txt=t.value;}; el.querySelectorAll("#vgCv button").forEach(b=>b.onclick=()=>{VG.cv=b.dataset.v;rerenderKeep();}); const g=el.querySelector("#vgGo"); if(g) g.onclick=()=>{VG.txt=t.value;rerenderKeep();}; }
 
 /* ---------- 2. Treino de entrevista (inspirado em Big Interview e Pramp) ---------- */
-const IVQ=[
- ["c","Fale um pouco sobre você.","Em 1 minuto: FAB (8 anos, administração e compras), ADS, por que dados agora e o que você já construiu (projetos). Termine com o que busca."],
- ["c","Por que você quer sair da Força Aérea?","Fale do futuro, nunca de problemas: o tempo de serviço termina em 2027 e você escolheu dados porque já fazia controles e relatórios."],
- ["c","Por que dados e BI?","Ligue a rotina (prazos, empenhos, entregas, escalas) à vontade de automatizar e decidir com números. Cite um projeto."],
- ["c","Conte uma situação em que você lidou com um prazo apertado.","Use STAR: situação (processo de compra urgente ou evento), tarefa, o que você fez, resultado com número ou prazo."],
- ["c","Conte um erro que você cometeu e o que aprendeu.","Escolha um erro real e pequeno, mostre a correção e o que mudou no seu método (checklist, conferência)."],
- ["c","Como você lida com informação sigilosa?","Processos disciplinares, dados pessoais e LGPD (curso ENAP): acesso mínimo, nada fora do sistema, conferência."],
- ["c","Conte uma vez em que precisou convencer alguém.","Ex.: mostrar a um fornecedor ou à chefia um prazo ou uma alternativa, com dados na mão."],
- ["c","Como você se organiza com muitas demandas ao mesmo tempo?","Lista de prioridades por prazo e impacto, controle em planilha, aviso antecipado quando algo vai atrasar."],
- ["c","Onde você se vê em 5 anos?","Analista pleno com foco em qualidade e governança de dados, com certificações (PL-300, EXIN, CDMP)."],
- ["c","Qual é a sua pretensão salarial?","Pesquise a faixa antes (Glassdoor, vagas parecidas). Dê uma faixa, não um número, e diga que está aberto a conversar."],
- ["t","Explique a diferença entre medida e coluna calculada no Power BI.","Coluna: calculada linha a linha e guardada no modelo. Medida: calculada na hora, conforme os filtros. Prefira medidas."],
- ["t","O que é um modelo estrela?","Uma tabela fato no centro (eventos, valores) ligada a dimensões (data, setor, produto). Mais simples e mais rápido para DAX."],
- ["t","Para que serve o CALCULATE?","Muda o contexto de filtro de uma medida. Ex.: vendas só de 2026, ou ignorando o filtro de setor."],
- ["t","Qual a diferença entre INNER JOIN e LEFT JOIN?","INNER traz só o que existe nas duas tabelas. LEFT traz tudo da esquerda e completa com nulo o que não achou na direita."],
- ["t","Como você trataria dados com duplicados e valores vazios?","Perfilar no Power Query, entender a causa, remover duplicados pela chave certa, decidir caso a caso o que fazer com vazios e documentar a regra."],
- ["t","Como você garante que um número do dashboard está certo?","Conferir com a fonte (total do sistema), testar com um caso conhecido, regras de validação e um dicionário de dados."],
- ["t","Que gráfico você usaria para mostrar evolução mensal?","Linha. Barras para comparar categorias; evite pizza com muitas fatias."],
- ["t","Fale de um projeto do seu portfólio.","Pergunta de negócio, dados (fonte), modelo, 2 medidas, uma descoberta e o que faria diferente."],
- ["t","O que é RLS no Power BI?","Segurança em nível de linha: cada usuário vê só as linhas permitidas (ex.: só o seu setor)."],
- ["a","Como funciona um processo de compra pública?","Planejamento e pesquisa de preços, termo de referência, licitação (pregão eletrônico), empenho, entrega, liquidação e pagamento (Lei 14.133)."],
- ["a","O que você fazia no SIAFI e no SILOMS?","Consultava empenhos e acompanhava pagamentos; acompanhava prazos e entregas com os fornecedores. Mostre que entende o ciclo da despesa."],
- ["a","Como você acompanharia entregas atrasadas de fornecedores?","Planilha ou painel com prazo, status e dias de atraso; contato com o fornecedor; aviso à chefia; registro para avaliar o fornecedor depois."],
- ["a","Você sabe Excel avançado?","Diga o que faz de verdade: PROCX, SOMASES, tabela dinâmica, Power Query. Ofereça mostrar um projeto."],
- ["a","Como você priorizaria pedidos de várias áreas?","Prazo legal ou de entrega, impacto, ordem de chegada. Combine o critério com a chefia e deixe visível para todos."]
-];
 const IVT={c:"Comportamental",t:"Técnica de BI",a:"Administrativa e compras"};
 let IV={f:"all",i:0,show:false,t0:0,tick:null,rec:null,chunks:[],url:null};
 function ivList(){return IVQ.map((q,i)=>Object.assign({i},{k:q[0],q:q[1],d:q[2]})).filter(x=>IV.f==="all"||x.k===IV.f);}
@@ -1491,13 +1624,6 @@ function vEnt(){
  return h;
 }
 function ivStopClock(){clearInterval(IV.tick);IV.tick=null;IV.t0=0;}
-const STORIES=[
- {t:"Organizar uma tropa de cerca de 64 militares",q:"Fale de uma vez em que você organizou pessoas ou liderou sem ter o cargo de chefe.",s:"No Esquadrão de Honras Militares, uma tropa de cerca de 64 militares, as formaturas e cerimônias mudavam com frequência.",ta:"Como Soldado de Primeira Classe, auxiliar na organização das escalas, das permutas e do treinamento da tropa.",a:"Mantive a escala atualizada, controlei permutas e faltas e apoiei o treino, avisando a chefia quando alguma cerimônia ficava descoberta.",r:"Cerimônias com o efetivo completo [diga quantas por mês]. Aprendi a coordenar muita gente com regra clara e registro.",d:"Controle de escala é um controle de dados: regra, registro e conferência."},
- {t:"Documentos oficiais com prazo (NPA e Notas de Serviço)",q:"Conte um momento em que você trabalhou com prazo apertado e muitos envolvidos.",s:"Na SAT do III COMAR, eventos como TACF, tiro anual, 7 de Setembro e Marcha Administrativa dependem de Notas de Serviço e NPA publicadas no prazo.",ta:"Auxiliar na confecção e na conferência desses documentos.",a:"Usei os modelos anteriores, conferi datas, efetivos e responsáveis com os setores e controlei as versões até a publicação.",r:"Documentos publicados no prazo [diga quantos por ano], sem retrabalho na publicação.",d:"É governança na prática: padrão, versão, dono e prazo de cada documento."},
- {t:"Acompanhar um projeto em mais de 60 organizações",q:"Conte uma vez em que você usou dados ou controles para ajudar uma decisão.",s:"A chefia precisava saber a situação de um projeto institucional em mais de 60 organizações militares.",ta:"Auxiliar no controle do que estava concluído e do que estava pendente.",a:"Montei e mantive a planilha de controle, cobrei os pendentes e atualizei a situação nas apresentações semanais das chefias.",r:"A chefia passou a ver o andamento toda semana [diga o % concluído no fim]. Foi meu primeiro indicador de verdade.",d:"É um painel de BI feito à mão: indicador, atualização semanal e cobrança."},
- {t:"Apoio às instruções da brigada de incêndio",q:"Conte uma vez em que você ensinou algo ou foi reconhecido pelo seu trabalho.",s:"O III COMAR mantém uma brigada de incêndio, e o GAP-RJ fez um Curso de Combate a Incêndio para brigadistas em maio de 2026.",ta:"Auxiliar o encarregado do setor nas atividades e nas instruções práticas e teóricas do curso.",a:"Ajudei nas instruções práticas e teóricas ministradas pelo encarregado, na preparação do material e na segurança dos alunos.",r:"Recebi referência elogiosa, publicada em junho de 2026. Aprendi a explicar com calma para quem nunca fez.",d:"Explicar um painel para quem não é de dados usa a mesma habilidade."},
- {t:"Eventos com até 100 participantes",q:"Fale de uma vez em que você planejou algo com várias áreas envolvidas.",s:"A SAT apoia reuniões, palestras e briefings com até 100 participantes.",ta:"Auxiliar na organização: passes e crachás, projeção e apoio no dia.",a:"Levantei a lista de participantes, emiti os passes e crachás, testei a projeção antes e fiquei de apoio durante o evento.",r:"Eventos sem atraso na entrada nem falha de projeção [diga quantos eventos].",d:"Planejar, conferir antes e ter um plano B é o mesmo cuidado de publicar um dashboard."}
-];
 function vStories(){
  return '<section class="panel stack"><h3>Suas histórias para entrevista</h3><p class="small">Cinco casos reais, tirados da sua carta, no formato <strong>situação, tarefa, ação e resultado</strong>. Decore a estrutura, não o texto. Troque os colchetes por números que você lembra e conte em até 2 minutos. No fim, ligue a história a dados: é o que o recrutador de BI quer ouvir.</p>'
   +STORIES.map((x,i)=>'<details class="acc"><summary><h3>'+(i+1)+'. '+esc(x.t)+'</h3><span class="chev">›</span></summary><div class="stack small"><p class="muted">Responde a: '+esc(x.q)+'</p><p><strong>Situação:</strong> '+esc(x.s)+'</p><p><strong>Tarefa:</strong> '+esc(x.ta)+'</p><p><strong>Ação:</strong> '+esc(x.a)+'</p><p><strong>Resultado:</strong> '+esc(x.r)+'</p><p><strong>Ligação com dados:</strong> '+esc(x.d)+'</p></div></details>').join("")+'</section>'; }
@@ -1515,14 +1641,6 @@ function wireEnt(el){
 }
 
 /* ---------- 3. Cofre de certificados (inspirado em LinkedIn e Credly) ---------- */
-const CERT_SEED=[
- {n:"Tecnólogo em Análise e Desenvolvimento de Sistemas",org:"Estácio",d:"2026-07-01",h:"",tp:"form"},
- {n:"Introdução à Lei Brasileira de Proteção de Dados Pessoais (LGPD)",org:"ENAP",d:"",h:"10",tp:"cert"},
- {n:"Acesso à Informação",org:"ENAP",d:"",h:"25",tp:"cert"},
- {n:"Ética e Serviço Público",org:"ENAP",d:"",h:"20",tp:"cert"},
- {n:"Gestão e Apuração da Ética Pública",org:"ENAP",d:"",h:"24",tp:"cert"},
- {n:"Prevenção e Enfrentamento do Assédio",org:"ENAP",d:"",h:"6",tp:"cert"}
-];
 let ctEdit=null;
 function certList(){return Object.entries(ST.certs||{}).filter(([,c])=>!c.x).map(([id,c])=>Object.assign({id},c)).sort((a,b)=>(b.d||"").localeCompare(a.d||""));}
 function certBlock(){ const L=certList(); const f=L.filter(c=>c.tp==="form"), c=L.filter(x=>x.tp!=="form"); const y=d=>d?d.slice(0,4):"";
@@ -1562,16 +1680,6 @@ function vFin(){
    +'<p class="muted small">Conta simples, para conversar em casa. Não inclui imprevistos nem o custo das provas de certificação.</p></section>'; }
  return h;
 }
-const CCOST=[
- {id:"pl300",n:"PL-300 (Power BI)",usd:99,q:"jan/2027, 2 semanas antes da prova"},
- {id:"pl300r",n:"Refazer a PL-300, se precisar",usd:99,q:"só se não passar de primeira"},
- {id:"ai901",n:"AI-901 (fundamentos de IA)",usd:59,q:"abr/2027, depois do curso"},
- {id:"sc900",n:"SC-900 (segurança, conformidade e identidade)",usd:59,q:"mar–abr/2027, depois do curso"},
- {id:"dp900",n:"DP-900 (fundamentos de dados no Azure)",usd:59,q:"abr–mai/2027, opcional"},
- {id:"pl900",n:"PL-900 (Power Platform)",usd:59,q:"opcional, só se sobrar reserva"},
- {id:"dp600",n:"DP-600 (Fabric)",usd:99,q:"depois da primeira vaga (2027–2028)"},
- {id:"pdpf",n:"EXIN PDPF (LGPD)",usd:295,q:"depois da primeira vaga (2027–2028)"},
- {id:"cdmp",n:"CDMP Associate (DAMA)",usd:311,q:"fase Pleno (2028–2029)"}];
 function vCost(){ const f=finGet(), dol=num(f.dol)||5.9, pg=f.cp||{}, g=num(f.cg);
  const rs=c=>Math.round(c.usd*dol/10)*10, ate=CCOST.slice(0,4), tot=ate.reduce((a,c)=>a+(pg[c.id]?0:rs(c)),0);
  let h='<section class="panel stack"><h3>Orçamento das certificações</h3><p class="small">Preços oficiais para quem faz a prova no Brasil (nov/2026). A Microsoft cobra em dólar no cartão; use o dólar do cartão com IOF. <strong>Fica só neste aparelho.</strong></p><div class="g2f"><label class="fl">Dólar no cartão, com IOF (R$)<input type="text" inputmode="decimal" id="dol" value="'+esc(f.dol||"5,90")+'"></label><label class="fl">Já guardado para provas (R$)<input type="text" inputmode="decimal" id="cg" value="'+esc(f.cg||"")+'" placeholder="ex.: 300"></label></div>';
@@ -1627,53 +1735,12 @@ function vMedals(){
  const X=xpOf(), lv=lvOf(X.xp), M=medals(), got=M.filter(m=>m[2]).length, goal=+cfg().wgoal||15, t=todayS(), w=weekStats(mondayOf(t)), wh=(w.mins+w.tm)/60, wp=Math.min(1,wh/goal);
  let h='<section class="panel stack"><div class="dayhead"><div><h4>Nível '+(lv.l+1)+'</h4><h3>'+esc(lv.n)+'</h3></div><span class="pill pri num">'+X.xp+' XP</span></div><div class="track"><span class="fill" style="display:block;width:'+Math.round(lv.p*100)+'%"></span></div><p class="muted small">'+(lv.l<LVN.length-1?(lv.b-X.xp)+' XP para o próximo nível. ':"")+'XP vem de tarefas (10), certificados (40), desafios de SQL (15), contatos (10), candidaturas e perguntas de entrevista (5) e flashcards (2).</p></section>';
  h+='<section class="panel stack"><div class="dayhead"><h3>Meta da semana</h3><span class="pill '+(wp>=1?"free":"pri")+' num">'+String(Math.round(wh*10)/10).replace(".",",")+' de '+goal+' h</span></div><div class="track"><span class="fill'+(wp>=1?" ok":"")+'" style="display:block;width:'+Math.round(wp*100)+'%"></span></div><div class="cfgrow"><label for="wgoal">Minha meta semanal</label><select id="wgoal">'+[8,10,12,15,20,25].map(v=>'<option value="'+v+'"'+(v===goal?" selected":"")+'>'+v+' horas</option>').join("")+'</select></div><p class="muted small">Conta as tarefas concluídas nesta semana e o tempo do cronômetro.</p></section>';
- h+='<section class="panel"><div class="dayhead"><h3>Medalhas</h3><span class="pill num">'+got+'/'+M.length+'</span></div><div class="medals">'+M.map(m=>'<div class="medal'+(m[2]?" on":"")+'" title="'+esc(m[1])+'"><span class="mi" aria-hidden="true">'+(m[2]?"★":"☆")+'</span><strong>'+esc(m[0])+'</strong><span class="muted small">'+esc(m[1])+'</span></div>').join("")+'</div></section>';
+ const nx=M.find(m=>!m[2]), mchip=m=>'<span class="mchip'+(m[2]?" on":"")+'" title="'+esc(m[1])+'"><span aria-hidden="true">'+(m[2]?"★":"☆")+'</span>'+esc(m[0])+'</span>';
+ h+='<section class="panel"><div class="dayhead"><h3>Medalhas</h3><span class="pill num">'+got+'/'+M.length+'</span></div>'+(got?'<div class="mchips">'+M.filter(m=>m[2]).map(mchip).join("")+'</div>':'')+(nx?'<p class="small"><strong>Próxima:</strong> '+esc(nx[0])+' · <span class="muted">'+esc(nx[1])+'</span></p>':'<p class="small">Todas conquistadas.</p>')+'<details class="acc" data-k="medall"><summary><span class="muted small">Ver todas as medalhas</span><span class="chev">›</span></summary><div class="mchips">'+M.map(mchip).join("")+'</div></details></section>';
  return h;
 }
 
 /* ---------- 7. Desafio de SQL no próprio app (inspirado em SQLBolt e StrataScratch) ---------- */
-const SQL_DB=`CREATE TABLE setores(id INTEGER PRIMARY KEY, nome TEXT);
-INSERT INTO setores VALUES (1,'Compras'),(2,'Pessoal'),(3,'Finanças'),(4,'Logística'),(5,'Protocolo');
-CREATE TABLE fornecedores(id INTEGER PRIMARY KEY, nome TEXT, uf TEXT);
-INSERT INTO fornecedores VALUES (1,'Alfa Esportes','RJ'),(2,'Beta Motos','SP'),(3,'Gama Informática','RJ'),(4,'Delta Papelaria','MG'),(5,'Ômega Uniformes','RJ');
-CREATE TABLE compras(id INTEGER PRIMARY KEY, item TEXT, fornecedor_id INTEGER, setor_id INTEGER, modalidade TEXT, valor REAL, empenho TEXT, prazo TEXT, entrega TEXT);
-INSERT INTO compras VALUES
-(1,'Bolas e redes',1,1,'Pregão',4200,'2026-02-03','2026-03-05','2026-03-01'),
-(2,'Capacetes para batedores',2,4,'Pregão',18500,'2026-02-10','2026-04-10','2026-04-22'),
-(3,'Notebooks',3,3,'Pregão',32000,'2026-03-01','2026-04-15','2026-04-12'),
-(4,'Papel A4',4,5,'Dispensa',1900,'2026-03-08','2026-03-20','2026-03-19'),
-(5,'Uniformes de treino',5,2,'Pregão',7600,'2026-03-15','2026-05-15',NULL),
-(6,'Cones e coletes',1,1,'Dispensa',850,'2026-04-02','2026-04-20','2026-04-25'),
-(7,'Luvas para motociclistas',2,4,'Pregão',5400,'2026-04-05','2026-05-30','2026-05-28'),
-(8,'Impressora',3,5,'Dispensa',2300,'2026-04-18','2026-05-10',NULL),
-(9,'Toner',4,5,'Pregão',3100,'2026-05-02','2026-05-30','2026-06-04'),
-(10,'Tênis de corrida',5,2,'Pregão',9800,'2026-05-20','2026-07-01','2026-06-28'),
-(11,'Monitores',3,3,'Pregão',12600,'2026-06-01','2026-07-15','2026-07-30'),
-(12,'Jaquetas para batedores',2,4,'Pregão',14300,'2026-06-10','2026-08-10',NULL);
-CREATE TABLE documentos(id INTEGER PRIMARY KEY, setor_id INTEGER, tipo TEXT, recebido TEXT, prazo_dias INTEGER, concluido TEXT);
-INSERT INTO documentos VALUES
-(1,1,'Ofício','2026-05-02',10,'2026-05-09'),(2,1,'Memorando','2026-05-03',5,'2026-05-12'),(3,2,'Ofício','2026-05-04',10,'2026-05-10'),
-(4,2,'Requerimento','2026-05-05',15,NULL),(5,3,'Ofício','2026-05-06',10,'2026-05-20'),(6,3,'Nota técnica','2026-05-07',20,'2026-05-22'),
-(7,4,'Memorando','2026-05-08',5,'2026-05-11'),(8,4,'Ofício','2026-05-09',10,NULL),(9,5,'Requerimento','2026-05-10',15,'2026-05-18'),
-(10,5,'Ofício','2026-05-11',10,'2026-05-30'),(11,1,'Nota técnica','2026-05-12',20,'2026-05-25'),(12,2,'Memorando','2026-05-13',5,'2026-05-15');`;
-const SQLC=[
- ["Todas as compras","Liste item e valor de todas as compras.","SELECT item, valor FROM compras;",0],
- ["Compras caras","Liste item e valor das compras acima de R$ 10.000.","SELECT item, valor FROM compras WHERE valor > 10000;",0],
- ["Ordenar por valor","Liste item e valor do maior para o menor valor.","SELECT item, valor FROM compras ORDER BY valor DESC;",1],
- ["Só pregões","Quantas compras foram por pregão?","SELECT COUNT(*) FROM compras WHERE modalidade = 'Pregão';",0],
- ["Total por modalidade","Mostre a modalidade e o valor total de cada uma.","SELECT modalidade, SUM(valor) FROM compras GROUP BY modalidade;",0],
- ["Ainda não entregues","Liste o item das compras sem data de entrega.","SELECT item FROM compras WHERE entrega IS NULL;",0],
- ["Entregas atrasadas","Liste o item das compras entregues depois do prazo.","SELECT item FROM compras WHERE entrega > prazo;",0],
- ["Compra e fornecedor","Liste o item e o nome do fornecedor de cada compra (JOIN).","SELECT c.item, f.nome FROM compras c JOIN fornecedores f ON f.id = c.fornecedor_id;",0],
- ["Gasto por fornecedor","Mostre o nome do fornecedor e o total comprado dele.","SELECT f.nome, SUM(c.valor) FROM compras c JOIN fornecedores f ON f.id = c.fornecedor_id GROUP BY f.nome;",0],
- ["Fornecedores do RJ","Quanto foi comprado de fornecedores do RJ?","SELECT SUM(c.valor) FROM compras c JOIN fornecedores f ON f.id = c.fornecedor_id WHERE f.uf = 'RJ';",0],
- ["Setor que mais compra","Mostre o setor e o total, só dos setores com mais de R$ 20.000 (HAVING).","SELECT s.nome, SUM(c.valor) FROM compras c JOIN setores s ON s.id = c.setor_id GROUP BY s.nome HAVING SUM(c.valor) > 20000;",0],
- ["Documentos pendentes","Quantos documentos ainda não foram concluídos?","SELECT COUNT(*) FROM documentos WHERE concluido IS NULL;",0],
- ["Dias para concluir","Liste o id e os dias entre recebido e concluído dos documentos concluídos (use julianday).","SELECT id, julianday(concluido) - julianday(recebido) FROM documentos WHERE concluido IS NOT NULL;",0],
- ["Fora do prazo","Liste o id dos documentos concluídos depois do prazo em dias.","SELECT id FROM documentos WHERE concluido IS NOT NULL AND julianday(concluido) - julianday(recebido) > prazo_dias;",0],
- ["SLA por setor","Mostre o setor e o % de documentos concluídos no prazo (pendentes contam como fora).","SELECT s.nome, ROUND(100.0 * SUM(CASE WHEN d.concluido IS NOT NULL AND julianday(d.concluido) - julianday(d.recebido) <= d.prazo_dias THEN 1 ELSE 0 END) / COUNT(*), 1) FROM documentos d JOIN setores s ON s.id = d.setor_id GROUP BY s.nome;",0],
- ["Ranking com janela","Mostre item, valor e a posição de cada compra no ranking de valor (RANK).","SELECT item, valor, RANK() OVER (ORDER BY valor DESC) FROM compras;",0]
-];
 const SQL_V="1.10.3", SQL_CDN="https://cdnjs.cloudflare.com/ajax/libs/sql.js/"+SQL_V+"/";
 let SQ={db:null,st:"off",i:null,txt:{},res:null,err:"",ans:false};
 function sqLoad(){ if(SQ.st==="ok"||SQ.st==="load") return; SQ.st="load";
@@ -1736,31 +1803,33 @@ function qtrStats(q){ const t=todayS(), b=q[3]<t?q[3]:t; let pl=0,pd=0,dn=0,mi=0
  for(const id in IDX){const x=IDX[id]; if(x.k==="folga") continue; if(x.date>=q[2]&&x.date<=b){pl++; if(isDone(id)) pd++;} const d=ST.done[id]; if(d&&d>=q[2]&&d<=q[3]){dn++;mi+=x.m; if(x.c&&COURSES.find(c=>c.id===x.c)&&COURSES.find(c=>c.id===x.c).s.every((_,i)=>isDone("c:"+x.c+":"+i))) cs.add(x.c);}}
  const ap=(typeof apList==="function"?apList():[]).filter(a=>(a.data||a.d||"")>=q[2]&&(a.data||a.d||"")<=q[3]).length;
  return {pl,pd,dn,mi,cs:cs.size,ap}; }
-function vQtr(){ const t=todayS(), q=qtrOf(t), r=qtrStats(q), Q=(ST.qr||{})[q[0]]||{};
+function qtrWin(t){ for(const q of QTR){ if(t>=addD(q[3],-14)&&t<=addD(q[3],10)) return q; } return null; }
+function vQtr(){ const t=todayS(), qw=qtrWin(t);
+ const old=QTR.filter(x=>(!qw||x[0]!==qw[0])&&(ST.qr||{})[x[0]]), oldH=old.map(x=>{const o=ST.qr[x[0]];return '<details class="acc"><summary><strong>'+esc(x[1])+'</strong><span class="chev">›</span></summary><div class="small stack"><p><strong>Deu certo:</strong> '+esc(o.a||"—")+'</p><p><strong>Travou:</strong> '+esc(o.b||"—")+'</p><p><strong>Ajustar:</strong> '+esc(o.c||"—")+'</p></div></details>';}).join("");
+ if(!qw){ const nq=QTR.find(x=>addD(x[3],-14)>t); return '<section class="panel stack"><div class="dayhead"><h3>Revisão trimestral</h3>'+(nq?'<span class="pill num">abre em '+fmtShort(addD(nq[3],-14))+'</span>':'')+'</div><p class="muted small">No fim de cada trimestre aparece aqui um formulário curto: o que deu certo, o que travou e o que ajustar.</p>'+oldH+'</section>'; }
+ const q=qw, r=qtrStats(q), Q=(ST.qr||{})[q[0]]||{};
  let h='<section class="panel stack"><div class="dayhead"><div><h4>Revisão trimestral</h4><h3>'+esc(q[1])+'</h3></div><span class="pill pri num">'+(r.pl?Math.round(r.pd/r.pl*100):100)+'% em dia</span></div><div class="grid g4"><div class="fact"><span class="k">Tarefas feitas</span><span class="big">'+r.dn+'</span></div><div class="fact"><span class="k">Horas</span><span class="big">'+hrs(r.mi)+' h</span></div><div class="fact"><span class="k">Cursos concluídos</span><span class="big">'+r.cs+'</span></div><div class="fact"><span class="k">Candidaturas</span><span class="big">'+r.ap+'</span></div></div><p class="small">No fim do trimestre (o app avisa), responda em poucas linhas. Releia na próxima revisão.</p>'
   +[["qa","O que deu certo",Q.a],["qb","O que travou",Q.b],["qc","O que vou ajustar no próximo trimestre",Q.c]].map(([id,l,v])=>'<label class="fl">'+l+'<textarea id="'+id+'">'+esc(v||"")+'</textarea></label>').join("")
   +'<div class="row"><button class="btn ghost sm" type="button" id="qSave">Salvar revisão</button>'+(Q.u?'<span class="muted small">salva em '+fmtShort(new Date(Q.u).toISOString().slice(0,10))+'</span>':"")+'</div>';
- const old=QTR.filter(x=>x[0]!==q[0]&&(ST.qr||{})[x[0]]); if(old.length) h+=old.map(x=>{const o=ST.qr[x[0]];return '<details class="acc"><summary><h3>'+esc(x[1])+'</h3><span class="chev">›</span></summary><div class="small stack"><p><strong>Deu certo:</strong> '+esc(o.a||"—")+'</p><p><strong>Travou:</strong> '+esc(o.b||"—")+'</p><p><strong>Ajustar:</strong> '+esc(o.c||"—")+'</p></div></details>';}).join("");
- return h+'</section>'; }
+ return h+oldH+'</section>'; }
 function vProg(){
  const st=stats(), t=todayS();
- let h='';
+ const tmTot=Object.values(ST.log||{}).reduce((a,x)=>a+x,0), pr=projection(), L=apList(), sk=SKILLS.reduce((a,d)=>a+skPct(d)*d.w,0)/SKILLS.reduce((a,d)=>a+d.w,0), cardsSeen=Object.keys(ST.srs||{}).length;
+ const f=(k,v,sub)=>'<div class="fact"><span class="k">'+k+'</span><span class="mid num">'+v+'</span>'+(sub?'<span class="muted small">'+sub+'</span>':'')+'</div>';
+ let h='<section class="panel"><h2>Progresso</h2><div class="pgrid">'+f("Tarefas feitas",st.doneN,"de "+TOTAL_TASKS)+f("Horas estudadas",hrs(st.mins)+" h")+f("Sequência",st.streak+" dia"+(st.streak===1?"":"s"))+f("Em dia",(st.planned?Math.round(st.plannedDone/st.planned*100):100)+"%",st.plannedDone+"/"+st.planned+" até hoje")+f("Cronômetro",hrs(tmTot)+" h")+f("PL-300",Math.round(sk*100)+"%","prontidão")+f("Flashcards",cardsSeen,"de "+CARDS.length+" vistos")+f("Candidaturas",L.length,L.filter(p=>["ent","fin","prop"].includes(p.etapa)).length+" com entrevista")+'</div>'
+  +(pr?'<p class="small">No ritmo das últimas 4 semanas ('+(Math.round(pr.rate*10)/10)+' sessões de curso por semana), a trilha de cursos termina por volta de <strong>'+fmt(pr.end)+'</strong>'+(pr.plan?(pr.end>pr.plan?', depois do planejado ('+fmtShort(pr.plan)+'). Se a diferença passar de 2 semanas, use "Reorganizar o plano" em Hoje.':', dentro do planejado ('+fmtShort(pr.plan)+').'):'.')+'</p>':'<p class="muted small">A previsão de término aparece depois das primeiras semanas de curso.</p>')+'</section>';
  if(t>=START){ const w0=mondayOf(t); h+=weekCard(weekStats(w0),weekStats(addD(w0,-7)),"Esta semana"); }
  h+=vMedals();
- h+=vQtr();
- h+='<section class="grid"><div class="panel fact"><span class="k">Tarefas feitas</span><span class="big">'+st.doneN+'</span><span class="muted small">de '+TOTAL_TASKS+' no plano</span></div><div class="panel fact"><span class="k">Horas estudadas</span><span class="big">'+hrs(st.mins)+' h</span></div><div class="panel fact"><span class="k">Sequência</span><span class="big">'+st.streak+' dia'+(st.streak===1?"":"s")+'</span></div><div class="panel fact"><span class="k">Em dia com o plano</span><span class="big">'+(st.planned?Math.round(st.plannedDone/st.planned*100):100)+'%</span><span class="muted small">'+st.plannedDone+'/'+st.planned+' até hoje</span></div></section>';
- h+='<section class="panel"><h3>Fases</h3>'+pipeHTML()+PHASES.map(p=>'<p class="small"><strong>'+esc(p.n)+'</strong> · '+fmtShort(p.a)+' a '+fmtShort(p.b)+' · '+esc(p.goal)+'</p>').join("")+'</section>';
+ h+='<section class="panel"><h3>Fases do cronograma</h3>'+pipeHTML()+'<details class="acc" data-k="pfases"><summary><span class="muted small">Metas de cada fase</span><span class="chev">›</span></summary>'+PHASES.map(p=>'<p class="small"><strong>'+esc(p.n)+'</strong> · '+fmtShort(p.a)+' a '+fmtShort(p.b)+' · '+esc(p.goal)+'</p>').join("")+'</details></section>';
  h+='<section class="panel"><h3>Por área</h3>'+Object.keys(KINDS).filter(k=>st.byK[k]).map(k=>{const x=st.byK[k];const p=Math.round(x.d/x.n*100);return '<div class="bar"><span class="kchip" style="--kc:var(--k-'+k+')">'+KINDS[k]+'</span><span class="track"><span class="fill" style="display:block;width:'+p+'%;background:var(--k-'+k+')"></span></span><span class="num small">'+x.d+'/'+x.n+'</span></div>';}).join("")+'</section>';
  let cells=""; for(let i=13;i>=0;i--){const s=addD(t,-i); let n=0; for(const id in ST.done) if(ST.done[id]===s) n++; cells+='<div class="hc '+(n>=4?"l3":n>=2?"l2":n>=1?"l1":"")+'" title="'+fmtShort(s)+': '+n+'">'+parse(s).getDate()+'</div>';}
- h+='<section class="panel"><h3>Últimos 14 dias</h3><div class="heat">'+cells+'</div><p class="muted small">Cada quadrado é um dia; quanto mais escuro, mais tarefas concluídas.</p></section>';
- h+='<section class="panel"><h3>Semanas: planejado x feito</h3>'+weeksChart(8)+'</section>';
- const tmTot=Object.values(ST.log||{}).reduce((a,x)=>a+x,0), pr=projection(), L=apList(), sk=SKILLS.reduce((a,d)=>a+skPct(d)*d.w,0)/SKILLS.reduce((a,d)=>a+d.w,0), cardsSeen=Object.keys(ST.srs||{}).length;
- h+='<section class="panel"><h3>Mais números</h3><div class="grid g4"><div class="fact"><span class="k">Foco no cronômetro</span><span class="big">'+hrs(tmTot)+' h</span></div><div class="fact"><span class="k">PL-300</span><span class="big">'+Math.round(sk*100)+'%</span><span class="muted small">prontidão</span></div><div class="fact"><span class="k">Flashcards</span><span class="big">'+cardsSeen+'</span><span class="muted small">de '+CARDS.length+' vistos</span></div><div class="fact"><span class="k">Candidaturas</span><span class="big">'+L.length+'</span><span class="muted small">'+L.filter(p=>["ent","fin","prop"].includes(p.etapa)).length+' com entrevista</span></div></div>'+(pr?'<p class="small">No ritmo das últimas 4 semanas ('+(Math.round(pr.rate*10)/10)+' sessões de curso por semana), a trilha de cursos termina por volta de <strong>'+fmt(pr.end)+'</strong>'+(pr.plan?(pr.end>pr.plan?', depois do planejado ('+fmtShort(pr.plan)+'). Se a diferença passar de 2 semanas, use "Reorganizar o plano" em Hoje.':', dentro do planejado ('+fmtShort(pr.plan)+').'):'.')+'</p>':'<p class="muted small">A previsão de término aparece depois das primeiras semanas de curso.</p>')+'</section>';
+ h+='<section class="panel"><h3>Últimos 14 dias</h3><div class="heat">'+cells+'</div><p class="muted small">Cada quadrado é um dia; quanto mais escuro, mais tarefas concluídas.</p><h3 style="margin-top:6px">Semanas: planejado x feito</h3>'+weeksChart(8)+'</section>';
+ h+=vQtr();
  h+=rpPanel();
  h+='<section class="panel"><details class="acc" style="border:0;padding:0"><summary><h3>Todas as dicas de preparo ('+TIPS.length+')</h3><span class="chev">›</span></summary><div class="stack">'+TIPS.map(x=>'<p class="small"><strong>'+esc(x[0])+'.</strong> '+esc(x[1])+'</p>').join("")+'</div></details></section>';
  return h;
 }
-WIRES.prog=el=>{ const qs=el.querySelector("#qSave"); if(qs) qs.onclick=()=>{const q=qtrOf(todayS()); ST.qr=Object.assign({},ST.qr||{}); ST.qr[q[0]]={a:el.querySelector("#qa").value.trim(),b:el.querySelector("#qb").value.trim(),c:el.querySelector("#qc").value.trim(),u:Date.now()}; changed(); rerenderKeep(); toast("Revisão do trimestre salva.");};
+WIRES.prog=el=>{ const qs=el.querySelector("#qSave"); if(qs) qs.onclick=()=>{const q=qtrWin(todayS())||qtrOf(todayS()); ST.qr=Object.assign({},ST.qr||{}); ST.qr[q[0]]={a:el.querySelector("#qa").value.trim(),b:el.querySelector("#qb").value.trim(),c:el.querySelector("#qc").value.trim(),u:Date.now()}; changed(); rerenderKeep(); toast("Revisão do trimestre salva.");};
  const g=el.querySelector("#wgoal"); if(g) g.onchange=()=>{ST.cfg=Object.assign({},ST.cfg||{},{wgoal:+g.value});changed();rerenderKeep();}; el.querySelectorAll("[data-rp]").forEach(b=>b.onclick=()=>rpOpen(b.dataset.rp)); };
 WIRES.config=el=>{
  wireCfg(el); wireSync(el);
@@ -1770,22 +1839,6 @@ WIRES.config=el=>{
  $("#rst").onclick=e=>{const b=e.currentTarget; if(!b.dataset.arm){b.dataset.arm="1";b.textContent="Toque de novo para confirmar";setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent="Apagar todo o progresso";}},4000);return;} ST={done:{},custom:[],upd:0};changed();rebuild();rerenderKeep();toast("Progresso apagado.");};
 };
 
-const PEND=[
- {id:"baixa",t:"Data da baixa",a:"Fim de fevereiro (28/02/2027). Pode ser liberado um pouco antes."},
- {id:"carta",t:"Quem assina a carta",a:"TC chefe da SAT. Pedir em 04/01/2027."},
- {id:"local",t:"Cidade e modelo de trabalho",a:"Rio, presencial ou home office. Fora do Rio, SP."},
- {id:"sal",t:"Pretensão salarial",a:"Faixa de mercado, com o líquido atual da FAB como piso (Carreira → Transição)."},
- {id:"transp",t:"Resultado da Transpetro",h:"Quando sair, o plano segue o cenário certo. O app lembra de conferir em 11/01 e 01/02."},
- {id:"ingles",t:"Teste de inglês (EF SET, grátis, 50 min)",h:"Escolha o nível que deu no teste: as sessões de inglês passam a seguir o plano desse nível.",u:"https://www.efset.org/pt/",lv:1},
- {id:"orc",t:"Reserva para as provas",h:"Carreira → Transição → Orçamento das certificações."},
- {id:"li",t:"Endereço do LinkedIn",a:"URL personalizada criada em 10/11/2026. Use a mesma no currículo e no GitHub."},
- {id:"post1",t:"Primeira publicação no LinkedIn (formação em ADS e transição para dados)",h:"Texto pronto. Publique quando tiver de 30 a 50 conexões e depois fixe nos Destaques."},
- {id:"gh",t:"Endereço do GitHub",a:"github.com/pedro1105, mantido porque os links do GitHub Pages dependem dele. Perfil e README revisados em 11/11/2026."},
- {id:"bt",t:"Banco de Talentos do Portal do Militar",a:"Cadastrado em 11/11/2026, com área nacional e 6 cursos. LGPD e Acesso à Informação aguardam validação da SPM."},
- {id:"ptm",t:"Portal do Militar: e-mail novo e inglês",h:"Dados Pessoais → Cadastro → Dados Pessoais. Cadastre o e-mail profissional e o inglês (básico)."},
- {id:"sig",t:"SIGPES: corrigir funções e confirmar CFC e CESD",h:"Na Seção de Pessoal: no SIGPES constam Pessoal e Processos Disciplinares e o SD nas funções. O app lembra junto da tarefa da Seção de Pessoal."},
- {id:"mlk",t:"Link do Microsoft Learn e da Transcrição no LinkedIn",h:"Depois do 1º roteiro do plano PL-300: gere o link público da Transcrição no Learn e ponha os dois links no LinkedIn."},
- {id:"msl",t:"Coleções do Microsoft Learn",a:"Feito em 11/11/2026: plano \"PL-300 – prova em 02/02/2027\" (5 roteiros) e coleção pública \"Certificações Microsoft – Roteiro 2027-2028\" (PL-300, SC-900, DP-900, AI-901, PL-900, DP-600 e o módulo do Purview)."}];
 function enLvHTML(){ const v=cfg().enLv||""; return '<br><select id="enLv" aria-label="Nível no EF SET"><option value="">Nível no EF SET…</option>'+EN_LV.map(([k,n])=>'<option value="'+k+'"'+(v===k?" selected":"")+'>'+n+'</option>').join("")+'</select>'+(v?'<br><span class="small">Plano: '+esc(EN_PLAN[v])+'</span>':''); }
 function pendHTML(){ const P=ST.pend||{}, op=PEND.filter(x=>!x.a&&!P[x.id]), dn=PEND.filter(x=>x.a||P[x.id]);
  const row=x=>(x.a||P[x.id])&&!(!x.a&&P[x.id])?'<div class="cfgrow"><span><strong>✓ '+esc(x.t)+'</strong><br><span class="muted small">'+esc(x.a)+'</span></span></div>':'<div class="cfgrow"><label for="pd-'+x.id+'"><strong>'+esc(x.t)+'</strong><br><span class="muted small">'+esc(x.h||x.a||"")+(x.u?' <a href="'+esc(x.u)+'" target="_blank" rel="noopener">Abrir</a>':"")+'</span>'+(x.lv?enLvHTML():"")+'</label><input type="checkbox" id="pd-'+x.id+'" data-pend="'+x.id+'"'+(P[x.id]?" checked":"")+'></div>';
@@ -1897,15 +1950,6 @@ function toastUndo(m,undo){const t=$("#toast");t.innerHTML='<span>'+esc(m)+'</sp
 /* ================= v4: SONS PARA CONCENTRAR (gerados no aparelho) ================= */
 /* ===== Sons para concentrar: mesma ideia do app da Transpetro (gerados aqui, tocam num <audio>, seguem nas outras telas) ===== */
 const SNDK=KEY+"-snd";
-const SNDS=[
- ["brown","Ruído marrom","Grave e uniforme. O que melhor abafa barulho de rua, ônibus e conversa."],
- ["pink","Ruído rosa","Equilibrado, mais suave que o branco. Bom para ler e fazer exercícios."],
- ["white","Ruído branco","Mais agudo, como um chiado. Abafa vozes por perto."],
- ["rain","Chuva","Chuva constante com gotas. Relaxa sem distrair."],
- ["waves","Ondas do mar","Ondas lentas, a cada 8 segundos. Bom para revisar com calma."],
- ["pad","Ambiente lo-fi","Acordes suaves e lentos, sem letra e sem batida forte."],
- ["piano","Piano calmo","Notas soltas de piano com eco, bem espaçadas."]
-];
 const SND_SR=22050, SND_CACHE={};
 const SND={k:null,last:"brown",auto:false,duck:false,on:false,ctx:null};
 try{const o=JSON.parse(localStorage.getItem(SNDK)||"{}");if(o.k||o.kind)SND.last=o.k||o.kind;if(o.auto!=null)SND.auto=o.auto;}catch(e){}
@@ -2150,13 +2194,6 @@ function pushPanel(){
 /* ================= v4: TUTOR COM IA (capability sample, só no claude.ai) ================= */
 let SAMPLE=null, SAMPLE_ST="wait";
 setTimeout(async()=>{ try{ if(!IN_CLAUDE){SAMPLE_ST="off";return;} SAMPLE=await window.claude.use("sample"); SAMPLE_ST=SAMPLE?"ok":"off"; }catch(e){SAMPLE_ST="off";} if(current==="rev") rerenderKeep(); },0);
-const TUTOR_MODES={
- mentor:{n:"Mentoria (sem dar a resposta)",ph:"Diga o que está estudando ou cole o que tentou fazer.",sys:"Você é mentor e tutor de um iniciante brasileiro em BI (8 anos na área administrativa da Força Aérea, formado em Análise e Desenvolvimento de Sistemas) que quer aprender a FAZER, não só assistir, para se sair bem nas entrevistas. Use o método socrático: não entregue a resposta pronta de primeira. 1) Pergunte o que ele já tentou ou peça que tente; 2) dê uma dica de cada vez; 3) quando ele acertar, peça que explique com as palavras dele; 4) corrija conceitos errados com franqueza; 5) no fim, faça uma pergunta de entrevista sobre o tema e avalie a resposta dele (nota de 0 a 10 e o que faltou). Use exemplos administrativos (documentos, prazos, compras). Português do Brasil, frases curtas."},
- erro:{n:"Explicar um erro",ph:"Cole a consulta SQL, a medida DAX ou o passo do Power Query e a mensagem de erro.",sys:"Você é um tutor paciente de SQL, DAX, Power Query e Excel para um iniciante brasileiro que está migrando para BI. Explique em português simples: 1) o que o erro quer dizer, 2) a causa mais provável no código enviado, 3) o código corrigido num bloco, 4) uma dica para não repetir. Seja breve."},
- duvida:{n:"Tirar uma dúvida",ph:"Ex.: qual a diferença entre ALL e REMOVEFILTERS? Quando usar DirectQuery?",sys:"Você é um tutor de dados e Power BI para um iniciante brasileiro que vai fazer a certificação PL-300. Responda em português, direto, com um exemplo curto e prático (de preferência com dados administrativos, como documentos, prazos e compras). No fim, diga em uma linha se o tema costuma cair na PL-300."},
- texto:{n:"Revisar texto (LinkedIn, currículo, post)",ph:"Cole o texto e diga onde vai usar.",sys:"Você revisa textos profissionais em português para alguém em transição de carreira: 8 anos como Cabo de Administração na Força Aérea Brasileira, formado em Análise e Desenvolvimento de Sistemas, buscando vaga de Analista de BI/Dados Júnior. Devolva: 1) a versão revisada, pronta para colar; 2) três ajustes que você fez e por quê. Regras: tom profissional e humano, verbos de ação, números quando houver, sem exagero nem clichês, sem jargão militar sem explicação. Nunca inclua informações internas da FAB. Enquanto ele for militar da ativa, não sugira oferecer serviços pagos."},
- entrev:{n:"Simular entrevista",ph:"Escreva \"começar\" ou cole a descrição da vaga.",sys:"Você é um recrutador brasileiro entrevistando um candidato para Analista de BI/Dados Júnior. Faça UMA pergunta por vez (alternando comportamental e técnica de SQL, Power BI, DAX e Excel). Depois de cada resposta, dê uma nota de 0 a 10, um ponto forte, um ponto a melhorar e uma versão melhor da resposta em até 5 linhas (método STAR quando couber), e então faça a próxima pergunta. O candidato tem 8 anos de experiência administrativa na Força Aérea e está saindo em 2027. Responda sempre em português."}
-};
 let TUT={mode:"erro",msgs:[],busy:false,ctrl:null};
 async function tutorSend(txt){
  txt=String(txt||"").trim(); if(!txt||TUT.busy) return; if(!SAMPLE){toast("O tutor funciona só no app do claude.ai.");return;}
@@ -2182,32 +2219,6 @@ function tutorAsk(mode,txt){ TUT.mode=mode; TUT.msgs=[]; revSeg="tut"; go("rev")
 
 
 /* ================= MENTORIA (v23): cada sessão vira prática ================= */
-const MENTOR={
- claude:{d:"Escreva um prompt pedindo ao Claude para corrigir uma consulta SQL sem dar a resposta pronta, só dicas, e teste.",q:["Como você usa IA no trabalho sem confiar cegamente?","Dê um exemplo de tarefa que a IA acelerou para você e de como conferiu o resultado."]},
- excel:{d:"Numa planilha nova, sem consultar: PROCX entre duas tabelas, SE com duas condições e uma tabela dinâmica por mês.",q:["Qual a diferença entre PROCV e PROCX?","Como você limparia uma base com datas em formatos diferentes?","Quando uma tabela dinâmica não basta?"]},
- git:{d:"Crie um repositório, faça 3 commits com mensagens claras e escreva um README com 4 seções.",q:["Para que serve o Git num projeto de BI?","Como você organiza um repositório de portfólio?"]},
- sql:{d:"Sem olhar a aula, escreva uma consulta com JOIN, WHERE, GROUP BY e HAVING na base do Desafio SQL (Estudar › Revisar).",q:["Qual a diferença entre WHERE e HAVING?","Explique INNER JOIN e LEFT JOIN com um exemplo de documentos e setores.","Como você acharia registros duplicados numa tabela?"]},
- pbi:{d:"Importe uma planilha, crie 2 relacionamentos e um visual com filtro, sem seguir o vídeo.",q:["Qual a diferença entre Power Query e DAX?","O que você faz quando um relatório está lento?","Como você escolhe o visual certo para uma pergunta?"]},
- model:{d:"Desenhe no papel um modelo estrela para documentos e setores: fato, dimensões e chaves.",q:["O que é modelo estrela e por que usar?","Qual a diferença entre tabela fato e dimensão?","O que é granularidade?"]},
- dax:{d:"Escreva de memória: total, % do total com ALL e acumulado do ano com TOTALYTD; depois teste.",q:["O que é contexto de filtro e contexto de linha?","Para que serve o CALCULATE?","Qual a diferença entre coluna calculada e medida?"]},
- sqladv:{d:"Resolva com CTE e função de janela: os 3 setores com mais atraso em cada mês.",q:["O que é uma CTE e quando usar?","Para que servem ROW_NUMBER e RANK?","Como você deixaria uma consulta lenta mais rápida?"]},
- ia1:{d:"Peça a uma IA o resumo de uma tabela sua e encontre pelo menos um erro ou exagero na resposta.",q:["Quais os riscos de usar IA generativa com dados da empresa?","Como você confere se uma resposta da IA está certa?"]},
- pl300:{d:"Faça 10 questões do simulado sem consultar e explique em voz alta por que cada alternativa errada está errada.",q:["Como você implementaria segurança por linha (RLS)?","Qual a diferença entre importação e DirectQuery?","Como você publica e compartilha um relatório no Power BI Service?"]},
- copilot:{d:"Use o Copilot para criar uma medida DAX e depois explique cada parte dela sem ajuda.",q:["Onde o Copilot ajuda e onde ele erra no Power BI?","Que cuidado tomar ao usar Copilot com dados sensíveis?"]},
- py:{d:"Com pandas, leia um CSV, trate os nulos, agrupe por mês e salve o resultado, sem copiar da aula.",q:["Quando você usaria Python em vez de Power Query?","Como você trata valores nulos no pandas?","O que o groupby faz?"]},
- ia2:{d:"Classifique 20 textos com IA, revise à mão e calcule quantos ela acertou.",q:["Como você avaliaria se um modelo de IA está acertando?","O que é viés num modelo e como perceber?"]},
- stats:{d:"Calcule média, mediana e desvio padrão de uma coluna e explique qual resume melhor e por quê.",q:["Média ou mediana: quando usar cada uma?","O que é correlação e por que ela não prova causa?","Como você identificaria um valor fora do normal?"]},
- gov:{d:"Escreva o dicionário de 5 colunas de um projeto seu: nome, descrição, tipo, regra de validação e dono.",q:["O que é governança de dados, em uma frase?","Como a LGPD afeta um dashboard?","O que é qualidade de dados e como você mede?","Para que serve um dicionário de dados?"]},
- sc900:{d:"Explique, sem ler, como um rótulo de confidencialidade do Purview protege um relatório com dados pessoais.",q:["Qual a diferença entre autenticação e autorização?","Como a LGPD aparece no Microsoft Purview?"]},
- dp900:{d:"Explique a diferença entre um banco relacional, um não relacional e um data warehouse, com um exemplo de cada.",q:["O que é ETL e o que é ELT?","Quando usar processamento em lote e quando usar tempo real?"]},
- pl900:{d:"Desenhe um fluxo do Power Automate que avisa por e-mail quando um prazo vence numa planilha.",q:["Que tarefa administrativa você automatizaria primeiro?","Qual a diferença entre Power Apps e Power Automate?"]},
- ai900:{d:"Explique em 2 minutos, sem ler, a diferença entre visão computacional, linguagem natural e IA generativa.",q:["O que é IA responsável?","Dê um exemplo de uso de IA numa área administrativa."]},
- fabric:{d:"Desenhe o caminho do dado: arquivo → lakehouse → modelo semântico → relatório, e explique cada etapa.",q:["O que é um lakehouse?","O que é Direct Lake e qual a vantagem?","Quando faz sentido usar Fabric em vez de só Power BI?"]},
- lider:{d:"Escreva como você daria um feedback difícil a um colega usando situação, comportamento e impacto.",q:["Como você lida com um colega que não entrega?","Conte uma vez em que você organizou pessoas para um objetivo.","Como você dá e recebe feedback?"]},
- p1:{d:"Antes de abrir qualquer tutorial, escreva o plano desta etapa em 3 passos. Só pesquise o que travar.",q:["Conte sobre um projeto de BI que você fez, do começo ao fim.","Que problemas você achou nos dados reais e como tratou?","Por que você escolheu esse modelo de dados?","Como você protegeu dados pessoais que estavam no texto dos pedidos?"]},
- p2:{d:"Antes de abrir qualquer tutorial, escreva o plano desta etapa em 3 passos. Só pesquise o que travar.",q:["Como você trabalha com dados públicos grandes e bagunçados?","Como você conferiu se os totais estavam certos?","Qual foi o achado mais interessante e o que você recomendaria?"]},
- p3:{d:"Antes de abrir qualquer tutorial, escreva o plano desta etapa em 3 passos. Só pesquise o que travar.",q:["Como você faria uma previsão e explicaria o limite dela para um gestor?","Como você detecta um valor fora do normal?","Como você usou IA sem perder o controle do resultado?"]}
-};
 function mentorOf(t){ const k=t.k==="curso"?t.c:t.k==="projeto"?t.p:null; const M=k&&MENTOR[k]; if(!M) return null; const n=parseInt(String(t.id).split(":").pop(),10)||0; return {d:M.d,q:M.q[n%M.q.length],proj:t.k==="projeto"}; }
 function mentorPrompt(t){ const m=mentorOf(t); return "Quero mentoria, não a resposta pronta. Estou na sessão: "+t.t+"."+(t.ok?"\nCritério de pronto: "+t.ok:"")+"\nDesafio sem olhar: "+m.d+"\nNo fim, me faça esta pergunta de entrevista e avalie minha resposta: "+m.q; }
 function mentorHTML(t){ const m=mentorOf(t); if(!m) return "";
@@ -2218,7 +2229,6 @@ function mentorHTML(t){ const m=mentorOf(t); if(!m) return "";
   +'<li><strong>Explique em voz alta (2 min):</strong> como se ensinasse a um colega da seção. Onde travar, é o que falta estudar.</li>'
   +'<li><strong>Pergunta de entrevista:</strong> '+esc(m.q)+'</li></ol>'
   +'<div class="row"><button type="button" class="btn ghost sm" data-mentor="'+esc(t.id)+'">'+(SAMPLE?"Pedir mentoria ao Claude":"Copiar pedido de mentoria para o Claude")+'</button></div></details>'; }
-const IV_PROMPT="Simulado semanal de entrevista (20 min) para vaga de Analista de BI/Dados Júnior. Faça 5 perguntas, uma por vez: 3 sobre os meus projetos (prazos da LAI com governança e LGPD; gastos da Defesa com orçamento, compras e viagens; combustíveis da ANP com Python, previsão e Fabric), 1 técnica de SQL ou DAX e 1 comportamental pedindo uma história no formato STAR. Avalie cada resposta e, no fim, diga o que treinar na próxima semana.";
 function ivGo(btn){ if(SAMPLE){ tutorAsk("entrev",IV_PROMPT); return; } pfSeg="ent"; go("perfil"); toast("Use as perguntas e o cronômetro de 2 min. No app do Claude, o tutor faz o simulado com você."); }
 function mentorGo(id,btn){ const t=IDX[id]; if(!t||!mentorOf(t)) return; const txt=mentorPrompt(t); if(SAMPLE){ tutorAsk("mentor",txt); return; } copyText(TUTOR_MODES.mentor.sys+"\n\n"+txt,btn).then(()=>toast("Pedido copiado. Cole numa conversa no app do Claude.")); }
 /* ================= v4: MODO ÁUDIO (flashcards falados) ================= */
@@ -2442,4 +2452,4 @@ render();
 if(TM) tmEnsureUI();
 setInterval(()=>{refreshHeader();},60000);
 </script>
-<script>if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){const sw=navigator.serviceWorker;let had=!!sw.controller;sw.register("sw.js",{scope:"./"}).then(r=>{document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update().catch(()=>{});});}).catch(()=>{});sw.addEventListener("controllerchange",()=>{if(had){if(typeof swUpdated==="function")swUpdated();else location.reload();}had=true;});}</script><script>(function(){const q='#nl-badge-frame,iframe[title="Powered by Netlify"]';const k=()=>document.querySelectorAll(q).forEach(e=>e.remove());k();new MutationObserver(k).observe(document.documentElement,{childList:true,subtree:true});})()</script></body></html>
+<script>if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){const sw=navigator.serviceWorker;let had=!!sw.controller;sw.register("sw.js",{scope:"./"}).then(r=>{document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update().catch(()=>{});});}).catch(()=>{});sw.addEventListener("controllerchange",()=>{if(had){if(typeof swUpdated==="function")swUpdated();else location.reload();}had=true;});}</script></body></html>
