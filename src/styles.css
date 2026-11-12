@@ -311,3 +311,27 @@ input[type=range]{accent-color:var(--pri);width:min(240px,100%)}
 .tdq{display:flex;flex-direction:column;gap:6px;margin-top:6px}
 .tdq textarea{min-height:56px;font-size:15px}
 #toast .linkbtn{margin-left:6px}
+
+/* v33 */
+.cpb{display:flex;flex-direction:column;gap:2px}
+.cpb+.cpb{border-top:1px solid var(--line);padding-top:12px}
+.cpb details.acc{border-top:0;padding-top:0}
+.cpb details.acc>summary{min-height:36px}
+.cpprev{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
+.cfgg>details>summary h3{margin:0}
+.cfgg .cfgsub{display:flex;flex-direction:column;gap:10px;padding-top:12px;border-top:1px solid var(--line);margin-top:6px}
+.cfgg .cfgsub h3{font-size:16px}
+#focus{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;flex-direction:column;padding:calc(20px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));overflow-y:auto}
+#focus .fwrap{max-width:560px;width:100%;margin:auto;display:flex;flex-direction:column;gap:18px}
+#focus .fk{font:700 12px var(--f);letter-spacing:.08em;text-transform:uppercase;color:var(--pri)}
+#focus .ft{font:700 clamp(22px,6vw,30px)/1.25 var(--f);text-wrap:balance}
+#focus .fm{color:var(--muted);font-size:15px}
+#focus .fclock{font:700 clamp(56px,20vw,96px)/1 var(--f);font-variant-numeric:tabular-nums;text-align:center;letter-spacing:-.02em}
+#focus .fph{text-align:center;font:600 14px var(--f);color:var(--muted)}
+#focus .fbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+#focus .fbtns .btn{min-width:120px;min-height:48px;font-size:16px}
+#focus .fnext{border-top:1px solid var(--line);padding-top:14px;font-size:14px;color:var(--muted)}
+#focus .fx{align-self:flex-end}
+body.hasfocus{overflow:hidden}
+body.hasfocus #tmbar{display:none}
+@media (prefers-reduced-motion:no-preference){#focus{animation:fin .18s ease-out}@keyframes fin{from{opacity:0}to{opacity:1}}}

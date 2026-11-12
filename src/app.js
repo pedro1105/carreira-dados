@@ -321,7 +321,7 @@ async function clNew(){CL.code=newCode();CL.base=0;ST.cloud=CL.code;clStore();ch
 function clOff(btn){if(!btn.dataset.arm){btn.dataset.arm="1";btn.textContent="Toque de novo para desconectar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.arm;btn.textContent="Desconectar este aparelho";}},4000);return;}
  CL.code=null;CL.base=0;CL.st="off";clStore();clSnap(null);delete ST.cloud;saveLocal();rerenderKeep();toast("Este aparelho parou de sincronizar.");}
 /* cada aparelho grava no progresso a versão do app, onde abriu e quando (lista em Configurações) */
-const APP_V=32;
+const APP_V=33;
 /* o que mudou em cada versão (aparece uma vez depois que o app atualiza e fica em Configurações) */
 const SEENK=KEY+"-seenV";
 /* versão nova baixada pelo service worker (app instalado): avisa e atualiza com um toque, como no app da Transpetro */
@@ -433,7 +433,7 @@ const TABS=[["hoje","Hoje"],["agenda","Agenda"],["cursos","Estudar"],["port","Po
 const TAB_OF={rev:"cursos"}; const VIEW_OK=["hoje","agenda","cursos","rev","port","perfil","prog","config"];
 let estSeg="cursos";
 let current=cfg().home==="agenda"?"agenda":"hoje"; if(cfg().home==="last"){try{const r=localStorage.getItem(KEY+"-tab"); if(r&&VIEW_OK.includes(r)) current=r;}catch(e){}}
-try{const qv=new URLSearchParams(location.search).get("v"); if(qv&&VIEW_OK.includes(qv)) current=qv;}catch(e){}
+try{const qp=new URLSearchParams(location.search), qv=qp.get("v"), qs=qp.get("s"); if(qv&&VIEW_OK.includes(qv)) current=qv; if(qs) setTimeout(()=>{ if(current==="perfil"){pfSeg=qs;} else if(current==="rev"){revSeg=qs;} rerender(); },0);}catch(e){}
 $("#tabs").innerHTML=TABS.map(([v,n])=>'<button role="tab" type="button" data-v="'+v+'" aria-selected="'+(v===(TAB_OF[current]||current))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICONS[v]+'</svg>'+n+'</button>').join("");
 $("#tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.v==="cursos"?(current==="cursos"||current==="rev"?"cursos":estSeg):b.dataset.v));
 const VIEWS={hoje:vHoje,agenda:vAgenda,cursos:vCursos,rev:vRev,port:vPort,perfil:vPerfil,prog:vProg,config:vConfig};
@@ -475,6 +475,8 @@ function cdHTML(t){
  return '<section class="panel cdrow">'+L.map(([k,n,d])=>'<div class="fact"><span class="k">'+esc(k)+'</span><span class="mid num">'+f(n)+'</span><span class="muted small">'+esc(d)+'</span></div>').join("")+'</section>'; }
 function fitHTML(t,mins){ const w=mondayOf(t), n=(ST.fit&&ST.fit[w])||0;
  return '<section class="panel"><div class="dayhead"><h3>Rotina e saúde</h3><span class="pill '+(n>=3?"free":"pri")+' num">'+n+'/3 treinos na semana</span></div><p class="small">'+(mins>=180?'Dia longo ('+hrs(mins)+' h): use o cronômetro 50+10 e levante nas pausas. ':'')+'Atividade física 3 vezes por semana segura o ritmo até setembro. Marque quando treinar:</p><div class="fitrow">'+[1,2,3].map(i=>'<button type="button" class="btn ghost sm" data-fit="'+i+'" aria-pressed="'+(n>=i)+'">Treino '+i+'</button>').join("")+'</div></section>'; }
+const HC=[["fit","Rotina e saúde"],["rev","Revisões de hoje"],["tom","Amanhã"],["meta","Meta da fase"],["num","Números (sequência, horas, em dia)"],["tip","Dica do dia"]];
+const hcOn=k=>!((cfg().hc||{})[k]===false);
 function vHoje(){
  const t=todayS(); const st=stats(); let h=syncBanner()+cdHTML(t);
  const tipI=(diff("2026-01-01",t)%TIPS.length+TIPS.length)%TIPS.length; const tip=TIPS[tipI];
@@ -487,22 +489,21 @@ function vHoje(){
   h+='<section class="panel"><h4>Plano de 2027 concluído</h4><h2>Hora de revisar as metas</h2><p>O cronograma diário ia até 30/09/2027. Abra o plano mestre para a fase Júnior e continue usando as abas Cursos, Portfólio e Perfil.</p></section>';
  } else {
   const ph=phaseOf(t); const T=SCHED[t]||[]; const real=T.filter(x=>x.k!=="folga"); const dn=real.filter(x=>isDone(x.id)).length; const mins=real.reduce((a,x)=>a+x.m,0);
-  h+='<section class="panel"><div class="dayhead"><div><h4>'+(ph?esc(ph.n):"")+'</h4><h2>'+fmt(t)+'</h2></div><span class="pill pri num">'+dn+'/'+real.length+' feitas · '+hrs(mins)+' h</span></div>'+(real.length?'<div class="track" aria-hidden="true"><div class="fill'+(dn===real.length?" ok":"")+'" style="width:'+(real.length?Math.round(dn/real.length*100):0)+'%"></div></div>':"")+'<div class="tasks">'+T.map(x=>taskHTML(x)).join("")+'</div></section>';
+  h+='<section class="panel"><div class="dayhead"><div><h4>'+(ph?esc(ph.n):"")+'</h4><h2>'+fmt(t)+'</h2></div><span class="pill pri num">'+dn+'/'+real.length+' feitas · '+hrs(mins)+' h</span></div>'+(dn<real.length?'<div class="row"><button class="btn sm" type="button" id="focusGo">Modo foco</button><span class="muted small">só a tarefa atual e o cronômetro</span></div>':'')+''+(real.length?'<div class="track" aria-hidden="true"><div class="fill'+(dn===real.length?" ok":"")+'" style="width:'+(real.length?Math.round(dn/real.length*100):0)+'%"></div></div>':"")+'<div class="tasks">'+T.map(x=>taskHTML(x)).join("")+'</div></section>';
   if(t<addD(START,14)&&PREP.some(x=>!isDone(x.id))) h+=prepHTML();
-  h+=fitHTML(t,mins);
+  if(hcOn("fit")) h+=fitHTML(t,mins);
   const cc=srsCounts(), fu=apFollow(), dow=parse(t).getDay();
-  if(cc.due||cc.fresh) h+='<section class="panel"><div class="dayhead"><h3>Revisões de hoje</h3><span class="pill pri num">'+cc.due+' para revisar · '+cc.fresh+' novos</span></div><p class="small">Cerca de '+Math.max(2,Math.round((cc.due+cc.fresh)*0.4))+' min de flashcards. Faça antes do curso do dia: aquece a cabeça.</p><div class="row"><button class="btn sm" id="goCards" type="button">Revisar agora</button>'+(TTS_OK?'<button class="btn ghost sm" id="goAudio" type="button">Ouvir em áudio</button>':'')+'</div></section>';
+  if(hcOn("rev")&&(cc.due||cc.fresh)) h+='<section class="panel"><div class="dayhead"><h3>Revisões de hoje</h3><span class="pill pri num">'+cc.due+' para revisar · '+cc.fresh+' novos</span></div><p class="small">Cerca de '+Math.max(2,Math.round((cc.due+cc.fresh)*0.4))+' min de flashcards. Faça antes do curso do dia: aquece a cabeça.</p><div class="row"><button class="btn sm" id="goCards" type="button">Revisar agora</button>'+(TTS_OK?'<button class="btn ghost sm" id="goAudio" type="button">Ouvir em áudio</button>':'')+'</div></section>';
   if(fu.length) h+='<section class="panel"><div class="dayhead"><h3>Candidaturas para cobrar</h3><span class="pill bad num">'+fu.length+'</span></div><p class="small">'+fu.slice(0,3).map(p=>esc(p.emp)).join(", ")+(fu.length>3?" e mais "+(fu.length-3):"")+' sem resposta há 10 dias ou mais.</p><div class="row"><button class="btn ghost sm" id="goApps" type="button">Abrir candidaturas</button></div></section>';
   if((dow===0||dow===1)&&t>addD(START,5)){ const w0=mondayOf(dow===1?addD(t,-1):t); h+=weekCard(weekStats(w0),weekStats(addD(w0,-7)),"Resumo da semana"); }
   const od=overdue(), bn=behindN();
-  if(bn>=3) h+='<section class="panel"><h3>Ficou para trás?</h3><p class="small">'+bn+' tarefas de curso, projeto ou perfil estão atrasadas. Em vez de acumular, reorganize: elas voltam para a fila a partir de hoje, na mesma ordem, e o resto do plano anda junto (pode passar de 30/09). Dá para desfazer em Configurações.</p><div class="row"><button class="btn sm" id="rpGo" type="button">Estou atrasado: reorganizar o plano</button></div></section>';
-  if(od.length) h+='<section class="panel"><details class="acc"><summary><h3>Pendentes dos últimos 21 dias <span class="pill bad num">'+od.length+'</span></h3><span class="chev">›</span></summary><p class="muted small">Não precisa zerar tudo. Priorize cursos e projetos; recorrentes como inglês podem ficar para trás.</p><div class="tasks">'+od.map(x=>taskHTML(x,true)).join("")+'</div></details></section>';
-  h+='<section class="panel"><h3>Amanhã</h3><div class="tasks">'+(SCHED[addD(t,1)]||[]).map(x=>'<div class="task folga"><div class="tb"><span class="tt">'+esc(x.k==="folga"?"Folga":x.t)+'</span>'+(x.k==="folga"?"":'<div class="tm"><span class="kchip" style="--kc:var(--k-'+x.k+')">'+KINDS[x.k]+'</span><span>'+x.m+' min</span></div>')+'</div></div>').join("")+'</div></section>';
-  if(ph) h+='<section class="panel"><details class="acc" style="border:0;padding:0" data-k="hmeta"><summary><span class="stack" style="gap:2px"><h4>Meta da fase</h4><strong>'+esc(ph.n)+'</strong></span><span class="chev">›</span></summary><p class="small">'+esc(ph.goal)+'</p><p class="muted small">'+esc(ph.h)+'</p></details></section>';
+  if(od.length||bn>=3) h+='<section class="panel"><details class="acc" style="border:0;padding:0" data-k="atraso"><summary><h3>Atrasadas <span class="pill bad num">'+od.length+'</span></h3><span class="chev">›</span></summary><p class="muted small">Tarefas dos últimos 21 dias que ficaram sem marcar. Não precisa zerar tudo: priorize cursos e projetos; recorrentes como inglês podem ficar para trás.</p>'+(bn>=3?'<div class="note stack" style="gap:8px"><p class="small">'+bn+' delas são de curso, projeto ou perfil. Em vez de acumular, reorganize: elas voltam para a fila a partir de hoje, na mesma ordem, e o resto do plano anda junto (pode passar de 30/09). Dá para desfazer em Configurações.</p><div class="row"><button class="btn sm" id="rpGo" type="button">Reorganizar o plano</button></div></div>':'')+'<div class="tasks">'+od.map(x=>taskHTML(x,true)).join("")+'</div></details></section>';
+  if(hcOn("tom")) h+='<section class="panel"><h3>Amanhã</h3><div class="tasks">'+(SCHED[addD(t,1)]||[]).map(x=>'<div class="task folga"><div class="tb"><span class="tt">'+esc(x.k==="folga"?"Folga":x.t)+'</span>'+(x.k==="folga"?"":'<div class="tm"><span class="kchip" style="--kc:var(--k-'+x.k+')">'+KINDS[x.k]+'</span><span>'+x.m+' min</span></div>')+'</div></div>').join("")+'</div></section>';
+  if(ph&&hcOn("meta")) h+='<section class="panel"><details class="acc" style="border:0;padding:0" data-k="hmeta"><summary><span class="stack" style="gap:2px"><h4>Meta da fase</h4><strong>'+esc(ph.n)+'</strong></span><span class="chev">›</span></summary><p class="small">'+esc(ph.goal)+'</p><p class="muted small">'+esc(ph.h)+'</p></details></section>';
  }
  h+=pendHTML(true);
- h+='<section class="panel statrow"><div class="fact"><span class="k">Sequência</span><span class="mid">'+st.streak+' dia'+(st.streak===1?"":"s")+'</span></div><div class="fact"><span class="k">Horas</span><span class="mid">'+hrs(st.mins)+' h</span></div><div class="fact"><span class="k">Em dia</span><span class="mid">'+(st.planned?Math.round(st.plannedDone/st.planned*100):100)+'%</span></div><button class="btn ghost sm" type="button" id="goProg">Ver progresso ›</button></section>';
- h+='<p class="tip1"><strong>Dica do dia · '+esc(tip[0])+'.</strong> '+esc(tip[1])+'</p>';
+ if(hcOn("num")) h+='<section class="panel statrow"><div class="fact"><span class="k">Sequência</span><span class="mid">'+st.streak+' dia'+(st.streak===1?"":"s")+'</span></div><div class="fact"><span class="k">Horas</span><span class="mid">'+hrs(st.mins)+' h</span></div><div class="fact"><span class="k">Em dia</span><span class="mid">'+(st.planned?Math.round(st.plannedDone/st.planned*100):100)+'%</span></div><button class="btn ghost sm" type="button" id="goProg">Ver progresso ›</button></section>';
+ if(hcOn("tip")) h+='<p class="tip1"><strong>Dica do dia · '+esc(tip[0])+'.</strong> '+esc(tip[1])+'</p>';
  return h;
 }
 WIRES.hoje=el=>{
@@ -510,8 +511,8 @@ WIRES.hoje=el=>{
  el.querySelectorAll("[data-fit]").forEach(b=>b.onclick=()=>{const w=mondayOf(todayS()), i=+b.dataset.fit, n=(ST.fit&&ST.fit[w])||0; ST.fit=Object.assign({},ST.fit||{}); ST.fit[w]=n>=i?i-1:i; changed(); rerenderKeep();});
  on("bnAllow",clAllow); on("bnGo",()=>clLink($("#bnIn").value,true).then(()=>rerenderKeep()));
  const bi=el.querySelector("#bnIn"); if(bi) bi.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("#bnGo").click();}};
- on("goCards",()=>{revSeg="cards";go("rev");}); on("goProg",()=>go("prog")); wirePend(el); on("goAudio",()=>{revSeg="au";go("rev");}); on("goApps",()=>{pfSeg="vagas";go("perfil");});
- on("rpGo",e=>{const b=e.currentTarget; if(!b.dataset.arm){b.dataset.arm="1";b.textContent="Toque de novo para confirmar";setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent="Estou atrasado: reorganizar o plano";}},4000);return;} replan();});
+ on("goCards",()=>{revSeg="cards";go("rev");}); on("goProg",()=>go("prog")); on("focusGo",focusOpen); wirePend(el); on("goAudio",()=>{revSeg="au";go("rev");}); on("goApps",()=>{pfSeg="vagas";go("perfil");});
+ on("rpGo",e=>{const b=e.currentTarget; if(!b.dataset.arm){b.dataset.arm="1";b.textContent="Toque de novo para confirmar";setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent="Reorganizar o plano";}},4000);return;} replan();});
 };
 function weekList(a,n){ let h=""; for(let i=0;i<n;i++){const s=addD(a,i); const T=SCHED[s]||[]; h+='<details class="acc"><summary><span class="daytitle">'+fmt(s)+'</span><span class="row"><span class="muted small num">'+T.filter(x=>x.k!=="folga").length+' tarefas</span><span class="chev">›</span></span></summary><div class="tasks">'+T.map(x=>taskHTML(x)).join("")+'</div></details>'; } return h; }
 
@@ -627,7 +628,8 @@ WIRES.port=el=>{ el.querySelectorAll("[data-ps]").forEach(b=>b.onclick=()=>{port
 /* Perfil profissional */
 let pfSeg=todayS()>="2027-02-01"?"vagas":"li";
 function brandList(g){ return '<div class="tasks">'+BRAND.filter(b=>b.g===g).map(b=>taskHTML(IDX["b:"+b.id],true)).join("")+'</div>'; }
-function copyBlock(key,title){ return '<div class="stack"><div class="dayhead"><h3>'+title+'</h3><button class="btn ghost sm" data-copy="'+key+'" type="button">Copiar</button></div><pre class="copybox">'+esc(TXT[key])+'</pre></div>'; }
+function copyBlock(key,title){ const tx=TXT[key]||"", first=tx.split("\n").find(l=>l.trim())||"", n=tx.split("\n").filter(l=>l.trim()).length;
+ return '<div class="cpb"><div class="dayhead"><h3>'+title+'</h3><button class="btn ghost sm" data-copy="'+key+'" type="button">Copiar</button></div><details class="acc" data-k="cp-'+key+'"><summary><span class="muted small cpprev">'+esc(first.length>90?first.slice(0,88)+"…":first)+'</span><span class="row" style="gap:6px;flex:none"><span class="muted small">'+(n>1?"ver "+n+" linhas":"ver")+'</span><span class="chev">›</span></span></summary><pre class="copybox">'+esc(tx)+'</pre></details></div>'; }
 function mktHTML(){
  return '<section class="panel"><details class="acc" style="border:0;padding:0"><summary><h3>Mercado de vagas (pesquisa de 11/11/2026)</h3><span class="chev">›</span></summary><div class="stack small">'
  +'<p><strong>Vagas vistas (RJ e remoto):</strong> Analista de Dados Jr (BIP Brasil, híbrido; Rede D\'Or), Analista Jr. de Dados/BI (Grupo Sacada, presencial), Analista de BI (MRM, híbrido), Power BI Junior Analyst (INDI, remoto) e Assistente de Inteligência de Dados (abler, remoto).</p>'
@@ -946,20 +948,24 @@ function wirePend(el){
 function vConfig(){
  const c=cfg(); const segH=(id,val,opts)=>'<div class="seg" role="tablist" id="'+id+'">'+opts.map(([k,n])=>'<button role="tab" type="button" data-v="'+k+'" aria-selected="'+(String(val)===k)+'">'+n+'</button>').join("")+'</div>';
  const ck=(id,on,lbl)=>'<div class="cfgrow"><label for="'+id+'">'+lbl+'</label><input type="checkbox" id="'+id+'"'+(on?" checked":"")+'></div>';
- let h='<section class="stack"><h2>Configurações</h2><p class="muted">Ajustes deste app. O progresso é salvo sozinho a cada tarefa marcada.</p></section>';
+ let h='<section class="stack"><h2>Configurações</h2><p class="muted">Ajustes deste app. O progresso é salvo sozinho a cada tarefa marcada.</p></section>'; const G={rot:"",avi:"",apa:"",dad:""}; let g="rot";
  h+=cfgSync();
- h+='<section class="panel"><h3>Rotina de estudo</h3><div class="cfgrow"><label for="cHF">Início nos dias úteis das férias (até 03/01)</label><input type="time" id="cHF" value="'+c.hf+'"></div><div class="cfgrow"><label for="cHM">Início nos dias úteis de meio expediente (04/01 a 10/02)</label><input type="time" id="cHM" value="'+c.hm+'"></div><div class="cfgrow"><label for="cH1">Início nos dias úteis, do Carnaval até a baixa</label><input type="time" id="cH1" value="'+c.h1+'"></div><div class="cfgrow"><label for="cH2">Início nos dias úteis, depois da baixa</label><input type="time" id="cH2" value="'+c.h2+'"></div><div class="cfgrow"><label for="cHW">Início no sábado e no domingo</label><input type="time" id="cHW" value="'+c.hw+'"></div><p class="muted small">Hoje e Agenda mostram o horário de cada tarefa a partir daqui, com pausa de 10 min entre elas.</p></section>';
- h+='<section class="panel"><h3>Data da baixa</h3><div class="cfgrow"><label for="cBx">Último dia de serviço</label><input type="date" id="cBx" min="2027-01-04" max="2027-06-30" value="'+c.baixa+'"></div><p class="muted small">Confirme com a Seção de Pessoal. Mudar a data muda o ritmo do cronograma (militar para civil), os marcos da saída e a contagem do topo. O que você já marcou continua marcado. A Google Agenda não muda sozinha: peça o ajuste na conversa.</p></section>';
- h+='<section class="panel"><h3>O que entra no cronograma</h3>'+ck("cEng",c.eng,"Inglês (30 min)")+ck("cSql",c.sql,"Desafio SQL (20 min)")+ck("cPost",c.post,"Post semanal no LinkedIn")+'<p class="muted small">Cursos, projetos, perfil profissional e candidaturas ficam sempre.</p></section>';
- h+='<section class="panel"><h3>Cronômetro e revisões</h3><div class="cfgrow"><label for="cFoc">Foco e pausa</label><select id="cFoc">'+[["50/10","50 + 10 min"],["45/15","45 + 15 min"],["25/5","25 + 5 min (pomodoro)"]].map(([v,n])=>'<option value="'+v+'"'+((c.foc||50)+"/"+(c.brk||10)===v?" selected":"")+'>'+n+'</option>').join("")+'</select></div>'+ck("cBeep",c.beep!==false,"Bipe e vibração ao fim de cada etapa")+'<div class="cfgrow"><label for="cNew">Flashcards novos por dia</label><select id="cNew">'+[5,10,15,20].map(v=>'<option'+((+c.newc||10)===v?" selected":"")+'>'+v+'</option>').join("")+'</select></div>'+ck("cAll",!!c.allDecks,"Liberar todos os baralhos (sem esperar o curso começar)")+'<p class="muted small">O cronômetro marca a tarefa como feita quando você completa os minutos dela. O tempo de foco aparece em Progresso.</p></section>';
- h+=pushPanel();
- if(c.rp) h+='<section class="panel"><h3>Reorganização do plano</h3><p class="small">O plano foi reorganizado em '+fmt(c.rp)+': o que estava atrasado foi para a frente.</p><div class="row"><button class="btn ghost sm" id="rpUndo" type="button">Desfazer reorganização</button></div></section>';
- h+='<section class="panel"><h3>Tela inicial</h3>'+segH("homeSeg",c.home,[["hoje","Hoje"],["agenda","Agenda"],["last","Última aba aberta"]])+'</section>';
- h+='<section class="panel"><h3>Lembretes</h3><p class="small">Os avisos chegam pela sua Google Agenda (a conta do Gmail sincronizada na conversa): 30 min antes de cada bloco de estudo e na véspera dos marcos. Para mudar os horários lá, peça na conversa.</p></section>';
- h+='<section class="panel"><h3>Aparência</h3><span class="muted small">Tema</span>'+segH("thSeg",theme,[["auto","Automático"],["light","Claro"],["dark","Escuro"]])+'<span class="muted small">Tamanho da letra</span>'+segH("fzSeg",String(fz),[["0.92","92%"],["1","100%"],["1.12","112%"],["1.25","125%"],["1.4","140%"]])+'<p class="muted small">Tema e letra valem só para este aparelho.</p></section>';
- h+='<section class="panel"><h3>Backup manual</h3><p class="muted small">Cópia do progresso por código, para guardar ou passar para outro aparelho. A importação substitui o progresso deste aparelho.</p><textarea id="bkTxt" aria-label="Código de backup" placeholder="Cole aqui o código de backup"></textarea><div class="row"><button class="btn ghost sm" id="bkGen" type="button">Gerar e copiar</button><button class="btn sm" id="bkImp" type="button">Importar código</button></div><p class="small muted" id="bkMsg" role="status"></p></section>';
- h+='<section class="panel"><h3>Zerar progresso</h3><p class="muted small">Apaga as tarefas marcadas, os cursos cadastrados e os ajustes, neste aparelho e na sua conta.</p><div class="row"><button class="btn warn sm" id="rst" type="button">Apagar todo o progresso</button></div></section>';
- h+='<section class="panel"><h3>Sobre</h3><p class="small">Versão '+APP_V+' · '+TOTAL_TASKS+' tarefas de 07/12/2026 a '+fmt(lastDay())+'. Plano completo, até CDO: <a href="https://claude.ai/artifact/8hv4yXAzjq8wiUcX57jfv5" target="_blank" rel="noopener">Trilha até CDO</a>.</p></section>';
+ G.rot+='<section class="panel"><h3>Rotina de estudo</h3><div class="cfgrow"><label for="cHF">Início nos dias úteis das férias (até 03/01)</label><input type="time" id="cHF" value="'+c.hf+'"></div><div class="cfgrow"><label for="cHM">Início nos dias úteis de meio expediente (04/01 a 10/02)</label><input type="time" id="cHM" value="'+c.hm+'"></div><div class="cfgrow"><label for="cH1">Início nos dias úteis, do Carnaval até a baixa</label><input type="time" id="cH1" value="'+c.h1+'"></div><div class="cfgrow"><label for="cH2">Início nos dias úteis, depois da baixa</label><input type="time" id="cH2" value="'+c.h2+'"></div><div class="cfgrow"><label for="cHW">Início no sábado e no domingo</label><input type="time" id="cHW" value="'+c.hw+'"></div><p class="muted small">Hoje e Agenda mostram o horário de cada tarefa a partir daqui, com pausa de 10 min entre elas.</p></section>';
+ G.rot+='<section class="panel"><h3>Data da baixa</h3><div class="cfgrow"><label for="cBx">Último dia de serviço</label><input type="date" id="cBx" min="2027-01-04" max="2027-06-30" value="'+c.baixa+'"></div><p class="muted small">Confirme com a Seção de Pessoal. Mudar a data muda o ritmo do cronograma (militar para civil), os marcos da saída e a contagem do topo. O que você já marcou continua marcado. A Google Agenda não muda sozinha: peça o ajuste na conversa.</p></section>';
+ G.rot+='<section class="panel"><h3>O que entra no cronograma</h3>'+ck("cEng",c.eng,"Inglês (30 min)")+ck("cSql",c.sql,"Desafio SQL (20 min)")+ck("cPost",c.post,"Post semanal no LinkedIn")+'<p class="muted small">Cursos, projetos, perfil profissional e candidaturas ficam sempre.</p></section>';
+ G.rot+='<section class="panel"><h3>Cronômetro e revisões</h3><div class="cfgrow"><label for="cFoc">Foco e pausa</label><select id="cFoc">'+[["50/10","50 + 10 min"],["45/15","45 + 15 min"],["25/5","25 + 5 min (pomodoro)"]].map(([v,n])=>'<option value="'+v+'"'+((c.foc||50)+"/"+(c.brk||10)===v?" selected":"")+'>'+n+'</option>').join("")+'</select></div>'+ck("cBeep",c.beep!==false,"Bipe e vibração ao fim de cada etapa")+'<div class="cfgrow"><label for="cNew">Flashcards novos por dia</label><select id="cNew">'+[5,10,15,20].map(v=>'<option'+((+c.newc||10)===v?" selected":"")+'>'+v+'</option>').join("")+'</select></div>'+ck("cAll",!!c.allDecks,"Liberar todos os baralhos (sem esperar o curso começar)")+'<p class="muted small">O cronômetro marca a tarefa como feita quando você completa os minutos dela. O tempo de foco aparece em Progresso.</p></section>';
+ G.avi+=pushPanel();
+ if(c.rp) G.dad+='<section class="panel"><h3>Reorganização do plano</h3><p class="small">O plano foi reorganizado em '+fmt(c.rp)+': o que estava atrasado foi para a frente.</p><div class="row"><button class="btn ghost sm" id="rpUndo" type="button">Desfazer reorganização</button></div></section>';
+ G.rot+='<section class="panel"><h3>Tela inicial</h3>'+segH("homeSeg",c.home,[["hoje","Hoje"],["agenda","Agenda"],["last","Última aba aberta"]])+'</section>';
+ G.rot+='<section class="panel"><h3>Cartões do Hoje</h3><p class="muted small">Escolha o que aparece na tela Hoje. As tarefas do dia, a preparação e as pendências sempre aparecem.</p>'+HC.map(([k,n])=>ck("cHc-"+k,hcOn(k),n)).join("")+'</section>';
+ G.avi+='<section class="panel"><h3>Lembretes</h3><p class="small">Os avisos chegam pela sua Google Agenda (a conta do Gmail sincronizada na conversa): 30 min antes de cada bloco de estudo e na véspera dos marcos. Para mudar os horários lá, peça na conversa.</p></section>';
+ G.apa+='<section class="panel"><h3>Aparência</h3><span class="muted small">Tema</span>'+segH("thSeg",theme,[["auto","Automático"],["light","Claro"],["dark","Escuro"]])+'<span class="muted small">Tamanho da letra</span>'+segH("fzSeg",String(fz),[["0.92","92%"],["1","100%"],["1.12","112%"],["1.25","125%"],["1.4","140%"]])+'<p class="muted small">Tema e letra valem só para este aparelho.</p></section>';
+ G.dad+='<section class="panel"><h3>Backup manual</h3><p class="muted small">Cópia do progresso por código, para guardar ou passar para outro aparelho. A importação substitui o progresso deste aparelho.</p><textarea id="bkTxt" aria-label="Código de backup" placeholder="Cole aqui o código de backup"></textarea><div class="row"><button class="btn ghost sm" id="bkGen" type="button">Gerar e copiar</button><button class="btn sm" id="bkImp" type="button">Importar código</button></div><p class="small muted" id="bkMsg" role="status"></p></section>';
+ G.dad+='<section class="panel"><h3>Zerar progresso</h3><p class="muted small">Apaga as tarefas marcadas, os cursos cadastrados e os ajustes, neste aparelho e na sua conta.</p><div class="row"><button class="btn warn sm" id="rst" type="button">Apagar todo o progresso</button></div></section>';
+ G.dad+='<section class="panel"><h3>Sobre</h3><p class="small">Versão '+APP_V+' · '+TOTAL_TASKS+' tarefas de 07/12/2026 a '+fmt(lastDay())+'. Plano completo, até CDO: <a href="https://claude.ai/artifact/8hv4yXAzjq8wiUcX57jfv5" target="_blank" rel="noopener">Trilha até CDO</a>.</p></section>';
+ G.avi+='<section class="panel"><h3>Resumo da semana</h3>'+ck("cWs",cfg().wsum!==false,"Notificação no domingo às 19h com horas, tarefas e atrasadas")+'<p class="muted small">Chega junto com os outros avisos, quando as notificações estão ligadas.</p></section>';
+ const sub=x=>x.replace(/<section class="panel(?: stack)?">/g,'<div class="cfgsub">').replace(/<\/section>/g,'</div>');
+ [["rot","Rotina e cronograma","Horários, baixa, o que entra no plano, cronômetro, tela inicial e cartões do Hoje"],["avi","Avisos","Notificações no celular, lembretes e resumo de domingo"],["apa","Aparência","Tema e tamanho da letra"],["dad","Dados e backup","Backup, zerar progresso e versão"]].forEach(([k,n,d])=>{ h+='<section class="panel cfgg"><details class="acc" style="border:0;padding:0" data-k="cfg-'+k+'"><summary><span class="stack" style="gap:2px"><h3>'+n+'</h3><span class="muted small">'+d+'</span></span><span class="chev">›</span></summary>'+sub(G[k])+'</details></section>'; });
  return h;
 }
 function setCfg(k,v){ST.cfg=Object.assign({},ST.cfg||{},{[k]:v});changed();}
@@ -975,6 +981,8 @@ function wireCfg(el){
  [["cHF","hf"],["cHM","hm"],["cH1","h1"],["cH2","h2"],["cHW","hw"]].forEach(([id,k])=>{$("#"+id).onchange=e=>{if(!e.target.value)return;setCfg(k,e.target.value);TCACHE={};toast("Horário salvo.");};});
  $("#cBx").onchange=e=>{const v=e.target.value; if(!v||v<"2027-01-04"||v>"2027-06-30"){toast("Escolha uma data entre 04/01 e 30/06/2027.");return;} setCfg("baixa",v);rebuild();refreshHeader();toast("Cronograma recalculado para a baixa em "+fmtShort(v)+".");};
  [["cEng","eng"],["cSql","sql"],["cPost","post"]].forEach(([id,k])=>{$("#"+id).onchange=e=>{setCfg(k,e.target.checked);rebuild();toast(e.target.checked?"Incluído no cronograma.":"Retirado do cronograma.");};});
+ HC.forEach(([k])=>{const c=$("#cHc-"+k); if(c) c.onchange=e=>{ST.cfg=Object.assign({},ST.cfg||{}); ST.cfg.hc=Object.assign({},ST.cfg.hc||{},{[k]:e.target.checked}); changed(); toast(e.target.checked?"Cartão volta a aparecer no Hoje.":"Cartão escondido do Hoje.");};});
+ const ws=$("#cWs"); if(ws) ws.onchange=e=>{setCfg("wsum",e.target.checked);pushSync(true);toast(e.target.checked?"Resumo de domingo ligado.":"Resumo de domingo desligado.");};
  el.querySelectorAll("#homeSeg button").forEach(b=>b.onclick=()=>{setCfg("home",b.dataset.v);rerenderKeep();toast("Tela inicial salva.");});
  el.querySelectorAll("#fzSeg button").forEach(b=>b.onclick=()=>{fz=+b.dataset.v;try{localStorage.setItem(KEY+"-fz",fz);}catch(e){}applyFz();rerenderKeep();});
 }
@@ -1037,6 +1045,32 @@ function tmRender(){
  try{document.title=(TM.paused?"❚❚ ":"")+pad(mm)+":"+pad(ss)+" · "+lbl;}catch(e){}
 }
 setInterval(tmTick,1000);
+/* ================= v33: MODO FOCO ================= */
+let FOCUS=false;
+function focusTask(){ if(TM&&IDX[TM.id]) return IDX[TM.id]; const T=SCHED[todayS()]||[]; return T.find(x=>x.k!=="folga"&&!isDone(x.id))||null; }
+function focusOpen(){ FOCUS=true; document.body.classList.add("hasfocus"); focusRender(true); }
+function focusClose(){ FOCUS=false; document.body.classList.remove("hasfocus"); const f=$("#focus"); if(f) f.remove(); rerenderKeep(); }
+function focusRender(full){
+ if(!FOCUS) return; let el=$("#focus"); const x=focusTask();
+ if(!el){ el=document.createElement("div"); el.id="focus"; el.setAttribute("role","dialog"); el.setAttribute("aria-modal","true"); el.setAttribute("aria-label","Modo foco"); document.body.appendChild(el); full=true; }
+ const run=TM&&x&&TM.id===x.id;
+ const len=run?tmPhaseLen():(x?Math.min(tmFoc(),x.m*60):0), left=run?Math.max(0,len-tmElapsed()):len, clock=pad(Math.floor(left/60))+":"+pad(left%60);
+ const key=(x?x.id:"-")+"|"+(run?TM.ph+TM.paused:"idle");
+ if(!full&&el.dataset.k===key){ const c=el.querySelector(".fclock"); if(c) c.textContent=clock; return; }
+ el.dataset.k=key;
+ if(!x){ el.innerHTML='<div class="fwrap"><button class="btn ghost sm fx" type="button" id="fX">Sair</button><p class="fk">Modo foco</p><p class="ft">Tudo feito por hoje.</p><p class="fm">Descanse. Amanhã tem mais.</p></div>'; $("#fX").onclick=focusClose; return; }
+ const T=(SCHED[todayS()]||[]).filter(y=>y.k!=="folga"&&!isDone(y.id)&&y.id!==x.id);
+ el.innerHTML='<div class="fwrap"><button class="btn ghost sm fx" type="button" id="fX">Sair do foco</button><div class="stack" style="gap:6px"><p class="fk">'+esc(KINDS[x.k])+' · '+x.m+' min'+(timeOf(x.id)?' · '+timeOf(x.id):'')+'</p><p class="ft">'+esc(x.t)+'</p>'+(x.ok?'<p class="fm"><strong>Pronto quando:</strong> '+esc(x.ok)+'</p>':'')+'</div>'
+  +'<div class="fclock" aria-live="off">'+clock+'</div><p class="fph">'+(run?(TM.ph==="foc"?"Foco":"Pausa")+(TM.paused?" · pausado":"")+' · '+Math.round((TM.acc+(TM.ph==="foc"?Math.min(tmElapsed(),len):0))/60)+' de '+x.m+' min':'Pronto para começar')+'</p>'
+  +'<div class="fbtns">'+(run?'<button class="btn" type="button" id="fP">'+(TM.paused?"Continuar":"Pausar")+'</button>':'<button class="btn" type="button" id="fGo">▶ Iniciar</button>')+'<button class="btn ghost" type="button" id="fOk">Concluir tarefa</button></div>'
+  +(T.length?'<p class="fnext"><strong>Depois:</strong> '+esc(T[0].t)+(T.length>1?' e mais '+(T.length-1):'')+'</p>':'')+'</div>';
+ $("#fX").onclick=focusClose;
+ const go_=$("#fGo"); if(go_) go_.onclick=()=>{tmStart(x.id);focusRender(true);};
+ const p_=$("#fP"); if(p_) p_.onclick=()=>{tmPause();focusRender(true);};
+ $("#fOk").onclick=()=>{ if(TM&&TM.id===x.id) tmStop(); ST.done[x.id]=todayS(); changed(); toast("Feito. Próxima tarefa."); focusRender(true); };
+}
+document.addEventListener("keydown",e=>{ if(FOCUS&&e.key==="Escape") focusClose(); });
+setInterval(()=>{ if(FOCUS) focusRender(false); },1000);
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible") tmTick();});
 
 /* toast com Desfazer */
@@ -1250,7 +1284,10 @@ function pushPlan(){
   const mins=pend.reduce((a,x)=>a+x.m,0);
   out.push({t:d.getTime(),ti:"Em "+before+" min: "+pend[0].t.slice(0,60),b:pend.length+(pend.length===1?" tarefa":" tarefas")+" hoje ("+hrs(mins)+" h)."+(i===0&&cc.due?" "+cc.due+" flashcards para revisar.":"")+" Toque para abrir.",u:"./"});
  }
- return out;
+ if(cfg().wsum!==false){ for(let i=0;i<7;i++){ const s=addD(todayS(),i), d=parse(s); if(d.getDay()!==0) continue; d.setHours(19,0,0,0); if(d.getTime()<=now) break;
+   const w=weekStats(mondayOf(s)), od=overdue().length, h_=hrs(w.mins+w.tm);
+   out.push({t:d.getTime(),ti:"Resumo da semana",b:w.done+" tarefas feitas, "+h_+" h de estudo"+(od?", "+od+" atrasadas":", nada atrasado")+". Toque para ver o progresso e planejar a semana.",u:"./?v=prog"}); break; } }
+ return out.sort((a,b)=>a.t-b.t);
 }
 const b64u=s=>{const p="=".repeat((4-s.length%4)%4),b=atob((s+p).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from(b,c=>c.charCodeAt(0));};
 async function pushOn(){

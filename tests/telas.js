@@ -41,6 +41,8 @@ const srv = http.createServer((q, r) => {
     await p.evaluate(() => go('hoje')); await p.waitForTimeout(80);
     const cb = await p.$('#view .task input[type=checkbox]:visible'); if (cb) { await cb.click(); clicks++; }
     const tm = await p.$('#view [data-tm]:visible'); if (tm) { await tm.click(); clicks++; }
+    const fg = await p.$('#focusGo'); if (fg) { await fg.click(); clicks++; for (const id of ['#fGo', '#fP', '#fP', '#fOk', '#fX']) { const e = await p.$(id); if (e) { await e.click(); clicks++; await p.waitForTimeout(50); } } }
+    await p.evaluate(() => go('config')); clicks += await p.$$eval('#view input[type=checkbox][id^=cHc-]', es => { es.forEach(e => { for (let i = 0; i < 2; i++) { e.checked = !e.checked; e.dispatchEvent(new Event('change')); } }); return es.length * 2; });
     for (const bt of await p.$$('#tabs button')) { await bt.click(); clicks++; }
     await p.click('#progBtn'); await p.click('#cfgBtn'); clicks += 2;
     console.log((date || 'hoje') + ' · ' + name + ': ' + clicks + ' cliques, ' + (errs.length ? errs.length + ' erro(s)' : 'sem erro'));
