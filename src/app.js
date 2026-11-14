@@ -321,7 +321,7 @@ async function clNew(){CL.code=newCode();CL.base=0;ST.cloud=CL.code;clStore();ch
 function clOff(btn){if(!btn.dataset.arm){btn.dataset.arm="1";btn.textContent="Toque de novo para desconectar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.arm;btn.textContent="Desconectar este aparelho";}},4000);return;}
  CL.code=null;CL.base=0;CL.st="off";clStore();clSnap(null);delete ST.cloud;saveLocal();rerenderKeep();toast("Este aparelho parou de sincronizar.");}
 /* cada aparelho grava no progresso a versão do app, onde abriu e quando (lista em Configurações) */
-const APP_V=35;
+const APP_V=36;
 /* o que mudou em cada versão (aparece uma vez depois que o app atualiza e fica em Configurações) */
 const SEENK=KEY+"-seenV";
 /* versão nova baixada pelo service worker (app instalado): avisa e atualiza com um toque, como no app da Transpetro */
@@ -402,7 +402,7 @@ function taskHTML(t,showDate,short){
  const ivb=/:iv$/.test(t.id)?'<div class="row"><button type="button" class="linkbtn" data-ivgo="1">Abrir o simulado</button></div>':"";
  const det=(t.d||t.u)?'<p class="tdet">'+esc(t.d||"")+(t.u?' <a href="'+esc(t.u)+'" target="_blank" rel="noopener">Abrir link</a>':"")+'</p>':"";
  const running=TM&&TM.id===t.id, canGo=!dn&&t.m>=20;
- const goBtn=canGo?'<button type="button" class="tmgo" data-tm="'+esc(t.id)+'" aria-label="Iniciar cronômetro: '+esc(t.t)+'">'+(running?"⏱ em andamento":"▶ Iniciar")+'</button>':'';
+ const goBtn=!canGo?'':running?'<button type="button" class="tmgo" data-tm="'+esc(t.id)+'" aria-label="'+(TM.paused?"Continuar":"Pausar")+' cronômetro: '+esc(t.t)+'">'+(TM.paused?"▶ Continuar":"❚❚ Pausar")+'</button><button type="button" class="tmgo" data-tmx="1" aria-label="Parar cronômetro">■ Parar</button>':'<button type="button" class="tmgo" data-tm="'+esc(t.id)+'" aria-label="Iniciar cronômetro: '+esc(t.t)+'">▶ Iniciar</button>';
  const inlineGo=canGo&&(running||t.id===NEXT_ID);
  let title=t.t; if(short){ const i=title.indexOf(" · "); if(i>0) title=title.slice(i+3); }
  const time=!showDate&&timeOf(t.id)?'<span class="num tmh">'+timeOf(t.id)+'</span>':'';
@@ -412,12 +412,13 @@ function taskHTML(t,showDate,short){
  return '<div class="task'+(dn?" done":"")+(inlineGo?" now":"")+'"><input type="checkbox" data-id="'+esc(t.id)+'" id="ck-'+esc(t.id)+'"'+(dn?" checked":"")+' aria-label="Concluir: '+esc(t.t)+'"><div class="tb">'+head+(inlineGo?'<div class="tm">'+goBtn+'</div>':'')+'</div></div>';
 }
 function wireChecks(root){
- root.querySelectorAll("[data-tm]").forEach(b=>b.onclick=()=>{tmStart(b.dataset.tm);rerenderKeep();});
+ root.querySelectorAll("[data-tm]").forEach(b=>b.onclick=()=>{ if(TM&&TM.id===b.dataset.tm) tmPause(); else tmStart(b.dataset.tm); rerenderKeep();});
+ root.querySelectorAll("[data-tmx]").forEach(b=>b.onclick=()=>tmStop());
  root.querySelectorAll("[data-tdqb]").forEach(b=>b.onclick=()=>{const ta=root.querySelector('textarea[data-tid="'+b.dataset.tdqb+'"]'); if(diaryAdd(ta.dataset.tdq,ta.value,ta.dataset.tid)){ta.value="";toast("Anotado no diário do projeto.");} else toast("Escreva o que você fez.");});
  root.querySelectorAll("[data-mentor]").forEach(b=>b.onclick=()=>mentorGo(b.dataset.mentor,b));
  root.querySelectorAll("[data-ivgo]").forEach(b=>b.onclick=()=>ivGo(b));
  root.querySelectorAll("[data-goapp]").forEach(b=>b.onclick=()=>{pfSeg="vagas";apEdit="new";go("perfil");});
- root.querySelectorAll('input[type=checkbox][data-id]').forEach(c=>c.onchange=()=>{toggle(c.dataset.id); const row=c.closest(".task"); if(row) row.classList.toggle("done",c.checked); if(c.checked) toast("Feito. Bom trabalho!"); refreshHeader(); if(current==="hoje"||current==="prog"||current==="cursos") rerenderKeep();}); }
+ root.querySelectorAll('input[type=checkbox][data-id]').forEach(c=>c.onchange=()=>{toggle(c.dataset.id); if(c.checked&&TM&&TM.id===c.dataset.id&&TM.ph==="foc") tmStop(true); const row=c.closest(".task"); if(row) row.classList.toggle("done",c.checked); if(c.checked) toast("Feito. Bom trabalho!"); refreshHeader(); if(current==="hoje"||current==="prog"||current==="cursos") rerenderKeep();}); }
 
 /* ================= ESTATÍSTICAS ================= */
 function stats(){
@@ -999,14 +1000,16 @@ function tmTask(){return TM&&(IDX[TM.id]||{t:TM.t||"Estudo livre",m:TM.m||50});}
 function tmElapsed(){if(!TM) return 0; return Math.floor(((TM.paused?TM.paused:Date.now())-TM.t0)/1000);}
 function tmPhaseLen(){if(!TM) return 0; if(TM.ph==="brk") return tmBrk(); const left=TM.target-TM.acc; return Math.max(1,Math.min(tmFoc(),left));}
 function tmStart(id){
- if(TM&&TM.ph==="foc"&&!TM.paused) tmLogFocus();
+ if(TM&&TM.ph==="foc") tmLogFocus();
  const t=IDX[id]; TM={id,t:t?t.t:"Estudo livre",m:t?t.m:50,ph:"foc",t0:Date.now(),acc:0,target:(t?t.m:50)*60,paused:0};
  tmSave(); tmEnsureUI(); sndAuto(true); toast("Cronômetro iniciado: "+(+cfg().foc||50)+" min de foco.");
 }
 function tmLog(sec){const m=Math.round(sec/60); if(m<1) return; const d=todayS(); ST.log=ST.log||{}; ST.log[d]=(ST.log[d]||0)+m; changed();}
 function tmLogFocus(){ if(!TM||TM.ph!=="foc") return; const e=Math.min(tmElapsed(),tmPhaseLen()); TM.acc+=e; tmLog(e); }
-function tmPause(){ if(!TM) return; if(TM.paused){TM.t0+=Date.now()-TM.paused;TM.paused=0;sndAuto(TM.ph==="foc");} else {TM.paused=Date.now();sndAuto(false);} tmSave(); tmRender(); }
-function tmStop(){ if(!TM) return; if(!TM.paused||TM.ph==="foc") tmLogFocus(); TM=null; tmSave(); sndAuto(false); tmRender(); }
+/* v36: as listas de tarefas mostram o estado do cronômetro (Pausar/Continuar/Parar); redesenha quando ele muda */
+function tmLists(){ if(typeof current!=="undefined"&&["hoje","agenda","prog","cursos"].includes(current)) rerenderKeep(); if(FOCUS) focusRender(true); }
+function tmPause(){ if(!TM) return; if(TM.paused){TM.t0+=Date.now()-TM.paused;TM.paused=0;sndAuto(TM.ph==="foc");} else {TM.paused=Date.now();sndAuto(false);} tmSave(); tmRender(); tmLists(); }
+function tmStop(quiet){ if(!TM) return; tmLogFocus(); TM=null; tmSave(); sndAuto(false); tmRender(); tmLists(); if(!quiet) toast("Cronômetro parado."); }
 function tmFinishTask(){ const id=TM&&TM.id; if(id&&IDX[id]&&!isDone(id)){ ST.done[id]=todayS(); changed(); toastUndo("Tarefa concluída pelo cronômetro.",()=>{delete ST.done[id];changed();rerenderKeep();}); if(["hoje","agenda","prog"].includes(current)) rerenderKeep(); } }
 function tmTick(){
  if(!TM){tmRender();return;}
@@ -1018,13 +1021,15 @@ function tmTick(){
    if(TM.acc>=TM.target){ tmFinishTask(); tmAlert("Tarefa concluída","Hora da pausa de "+(+cfg().brk||10)+" min. Levante, beba água."); TM.ph="brk"; TM.t0=Date.now(); TM.done=1; sndAuto(false); }
    else { tmAlert("Pausa de "+(+cfg().brk||10)+" min","Você fez "+Math.round(TM.acc/60)+" de "+Math.round(TM.target/60)+" min desta tarefa."); TM.ph="brk"; TM.t0=Date.now(); sndAuto(false); }
   } else {
-   if(TM.done){ tmAlert("Pausa encerrada","Abra a próxima tarefa de hoje e toque em ▶."); TM=null; }
+   if(TM.done){ tmAlert("Pausa encerrada","Abra a próxima tarefa de hoje e toque em ▶."); TM=null; sndAuto(false); }
    else { tmAlert("Voltar ao foco","Mais "+Math.round(Math.min(tmFoc(),TM.target-TM.acc)/60)+" min de foco."); TM.ph="foc"; TM.t0=Date.now(); sndAuto(true); }
   }
-  tmSave();
+  tmSave(); tmRender(); tmLists(); return;
  }
  tmRender();
 }
+/* v36: outra aba ou janela do app mexeu no cronômetro: segue o que ficou salvo, para uma aba não religar o que a outra parou */
+window.addEventListener("storage",e=>{ if(e.key!==TMK) return; try{TM=JSON.parse(e.newValue||"null");}catch(_){TM=null;} if(!TM||TM.paused||TM.ph!=="foc") sndAuto(false); tmRender(); tmLists(); });
 function beep(){ try{const A=window.AudioContext||window.webkitAudioContext; const c=sndCtx()||new A(); [0,0.25,0.5].forEach(d=>{const o=c.createOscillator(),g=c.createGain(); o.frequency.value=880; g.gain.setValueAtTime(0.0001,c.currentTime+d); g.gain.exponentialRampToValueAtTime(0.25,c.currentTime+d+0.02); g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+d+0.2); o.connect(g).connect(c.destination); o.start(c.currentTime+d); o.stop(c.currentTime+d+0.22);}); }catch(e){} }
 async function tmAlert(title,body){
  if(cfg().beep!==false) beep();
@@ -1068,7 +1073,7 @@ function focusRender(full){
  $("#fX").onclick=focusClose;
  const go_=$("#fGo"); if(go_) go_.onclick=()=>{tmStart(x.id);focusRender(true);};
  const p_=$("#fP"); if(p_) p_.onclick=()=>{tmPause();focusRender(true);};
- $("#fOk").onclick=()=>{ if(TM&&TM.id===x.id) tmStop(); ST.done[x.id]=todayS(); changed(); toast("Feito. Próxima tarefa."); focusRender(true); };
+ $("#fOk").onclick=()=>{ if(TM&&TM.id===x.id) tmStop(true); ST.done[x.id]=todayS(); changed(); toast("Feito. Próxima tarefa."); focusRender(true); };
 }
 document.addEventListener("keydown",e=>{ if(FOCUS&&e.key==="Escape") focusClose(); });
 setInterval(()=>{ if(FOCUS) focusRender(false); },1000);
